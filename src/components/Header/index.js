@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {
 	HeaderContainer,
@@ -21,6 +21,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faClipboard, faLightbulb, faMoon} from "@fortawesome/free-regular-svg-icons";
+import {useUserDetailsContext} from "../../context/UserDetailsContext";
+import FullPageLoader from "../FullPageLoader";
 
 const NAV_LINKS = [
 	{icon: faDice, text: "Skills", to: LINK.SKILLS},
@@ -33,6 +35,19 @@ const NAV_LINKS = [
 const Header = props => {
 
 	const {theme, setTheme} = useThemeContext();
+	const {state, actions, loaders} = useUserDetailsContext();
+
+	let isMounted = useRef(false);
+
+	useEffect(() => {
+		if (!isMounted.current) {
+			if (!state?.basicInformation) {
+				actions.getBasicInformation();
+			}
+			isMounted.current = true;
+		}
+	}, []);
+
 
 	const onThemeToggle = () => {
 		setTheme(prev => {
@@ -42,12 +57,16 @@ const Header = props => {
 	}
 
 	return <>
+		{
+			loaders.getBasicInformationLoader &&
+			<FullPageLoader/>
+		}
 		<HeaderWrapper>
 			<HeaderContainer>
 				<div className="left">
 					<LogoContainer to={LINK.HOME} className={"action-item"}>
 						<h1>
-							<Logo/>
+							<Logo name={state?.basicInformation?.name}/>
 						</h1>
 					</LogoContainer>
 				</div>

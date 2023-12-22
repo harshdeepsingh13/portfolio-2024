@@ -2,6 +2,7 @@
   "name": "harshdeep-singh",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8081",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
@@ -31,7 +32,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev_server_start": "nodemon index.js",
+    "dev_start": "concurrently \"npm start\" \"npm run dev_server_start\""
   },
   "eslintConfig": {
     "extends": [

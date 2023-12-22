@@ -9,7 +9,7 @@ export const THEME = {LIGHT: "light", DARK: "dark"};
 
 const ThemeContextProvider = ({children}) => {
 
-	const [theme, setTheme] = useState(THEME.LIGHT);
+	const [theme, setTheme] = useState(THEME.LIGHT );
 
 	useEffect(() => {
 		document.documentElement.setAttribute("data-theme", theme);

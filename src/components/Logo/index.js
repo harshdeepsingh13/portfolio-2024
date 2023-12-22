@@ -4,20 +4,18 @@ import {faCode} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {LogoWrapper} from "./styles";
 
-const Logo = props => {
+const Logo = ({name}) => {
 	return <>
 		<LogoWrapper>
 			<FontAwesomeIcon icon={faCode}/>
-			<span className="text"> Harshdeep Singh </span>
+			<span className="text"> {name} </span>
 		</LogoWrapper>
 	</>
 };
 
 Logo.propTypes = {
-	props: PropTypes.object
+	name: PropTypes.string.isRequired
 };
-Logo.defaultProps = {
-	props: {}
-};
+Logo.defaultProps = {};
 
 export default Logo

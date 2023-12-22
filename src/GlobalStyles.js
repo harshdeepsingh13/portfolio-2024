@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import BootstrapContainer from "react-bootstrap/Container"
+import {Container as BootstrapContainer, Row as BootstrapRow} from "react-bootstrap"
 
 export const Container = styled(BootstrapContainer)`
   max-width: 1200px;
@@ -24,3 +24,7 @@ export const Container = styled(BootstrapContainer)`
     }
   }
 `
+
+export const Row = styled(BootstrapRow)`
+  width: 100%;
+`;
