@@ -4,6 +4,7 @@ import actions from './actions';
 const initState = {
 	basicInformation: {},
 	skills: [],
+	projects: []
 }
 
 export const UserDetailsContext = createContext(initState);
@@ -14,7 +15,8 @@ const UserDetailsContextProvider = ({children}) => {
 
 	const [state, setState] = useState({});
 	const [getBasicInformationLoader, setGetBasicInformationLoader] = useState(false);
-	const [getSkillsLoader, setGetSkillsLoader] = useState(false)
+	const [getSkillsLoader, setGetSkillsLoader] = useState(false);
+	const [getProjectsLoader, setGetProjectsLoader] = useState(false)
 
 	const updateState = useCallback((updatedData, toClear = false) => {
 		setState((prevState => (toClear ? {} : {...prevState, ...updatedData})))
@@ -22,15 +24,16 @@ const UserDetailsContextProvider = ({children}) => {
 
 	const enhancedActions = useMemo(() => actions(state, updateState, {
 		setGetBasicInformationLoader,
-		setGetSkillsLoader
+		setGetSkillsLoader,
+		setGetProjectsLoader
 	}), [state, updateState]);
 
 
 	const value = useMemo(() => ({
 		actions: enhancedActions,
 		state,
-		loaders: {getBasicInformationLoader, getSkillsLoader}
-	}), [enhancedActions, state, getBasicInformationLoader, getSkillsLoader]);
+		loaders: {getBasicInformationLoader, getSkillsLoader, getProjectsLoader}
+	}), [enhancedActions, state, getBasicInformationLoader, getSkillsLoader, getProjectsLoader]);
 
 	return <>
 		<UserDetailsContext.Provider value={value}>
