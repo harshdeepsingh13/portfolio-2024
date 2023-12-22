@@ -10,5 +10,6 @@ export const LINK = {
 
 export const API_ROUTES = {
 	BASE_URL: "/api/user",
-	GET_BASIC_INFORMATION: "/basicInformation"
+	GET_BASIC_INFORMATION: "/basicInformation",
+	GET_SKILLS: "/skillInformation"
 }

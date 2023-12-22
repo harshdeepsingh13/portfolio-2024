@@ -1,4 +1,4 @@
-import {getBasicInformationAPI} from "../../services/axios";
+import {getBasicInformationAPI, getSkillsAPI} from "../../services/axios";
 
 export default (state, updateState, loaderSetters) => ({
 	getBasicInformation: async () => {
@@ -7,9 +7,20 @@ export default (state, updateState, loaderSetters) => ({
 			const {data: {data}} = await getBasicInformationAPI();
 			updateState({basicInformation: data.basicInformation});
 		} catch (e) {
-			console.log("e", e);
+			console.error("e", e);
 		} finally {
 			loaderSetters.setGetBasicInformationLoader(false);
+		}
+	},
+	getSkills: async () => {
+		try {
+			loaderSetters.setGetSkillsLoader(true);
+			const {data: {data}} = await getSkillsAPI();
+			updateState({skills: data})
+		} catch (e) {
+			console.error("e", e);
+		} finally {
+			loaderSetters.setGetSkillsLoader(false);
 		}
 	}
 })

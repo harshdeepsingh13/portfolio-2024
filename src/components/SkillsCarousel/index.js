@@ -3,22 +3,7 @@ import PropTypes from 'prop-types';
 import {CarouselButton, SkillItem, SkillsCarouselWrapper} from "./styles";
 import {faChevronLeft, faChevronRight} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-
-const SKILLS = [
-	{TEXT: "HTML", LOGO: "assets/logos/html.svg"},
-	{TEXT: "CSS", LOGO: "assets/logos/css.svg"},
-	{TEXT: "SASS", LOGO: "assets/logos/sass.svg"},
-	{TEXT: "Styled Components", LOGO: "assets/logos/styled-components.svg"},
-	{TEXT: "JavaScript", LOGO: "assets/logos/js.png"},
-	{TEXT: "TypeScript", LOGO: "assets/logos/ts.png"},
-	{TEXT: "React", LOGO: "assets/logos/react.svg"},
-	{TEXT: "ExpressJS", LOGO: "assets/logos/express.svg"},
-	{TEXT: "Node", LOGO: "assets/logos/node.svg"},
-	{TEXT: "MongoDB", LOGO: "assets/logos/mongodb.svg"},
-	{TEXT: "AWS", LOGO: "assets/logos/aws.svg"},
-	{TEXT: "Nginx", LOGO: "assets/logos/nginx.svg"},
-	{TEXT: "MySQL", LOGO: "assets/logos/mysql.svg"}
-]
+import {SKILLS} from "../../containerComponents/Skills";
 
 const SkillsCarousel = props => {
 

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {Container} from "../../GlobalStyles";
+import {Container, PageHeader} from "../../GlobalStyles";
 import {Col} from "react-bootstrap";
 
 
@@ -11,29 +11,12 @@ export const HomeWrapper = styled(Container)`
   align-items: center;
 
 `
-export const Name = styled.h2`
-  font-size: 2.5em;
-  margin: unset;
-  letter-spacing: 4px;
-  font-weight: 900;
-  color: var(--secondary-text);
-
-
-  @media (min-width: 640px) {
-    font-size: 3em;
-  }
-
+export const Name = styled(PageHeader)`
   @media (min-width: 768px) {
     font-size: 3.5em;
     text-align: left;
   }
-
-  @media (min-width: 1024px) {
-    font-size: 4em;
-  }
-
-
-`;
+`
 
 export const ProfessionalSummary = styled.div`
   color: var(--tertiary-text);

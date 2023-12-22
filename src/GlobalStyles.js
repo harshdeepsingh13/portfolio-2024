@@ -28,3 +28,27 @@ export const Container = styled(BootstrapContainer)`
 export const Row = styled(BootstrapRow)`
   width: 100%;
 `;
+
+export const PageHeader = styled.h2`
+  font-size: 2.5em;
+  margin: unset;
+  letter-spacing: 4px;
+  font-weight: 900;
+  color: var(--secondary-text);
+  text-align: center;
+
+
+  @media (min-width: 640px) {
+    font-size: 3em;
+  }
+
+  @media (min-width: 768px) {
+    font-size: 3.5em;
+  }
+
+  @media (min-width: 1024px) {
+    font-size: 4em;
+  }
+
+
+`;
