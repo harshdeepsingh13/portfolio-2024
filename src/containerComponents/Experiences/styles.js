@@ -31,6 +31,7 @@ export const ExperienceRow = styled(Row)`
 
 export const ExperienceItem = styled(Card)`
   width: calc(50% - 32px) !important;
+  margin: unset;
   //width: calc(100% - var(--bs-gutter-x) * 2) !important;
 
   @media (max-width: 992px) {
