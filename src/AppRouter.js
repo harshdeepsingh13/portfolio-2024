@@ -17,8 +17,11 @@ const ROUTES = [
 	{path: LINK.EXPERIENCES, element: <Experiences/>},
 	{path: LINK.EDUCATION,element: <Education/>},
 	{path: LINK.RESUME, element: <ResumePage/>},
-	{path: LINK.SEARCH, element: <Search/>}
 ]
+
+if(process.env.REACT_APP_MODE === "dev") {
+	ROUTES.push({path: LINK.SEARCH, element: <Search/>})
+}
 
 const AppRouter = props => {
 	return <>
