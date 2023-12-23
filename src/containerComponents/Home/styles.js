@@ -64,6 +64,22 @@ export const SocialMediaItem = styled.a`
 export const DetailsColumn = styled(Col)`
   text-align: center;
 
+  .freelancer-at-toptal {
+    color: var(--tertiary-text);
+    margin: 1.5em 0;
+    text-decoration: none;
+    display: inline-block;
+
+    &:hover{
+      transform: scale(1.01);
+      color: var(--tertiary-text-hover);
+    }
+
+    img {
+      width: 150px;
+    }
+  }
+
   @media (min-width: 768px) {
     text-align: left;
   }

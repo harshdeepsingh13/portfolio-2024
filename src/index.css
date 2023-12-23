@@ -117,7 +117,7 @@
 
 * {
   transition-duration: 300ms;
-  transition-property: background, border-color, opacity, box-shadow, top, bottom, left, margin;
+  transition-property: background, border-color, opacity, box-shadow, top, bottom, left, margin, transform;
   box-sizing: border-box;
   user-select: none;
   -moz-user-select: none;
