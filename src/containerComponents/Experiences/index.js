@@ -17,6 +17,8 @@ import {faBuilding, faCalendar} from "@fortawesome/free-regular-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMapPin} from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
+import ReactGA from "react-ga4";
+import {LINK} from "../../config/config";
 
 const Experiences = props => {
 
@@ -26,6 +28,7 @@ const Experiences = props => {
 
     useEffect(() => {
         if (!isMounted.current) {
+            ReactGA.send({hitType: "pageview", page: LINK.EXPERIENCES, title: "Experiences"});
             if (!state.experiences)
                 actions.getExperiences();
             isMounted.current = true;

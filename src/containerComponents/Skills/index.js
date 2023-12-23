@@ -4,6 +4,8 @@ import {Container, PageHeader, Row} from "../../GlobalStyles";
 import {useUserDetailsContext} from "../../context/UserDetailsContext";
 import FullPageLoader from "../../components/FullPageLoader";
 import {SkillItem, SkillsRow, SkillsWrapper} from "./styles";
+import ReactGA from "react-ga4";
+import {LINK} from "../../config/config";
 
 export const SKILLS = [
 	{TEXT: "HTML", LOGO: "assets/logos/html.svg"},
@@ -31,6 +33,7 @@ const Skills = props => {
 
 	useEffect(() => {
 		if (!isMounted.current) {
+			ReactGA.send({hitType: "pageview", page: LINK.SKILLS, title: "Skills Page"});
 			if (!state?.skills)
 				actions.getSkills();
 			isMounted.current = true;

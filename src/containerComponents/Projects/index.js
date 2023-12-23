@@ -9,6 +9,8 @@ import {faGithub} from "@fortawesome/free-brands-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {CardLink, CardLinksContainer} from "../../components/Card/styles";
 import {faGlobe} from "@fortawesome/free-solid-svg-icons";
+import ReactGA from "react-ga4";
+import {LINK} from "../../config/config";
 
 const colorThief = new ColorThief();
 
@@ -26,6 +28,7 @@ const Projects = props => {
 
 	useEffect(() => {
 		if (!isMounted.current) {
+			ReactGA.send({hitType: "pageview", page: LINK.PROJECTS, title: "Projects Page"});
 			if (!state?.projects) {
 				actions.getProjects();
 			}

@@ -10,6 +10,8 @@ import {faBuildingColumns, faMapPin} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCalendar} from "@fortawesome/free-regular-svg-icons";
 import moment from "moment/moment";
+import ReactGA from "react-ga4";
+import {LINK} from "../../config/config";
 
 const Education = props => {
 
@@ -19,6 +21,7 @@ const Education = props => {
 
     useEffect(() => {
         if (!isMounted.current) {
+            ReactGA.send({hitType: "pageview", page: LINK.EDUCATION, title: "Education Details"});
             if (!state?.educationDetails) {
                 actions.getEducationDetails();
             }

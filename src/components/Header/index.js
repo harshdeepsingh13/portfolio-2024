@@ -23,6 +23,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faClipboard, faLightbulb, faMoon} from "@fortawesome/free-regular-svg-icons";
 import {useUserDetailsContext} from "../../context/UserDetailsContext";
 import FullPageLoader from "../FullPageLoader";
+import ReactGA from "react-ga4";
 
 const NAV_LINKS = [
     {icon: faDice, text: "Skills", to: LINK.SKILLS},
@@ -50,6 +51,7 @@ const Header = props => {
 
 
     const onThemeToggle = () => {
+        ReactGA.event("toggle_theme", {event_name: "toggle_theme"})
         setTheme(prev => {
             if (prev === THEME.LIGHT) return THEME.DARK
             return THEME.LIGHT
