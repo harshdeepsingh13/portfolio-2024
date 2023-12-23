@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
-import {Container, PageHeader} from "../../GlobalStyles";
+import {CardTitle, Container, PageHeader} from "../../GlobalStyles";
 import {ProjectItem, ProjectLogo, ProjectName, ProjectsRow, ProjectsWrapper, TechItem} from "./styles";
 import {useUserDetailsContext} from "../../context/UserDetailsContext";
 import FullPageLoader from "../../components/FullPageLoader";
@@ -66,7 +66,7 @@ const ProjectCard = ({project}) => {
 				onLoad={getDominantColor}
 			/>
 			<div className="name-container">
-				<ProjectName>{project.name}</ProjectName>
+				<CardTitle>{project.name}</CardTitle>
 				<CardLinksContainer>
 					{project.link &&
 						<CardLink href={project.link} target={"_blank"} rel={"noreferrer noopener"} dataHelp={"GitHub"}>

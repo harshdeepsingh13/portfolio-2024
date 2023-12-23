@@ -140,6 +140,10 @@ code {
   monospace;
 }
 
+.hidden{
+  visibility: hidden;
+}
+
 
 
 

@@ -10,7 +10,7 @@ export const ProjectsRow = styled(Row)`
 `;
 
 export const ProjectItem = styled(Card)`
-  padding: 25px;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -61,9 +61,5 @@ export const ProjectLogo = styled.img`
   display: block;
 `;
 
-export const ProjectName = styled.h4`
-  margin: 5px 0;
-  font-size: 1.01em;
-`;
 
 export const TechItem = styled(CardTag)``;

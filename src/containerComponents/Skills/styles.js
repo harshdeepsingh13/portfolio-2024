@@ -22,7 +22,7 @@ export const SkillsRow = styled(Row)`
 `;
 
 export const SkillItem = styled(Card)`
-  padding: 25px;
+
 
 
 

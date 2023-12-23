@@ -50,5 +50,9 @@ export const PageHeader = styled.h2`
     font-size: 4em;
   }
 
+`;
 
+export const CardTitle = styled.h4`
+  margin: 5px 0;
+  font-size: 1.01em;
 `;

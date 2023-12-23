@@ -5,7 +5,8 @@ import {Link} from "react-router-dom";
 export const HeaderWrapper = styled.div`
   color: var(--secondary-text);
   border-bottom: thin solid var(--secondary);
-  z-index: 10;
+  background-color: var(--main);
+  z-index: 999;
   top: 0;
   position: sticky;
   font-size: 0.875rem;

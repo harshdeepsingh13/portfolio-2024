@@ -1,4 +1,4 @@
-import {getBasicInformationAPI, getProjectsAPI, getSkillsAPI} from "../../services/axios";
+import {getBasicInformationAPI, getExperiencesAPI, getProjectsAPI, getSkillsAPI} from "../../services/axios";
 
 export default (state, updateState, loaderSetters) => ({
 	getBasicInformation: async () => {
@@ -29,9 +29,20 @@ export default (state, updateState, loaderSetters) => ({
 			const {data: {data}} = await getProjectsAPI();
 			updateState({projects: data.projects})
 		} catch (e) {
-
+			console.error("e", e);
 		} finally {
 			loaderSetters.setGetProjectsLoader(false);
+		}
+	},
+	getExperiences: async () => {
+		try {
+			loaderSetters.setGetExperiencesLoader(true);
+			const {data: {data}} = await getExperiencesAPI();
+			updateState({experiences: data.workExperiences});
+		} catch (e) {
+			console.error("e", e)
+		} finally {
+			loaderSetters.setGetExperiencesLoader(false);
 		}
 	}
 })

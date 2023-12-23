@@ -8,3 +8,5 @@ export const getBasicInformationAPI = () => axiosInstance({method: "GET", url: A
 export const getSkillsAPI = () => axiosInstance({method: "GET", url: API_ROUTES.GET_SKILLS})
 
 export const getProjectsAPI = () => axiosInstance({method: "GET", url: API_ROUTES.GET_PROJECTS})
+
+export const getExperiencesAPI = () => axiosInstance({method: "GET", url: API_ROUTES.GET_EXPERIENCES})
