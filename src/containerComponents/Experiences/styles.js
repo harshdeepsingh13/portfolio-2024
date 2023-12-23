@@ -63,6 +63,7 @@ export const SecondaryInformation = styled.h5`
   font-size: 0.9em;
   font-weight: 400;
   color: var(--tertiary-text);
+  display: flex;
 
   svg {
     margin-right: 1em;

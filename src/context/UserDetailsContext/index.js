@@ -5,7 +5,8 @@ const initState = {
 	basicInformation: {},
 	skills: [],
 	projects: [],
-	experiences: []
+	experiences: [],
+	educationDetails: []
 }
 
 export const UserDetailsContext = createContext(initState);
@@ -19,6 +20,7 @@ const UserDetailsContextProvider = ({children}) => {
 	const [getSkillsLoader, setGetSkillsLoader] = useState(false);
 	const [getProjectsLoader, setGetProjectsLoader] = useState(false)
 	const [getExperiencesLoader, setGetExperiencesLoader] = useState(false);
+	const [getEducationDetailsLoader, setGetEducationDetailsLoader] = useState(false);
 
 	const updateState = useCallback((updatedData, toClear = false) => {
 		setState((prevState => (toClear ? {} : {...prevState, ...updatedData})))
@@ -28,7 +30,8 @@ const UserDetailsContextProvider = ({children}) => {
 		setGetBasicInformationLoader,
 		setGetSkillsLoader,
 		setGetProjectsLoader,
-		setGetExperiencesLoader
+		setGetExperiencesLoader,
+		setGetEducationDetailsLoader
 	}), [state, updateState]);
 
 
@@ -39,9 +42,10 @@ const UserDetailsContextProvider = ({children}) => {
 			getBasicInformationLoader,
 			getSkillsLoader,
 			getProjectsLoader,
-			getExperiencesLoader
+			getExperiencesLoader,
+			getEducationDetailsLoader
 		}
-	}), [enhancedActions, state, getBasicInformationLoader, getSkillsLoader, getProjectsLoader, getExperiencesLoader]);
+	}), [enhancedActions, state, getBasicInformationLoader, getSkillsLoader, getProjectsLoader, getExperiencesLoader, getEducationDetailsLoader]);
 
 	return <>
 		<UserDetailsContext.Provider value={value}>
