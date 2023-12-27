@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
-import {Container, PageHeader, Row} from "../../GlobalStyles";
+import {Container, PageHeader} from "../../GlobalStyles";
 import {useUserDetailsContext} from "../../context/UserDetailsContext";
 import FullPageLoader from "../../components/FullPageLoader";
 import {SkillItem, SkillsRow, SkillsWrapper} from "./styles";
@@ -20,7 +20,8 @@ export const SKILLS = [
 	{TEXT: "MongoDB", LOGO: "assets/logos/mongodb.svg"},
 	{TEXT: "AWS", LOGO: "assets/logos/aws.svg"},
 	{TEXT: "Nginx", LOGO: "assets/logos/nginx.svg"},
-	{TEXT: "MySQL", LOGO: "assets/logos/mysql.svg"}
+	{TEXT: "MySQL", LOGO: "assets/logos/mysql.svg"},
+	{TEXT: "Google Analytics", LOGO: "assets/logos/google-analytics.svg"}
 ]
 
 const Skills = props => {
@@ -42,12 +43,12 @@ const Skills = props => {
 
 	const getBackgroundLogo = useCallback((skill) => {
 		const backgroundLogo = SKILLS.find(skillItem => {
-			if(skillItem.TEXT.toLowerCase() === skill.toLowerCase()){
+			if (skillItem.TEXT.toLowerCase() === skill.toLowerCase()) {
 				return true
 			}
 			return false
 		})
-		if(backgroundLogo) return backgroundLogo.LOGO;
+		if (backgroundLogo) return backgroundLogo.LOGO;
 		else return "assets/logos/code-default.svg"
 	}, [])
 
