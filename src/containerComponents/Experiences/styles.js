@@ -10,6 +10,11 @@ export const ExperiencesWrapper = styled.div`
   padding: 2em 0;
   margin-top: 2rem;
   gap: 1.2em;
+
+  @media (max-width: 992px){
+    margin-top: 1em;
+    padding-top: unset;
+  }
 `;
 
 export const TimelineDivider = styled.div`
@@ -75,12 +80,12 @@ export const Responsibilities = styled.div`
   margin: 15px 0;
   font-size: 0.9em;
   font-weight: 400;
-  color: var(--tertiary-text)
+  color: var(--tertiary-text);
 
-  ul{
+  ul {
     padding-left: 1rem;
 
-    li{
+    li {
       margin-bottom: 5px;
     }
   }
