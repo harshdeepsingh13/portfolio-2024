@@ -16,6 +16,7 @@ const colorThief = new ColorThief();
 
 const LOGO_MAP = {
 	"Unconventional Music Player": "assets/logos/unconventional-player.svg",
+	"Career Canvas": "assets/logos/career-canvas.svg",
 	"Pixeliano": "assets/logos/pixeliano.png",
 	"Pixeliano Admin App": "assets/logos/pixeliano.png",
 }
