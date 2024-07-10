@@ -21,7 +21,9 @@ export const SKILLS = [
 	{TEXT: "AWS", LOGO: "assets/logos/aws.svg"},
 	{TEXT: "Nginx", LOGO: "assets/logos/nginx.svg"},
 	{TEXT: "MySQL", LOGO: "assets/logos/mysql.svg"},
-	{TEXT: "Google Analytics", LOGO: "assets/logos/google-analytics.svg"}
+	{TEXT: "Google Analytics", LOGO: "assets/logos/google-analytics.svg"},
+  {TEXT: "JAVA", LOGO: "assets/logos/java.svg"},
+  {TEXT: "Spring Boot", LOGO: "assets/logos/spring-boot.svg"},
 ]
 
 const Skills = props => {
