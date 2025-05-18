@@ -1,10 +1,11 @@
 const axios = require("axios");
 const nodemailer = require("nodemailer");
 const { userTrackerEmail } = require("../emailTemplates");
+const moment = require("moment");
 
 const ipVisitCache = new Map();
 
-const DEBOUNCE_MINUTES = 5;
+const DEBOUNCE_MINUTES = 2;
 
 const isLocalHost = (ip) => {
   return ["::1", "127.0.0.1", "::ffff:127.0.0.1"].includes(ip);
@@ -31,7 +32,7 @@ const sendEmail = async (details) => {
     await transporter.sendMail({
       from: `Admin <${process.env.EMAIL_USER}>`,
       to: process.env.USER_TRACKER_RECIPIENT_EMAIL,
-      subject: "🚨 New Portfolio Visit",
+      subject: "🚨 New Portfolio Visit " + details.time,
       html: userTrackerEmail(details),
     });
     console.log(`[UserTracker] Email sent for IP: ${details.ip}`);
@@ -65,7 +66,7 @@ module.exports = () => async (req, res, next) => {
     city: geo.city,
     region: geo.region,
     country: geo.country_name,
-    time: new Date().toLocaleString(),
+    time: moment.utc().format("MMMM DD YYYY, hh:mm:ss a"),
   };
   console.log("[UserTracker] User details:", details);
   await sendEmail(details);

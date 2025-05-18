@@ -6,5 +6,5 @@ module.exports = (placeholders) => `
     <p><b>Location:</b> ${placeholders?.city}, ${placeholders?.region}, ${placeholders?.country}</p>
     <p><b>User Agent:</b> ${placeholders?.userAgent}</p>
     <p><b>Referrer:</b> ${placeholders?.referrer}</p>
-    <p><b>Time:</b> ${moment.utc(placeholders?.time, "YYYY-MM-DD, hh:mm:ss a").format("MMMM DD YYYY, hh:mm:ss a")}</p>
+    <p><b>Time:</b> ${placeholders.time}</p>
   `;
