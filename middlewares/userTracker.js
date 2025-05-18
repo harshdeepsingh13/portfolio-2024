@@ -66,7 +66,7 @@ module.exports = () => async (req, res, next) => {
     city: geo.city,
     region: geo.region,
     country: geo.country_name,
-    time: moment.format("MMMM DD YYYY, hh:mm:ss a"),
+    time: moment().format("MMMM DD YYYY, hh:mm:ss a"),
   };
   console.log("[UserTracker] User details:", details);
   await sendEmail(details);
