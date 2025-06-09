@@ -63,7 +63,7 @@ export function middleware(req: NextRequest) {
     body: JSON.stringify(details),
   }).catch((error) => {
     console.log(error);
-    console.warn("[UserTracker] Failed to send tracking info");
+    console.warn("[UserTracker] Failed to send tracking info " + `${req.nextUrl.origin}/api/track`);
   });
 
   ipVisitCache.set(ip, Date.now());
