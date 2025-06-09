@@ -24,7 +24,7 @@ const SkillsCarousel = ({ skills = [] }: { skills: any }) => {
       }, 3000);
       isMounted.current = true;
     }
-  }, []);
+  }, [skills]);
 
   useEffect(() => {
     skillsContainerRef?.current?.scroll({
