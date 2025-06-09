@@ -1,3 +1,4 @@
+import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 const ipVisitCache = new Map();
@@ -58,11 +59,7 @@ export function middleware(req: NextRequest) {
   };
   console.log("[UserTracker] User details:", details);
   const siteURL = process.env.NEXT_PUBLIC_SITE_URL;
-  fetch(`${siteURL}/api/track`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(details),
-  }).catch((error) => {
+  axios.post(`${siteURL}/api/track`, JSON.stringify(details)).catch((error) => {
     console.log(error);
     console.warn("[UserTracker] Failed to send tracking info " + `${siteURL}/api/track`);
   });
