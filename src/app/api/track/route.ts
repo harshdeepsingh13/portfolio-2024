@@ -2,8 +2,7 @@ import userTrackerEmail from "@/lib/emailTemplates/userTrackerEmail";
 import axios from "axios";
 import moment from "moment-timezone";
 import { NextResponse } from "next/server";
-
-const nodemailer = require("nodemailer");
+import nodemailer from "nodemailer";
 
 export const POST = async (req: Request) => {
   const body = await req.json();
