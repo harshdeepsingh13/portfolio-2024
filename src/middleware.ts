@@ -38,7 +38,6 @@ function isBot(userAgent = "") {
 }
 
 export function middleware(req: NextRequest) {
-  console.log("yo");
   const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0].trim();
 
   const userAgent = req.headers.get("user-agent") || "Unknown";
