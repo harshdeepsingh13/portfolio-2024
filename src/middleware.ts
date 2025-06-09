@@ -57,13 +57,14 @@ export function middleware(req: NextRequest) {
     timestamp: new Date().toISOString(),
   };
   console.log("[UserTracker] User details:", details);
-  fetch(`${req.nextUrl.origin}/api/track`, {
+  const siteURL = process.env.NEXT_PUBLIC_SITE_URL;
+  fetch(`${siteURL}/api/track`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(details),
   }).catch((error) => {
     console.log(error);
-    console.warn("[UserTracker] Failed to send tracking info " + `${req.nextUrl.origin}/api/track`);
+    console.warn("[UserTracker] Failed to send tracking info " + `${siteURL}/api/track`);
   });
 
   ipVisitCache.set(ip, Date.now());
