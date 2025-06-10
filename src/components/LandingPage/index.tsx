@@ -22,11 +22,11 @@ const LandingPage = ({ basicInformation, skills }: { basicInformation: any; skil
   }, [basicInformation?.socialMediaLinks]);
 
   const onToptalLinkClick = () => {
-    sendGAEvent("link_toptal");
+    sendGAEvent("event", "link_toptal");
   };
 
   const onSocialLinkClick = (text: string) => {
-    sendGAEvent("social_link_click", { to: text });
+    sendGAEvent("event", "social_link_click", { to: text });
   };
 
   return (
