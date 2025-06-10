@@ -5,6 +5,7 @@ import Image from "@/elements/Image";
 import { faFacebookF, faGithub, faInstagram, faLinkedinIn } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { sendGAEvent } from "@next/third-parties/google";
 import { useMemo } from "react";
 import { Col } from "react-bootstrap";
 import SkillsCarousel from "../SkillsCarousel";
@@ -20,6 +21,14 @@ const LandingPage = ({ basicInformation, skills }: { basicInformation: any; skil
     return accounts;
   }, [basicInformation?.socialMediaLinks]);
 
+  const onToptalLinkClick = () => {
+    sendGAEvent("link_toptal");
+  };
+
+  const onSocialLinkClick = (text: string) => {
+    sendGAEvent("social_link_click", { to: text });
+  };
+
   return (
     <>
       <HomeWrapper>
@@ -34,7 +43,7 @@ const LandingPage = ({ basicInformation, skills }: { basicInformation: any; skil
                   target={"_blank"}
                   rel={"noreferrer noopener"}
                   key={link}
-                  // onClick={() => onSocialLinkClick(text)}
+                  onClick={() => onSocialLinkClick(text)}
                 >
                   <FontAwesomeIcon icon={icon} />
                 </SocialMediaItem>
@@ -45,7 +54,7 @@ const LandingPage = ({ basicInformation, skills }: { basicInformation: any; skil
               target={"_blank"}
               href={"https://www.toptal.com/resume/harshdeep-singh"}
               rel={"noreferrer noopener"}
-              // onClick={onToptalLinkClick}
+              onClick={onToptalLinkClick}
             >
               Freelancer at
               <Image
