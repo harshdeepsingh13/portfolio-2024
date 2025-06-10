@@ -17,8 +17,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Harshdeep Singh | Portfolio",
-  description: "Know more about Harshdeep!",
+  title: "Harshdeep Singh | Full Stack Developer",
+  description:
+    "Portfolio of Harshdeep Singh – MERN stack developer, photographer, and creator. Explore my work, projects, and journey.",
   icons: {
     icon: [
       {
@@ -32,6 +33,27 @@ export const metadata: Metadata = {
         href: "/assets/favicon_dark.ico",
       },
     ],
+  },
+  openGraph: {
+    title: "Harshdeep Singh | Full Stack Developer",
+    description:
+      "Explore the personal portfolio of Harshdeep Singh — experienced in React, Node.js, MongoDB, Express, Java Springboot and more.",
+    url: "https://theharshdeepsingh.com",
+    siteName: "Harshdeep Singh",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "/assets/og/default.png", // Path in /public folder
+        width: 1200,
+        height: 630,
+        alt: "Harshdeep Singh – Full Stack Portfolio",
+      },
+    ],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
