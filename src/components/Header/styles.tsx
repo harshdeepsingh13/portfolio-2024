@@ -21,6 +21,7 @@ export const HeaderWrapper = styled.div`
   .action-item {
     display: block;
     cursor: pointer;
+    transition: all 0.3s ease-in-out;
 
     svg {
       color: var(--accent-text);
@@ -54,7 +55,7 @@ export const HeaderContainer = styled(Container)`
     align-items: stretch;
     align-self: stretch;
   }
-`
+`;
 
 export const LogoContainer = styled(Link)`
   padding-left: 1rem;
@@ -76,8 +77,7 @@ export const LogoContainer = styled(Link)`
       display: none;
     }
   }
-
-`
+`;
 export const NavLinkItem = styled(Link)`
   padding: 10px 20px;
 
@@ -94,15 +94,23 @@ export const NavLinkItem = styled(Link)`
     .text {
       display: none;
     }
+
+    &.action-item:hover {
+      svg {
+        margin-right: 10px;
+      }
+      .text {
+        display: inline-block;
+      }
+    }
   }
-`
+`;
 export const NavLinksContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 1 1 0;
   align-self: center;
-
 `;
 
 export const SearchLink = styled(Link)`
