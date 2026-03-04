@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
 export const POST = async (req: Request) => {
+	return NextResponse.json({});
   const body = await req.json();
   const { ip, userAgent, referrer, pathname, method, timestamp } = body;
 
