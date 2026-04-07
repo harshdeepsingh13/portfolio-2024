@@ -12,6 +12,7 @@ const LOGO_MAP: Record<string, string> = {
   "Career Canvas": "/assets/logos/career-canvas.svg",
   Pixeliano: "/assets/logos/pixeliano.png",
   "Pixeliano Admin App": "/assets/logos/pixeliano.png",
+  "StockFlow AI": "/assets/logos/stockflowAi.png",
 };
 
 const ProjectCard = ({ project }: { project: any }) => {
