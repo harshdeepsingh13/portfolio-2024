@@ -28,7 +28,11 @@ export type SkillName =
   | "Spring Boot"
   | "Vite"
   | "Chart.js"
-  | "Open AI API" | "Zapier";
+  | "Open AI API"
+  | "Zapier"
+  | "LangChain"
+  | "Playwright"
+  | "CI/CD Pipelines";
 
 export const SKILLS_ASSETS_MAPPING: Record<SkillName, string> = {
   HTML: "/assets/logos/html.svg",
@@ -53,6 +57,9 @@ export const SKILLS_ASSETS_MAPPING: Record<SkillName, string> = {
   "Chart.js": "/assets/logos/chartjs.svg",
   "Open AI API": "/assets/logos/openai.svg",
   Zapier: "/assets/logos/zapier.svg",
+  LangChain: "/assets/logos/langchain.svg",
+  Playwright: "/assets/logos/playwright.svg",
+  "CI/CD Pipelines": "/assets/logos/cicd.svg",
 };
 
 export const LINK_MAPPING = {
