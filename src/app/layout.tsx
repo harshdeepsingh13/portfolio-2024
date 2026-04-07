@@ -16,10 +16,18 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+// Force request-time rendering so navbar/profile data from DB is always fresh.
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Harshdeep Singh | Full Stack Developer",
   description:
     "Portfolio of Harshdeep Singh – MERN stack developer, photographer, and creator. Explore my work, projects, and journey.",
+  // Canonical helps search engines index a single preferred URL for this page.
+  alternates: {
+    canonical: "https://theharshdeepsingh.com",
+  },
   icons: {
     icon: [
       {
