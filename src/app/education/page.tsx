@@ -1,3 +1,4 @@
+import Breadcrumbs from "@/components/Breadcrumbs";
 import EducationComponent from "@/components/EducationComponent";
 import { getData } from "@/lib/getData";
 import { Metadata } from "next";
@@ -8,7 +9,8 @@ export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "Education | Harshdeep Singh",
-  description: "Details about my academic background, including degrees and certifications in Data Analytics and Computer Science.",
+  description:
+    "Details about my academic background, including degrees and certifications in Data Analytics and Computer Science.",
   // Canonical URL signals the authoritative route to search crawlers.
   alternates: {
     canonical: "https://theharshdeepsingh.com/education",
@@ -21,11 +23,26 @@ export const metadata: Metadata = {
     locale: "en_US",
     type: "profile",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Education | Harshdeep Singh",
+    description: "Academic background, Data Analytics training, Computer Science Engineering, and continuous learning.",
+  },
 };
 
 const Education = async () => {
   const educationInformation = await getData.getEducationInformation();
-  return <><EducationComponent educationDetails={educationInformation} /></>;
+  return (
+    <>
+      <Breadcrumbs
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Education", href: "/education" },
+        ]}
+      />
+      <EducationComponent educationDetails={educationInformation} />
+    </>
+  );
 };
 
 export default Education;

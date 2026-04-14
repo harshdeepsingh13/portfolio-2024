@@ -1,6 +1,6 @@
 "use client";
 
-import { Container, CustomTab, CustomTabs } from "@/app/_globalStyles";
+import { Container, CustomTab, CustomTabs, PageLead } from "@/app/_globalStyles";
 import { useMemo, useState } from "react";
 import { PageHeader } from "../../app/_globalStyles";
 import TimelinePoint from "../TimelinePoint";
@@ -27,7 +27,11 @@ const ExperienceComponent = ({ experiences: experiencesProps }: { experiences: a
   return (
     <>
       <Container>
-        <PageHeader>Experiences</PageHeader>
+        <PageHeader>Professional Experiences</PageHeader>
+        <PageLead>
+          A timeline of full-stack, SaaS, eCommerce, consulting, and support roles that shaped my ability to ship
+          production software, improve performance, and work across teams.
+        </PageLead>
         <CustomTabs
           variant={"pills"}
           activeKey={activeTab}

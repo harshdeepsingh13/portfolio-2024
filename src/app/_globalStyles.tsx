@@ -1,5 +1,5 @@
+import { Container as BootstrapContainer, Row as BootstrapRow, Tab, Tabs } from "react-bootstrap";
 import styled from "styled-components";
-import {Container as BootstrapContainer, Row as BootstrapRow, Tabs, Tab} from "react-bootstrap"
 
 export const Container = styled(BootstrapContainer)`
   max-width: 1200px;
@@ -50,6 +50,58 @@ export const PageHeader = styled.h2`
     font-size: 4em;
   }
 
+`;
+
+export const PageLead = styled.p`
+  margin: 1rem auto;
+  max-width: 760px;
+  text-align: center;
+  color: var(--tertiary-text);
+  font-weight: 300;
+  line-height: 1.8;
+  letter-spacing: 0.2px;
+
+  @media (min-width: 768px) {
+    text-align: center;
+    /* margin-left: 0; */
+    /* margin-right: 0; */
+  }
+`;
+
+export const BreadcrumbsNav = styled.nav`
+  margin-bottom: 1rem;
+  color: var(--tertiary-text);
+  font-size: 0.85rem;
+`;
+
+export const BreadcrumbsList = styled.ol`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
+
+export const BreadcrumbItem = styled.li`
+  display: flex;
+  align-items: center;
+
+  &:not(:last-child)::after {
+    content: "/";
+    margin-left: 0.35rem;
+    color: var(--accent-text);
+  }
+`;
+
+export const BreadcrumbLink = styled.a`
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--main-text-hover);
+    text-decoration: underline;
+  }
 `;
 
 export const CardTitle = styled.h4`
