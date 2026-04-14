@@ -20,7 +20,34 @@ const inter = Inter({
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+const siteUrl = "https://theharshdeepsingh.com";
+
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Harshdeep Singh",
+  url: siteUrl,
+  jobTitle: "Full Stack Developer",
+  description:
+    "Full-stack software engineer with experience in React, TypeScript, Node.js, AI automation, and cloud technologies.",
+  sameAs: [
+    "https://www.linkedin.com/in/harshdeepsingh13/",
+    "https://github.com/harshdeepsingh13/",
+    "https://www.toptal.com/resume/harshdeep-singh",
+  ],
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Harshdeep Singh",
+  url: siteUrl,
+  description:
+    "Portfolio of Harshdeep Singh, a full stack developer focused on React, TypeScript, Node.js, and AI automation.",
+};
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Harshdeep Singh | Full Stack Developer",
   description:
     "Portfolio of Harshdeep Singh – MERN stack developer, photographer, and creator. Explore my work, projects, and journey.",
@@ -46,7 +73,7 @@ export const metadata: Metadata = {
     title: "Harshdeep Singh | Full Stack Developer",
     description:
       "Explore the personal portfolio of Harshdeep Singh — experienced in React, Node.js, MongoDB, Express, Java Springboot and more.",
-    url: "https://theharshdeepsingh.com",
+    url: siteUrl,
     siteName: "Harshdeep Singh",
     locale: "en_US",
     type: "website",
@@ -58,6 +85,13 @@ export const metadata: Metadata = {
         alt: "Harshdeep Singh – Full Stack Portfolio",
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Harshdeep Singh | Full Stack Developer",
+    description:
+      "Portfolio of Harshdeep Singh – React, TypeScript, Node.js, AI automation, and full-stack engineering.",
+    images: ["/assets/og/default.png"],
   },
   robots: {
     index: true,
@@ -75,6 +109,14 @@ export default async function RootLayout({
   return (
     <html lang="en" className={inter.className}>
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
         <GoogleAnalytics gaId={gaID} />
         <StyledComponentsRegistry>
           <ThemeContextProvider>

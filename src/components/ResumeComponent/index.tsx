@@ -1,5 +1,6 @@
 "use client";
 
+import { PageLead } from "@/app/_globalStyles";
 import { cloudinaryResLink } from "@/config/config";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,6 +21,10 @@ const ResumeComponent = () => {
     <>
       <Container>
         <PageHeader>Download Resume</PageHeader>
+        <PageLead>
+          Download a concise summary of my experience, skills, and project work if you want a quick overview of my
+          background as a full stack developer.
+        </PageLead>
         <DownloadButton onClick={onResumeDownload}>
           <FontAwesomeIcon icon={faDownload} /> Download Resume
         </DownloadButton>
