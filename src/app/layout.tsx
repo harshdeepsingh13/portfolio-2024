@@ -5,6 +5,7 @@ import "@/lib/fontawesome";
 import { getData } from "@/lib/getData";
 import StyledComponentsRegistry from "@/lib/styledComponentsRegistry";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import "bootstrap/dist/css/bootstrap-reboot.min.css";
 import "bootstrap/dist/css/bootstrap-grid.min.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
