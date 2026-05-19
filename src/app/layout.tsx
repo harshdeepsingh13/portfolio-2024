@@ -82,16 +82,9 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      {
-        media: "(prefers-color-scheme: light)",
-        url: "/assets/favicon_light.ico",
-        href: "/assets/favicon_light.ico",
-      },
-      {
-        media: "(prefers-color-scheme: dark)",
-        url: "/assets/favicon_dark.ico",
-        href: "/assets/favicon_dark.ico",
-      },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { media: "(prefers-color-scheme: light)", url: "/assets/favicon_light.ico" },
+      { media: "(prefers-color-scheme: dark)",  url: "/assets/favicon_dark.ico"  },
     ],
   },
   openGraph: {
