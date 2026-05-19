@@ -21,13 +21,22 @@ export const metadata: Metadata = {
     url: "https://theharshdeepsingh.com/skills",
     siteName: "Harshdeep Singh",
     locale: "en_US",
-    type: "profile",
+    type: "website",
+    images: [
+      {
+        url: "/assets/og/default.png",
+        width: 1200,
+        height: 630,
+        alt: "Harshdeep Singh – Full Stack Portfolio",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Skills | React, Node.js, TypeScript & AI Automation | Harshdeep Singh",
     description:
       "Technical skills across React, Node.js, TypeScript, MongoDB, AWS, Playwright, LangChain, and more.",
+    images: ["/assets/og/default.png"],
   },
 };
 

@@ -47,9 +47,9 @@ const Header = ({ basicInformation }: { basicInformation: any }) => {
         <HeaderContainer>
           <div className="left">
             <LogoContainer href={LINK_MAPPING.HOME} className={"action-item"}>
-              <h1>
+              <span>
                 <Logo name={basicInformation?.name} />
-              </h1>
+              </span>
             </LogoContainer>
           </div>
           <NavLinksContainer className="center">

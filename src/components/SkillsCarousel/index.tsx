@@ -19,11 +19,12 @@ const SkillsCarousel = ({ skills = [] }: { skills: any }) => {
     if (!isMounted.current) {
       const randomIndex = Math.floor(Math.random() * (skills.length - 1 - 0) + 0);
       setCurrentIndex(randomIndex);
-      setInterval(() => {
-        onNext();
-      }, 3000);
       isMounted.current = true;
     }
+    const id = setInterval(() => {
+      onNext();
+    }, 3000);
+    return () => clearInterval(id);
   }, [skills]);
 
   useEffect(() => {

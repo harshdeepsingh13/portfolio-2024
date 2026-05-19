@@ -22,19 +22,67 @@ export const metadata: Metadata = {
     siteName: "Harshdeep Singh",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/assets/og/default.png",
+        width: 1200,
+        height: 630,
+        alt: "Harshdeep Singh – Full Stack Portfolio",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Projects | Full-Stack, AI Automation & SaaS Case Studies | Harshdeep Singh",
     description: "Explore full-stack projects, AI automation tools, resume builders, and production-ready web apps.",
+    images: ["/assets/og/default.png"],
   },
 };
+
+const siteUrl = "https://theharshdeepsingh.com";
 
 const Projects = async () => {
   const projects = await getData.getProjects();
 
+  const projectsItemListJsonLd = projects?.length
+    ? {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: "Portfolio Projects by Harshdeep Singh",
+        description:
+          "A showcase of full-stack, AI automation, SaaS, and production web applications.",
+        url: `${siteUrl}/projects`,
+        numberOfItems: projects.length,
+        itemListElement: projects.map((project: any, index: number) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          item: {
+            "@type": project.website ? "SoftwareApplication" : "CreativeWork",
+            name: project.name,
+            ...(project.summary && { description: project.summary }),
+            ...(project.website && { url: project.website }),
+            ...(project.link && { codeRepository: project.link }),
+            ...(project.technologyStack?.length && {
+              keywords: project.technologyStack.join(", "),
+            }),
+            author: { "@id": `${siteUrl}/#person` },
+            ...(project.website && {
+              applicationCategory: "WebApplication",
+              operatingSystem: "Web Browser",
+            }),
+          },
+        })),
+      }
+    : null;
+
   return (
     <>
+      {projectsItemListJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(projectsItemListJsonLd) }}
+        />
+      )}
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
