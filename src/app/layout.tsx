@@ -5,7 +5,7 @@ import "@/lib/fontawesome";
 import { getData } from "@/lib/getData";
 import StyledComponentsRegistry from "@/lib/styledComponentsRegistry";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap-grid.min.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import React from "react";
@@ -25,11 +25,32 @@ const siteUrl = "https://theharshdeepsingh.com";
 const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": `${siteUrl}/#person`,
   name: "Harshdeep Singh",
   url: siteUrl,
   jobTitle: "Full Stack Developer",
   description:
     "Full-stack software engineer with experience in React, TypeScript, Node.js, AI automation, and cloud technologies.",
+  address: {
+    "@type": "PostalAddress",
+    addressCountry: "CA",
+  },
+  knowsAbout: [
+    "React",
+    "TypeScript",
+    "Node.js",
+    "JavaScript",
+    "MongoDB",
+    "Express.js",
+    "AWS",
+    "LangChain",
+    "OpenAI API",
+    "Playwright",
+    "Spring Boot",
+    "CI/CD",
+    "Full Stack Development",
+    "AI Automation",
+  ],
   sameAs: [
     "https://www.linkedin.com/in/harshdeepsingh13/",
     "https://github.com/harshdeepsingh13/",
@@ -40,18 +61,22 @@ const personJsonLd = {
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": `${siteUrl}/#website`,
   name: "Harshdeep Singh",
   url: siteUrl,
   description:
     "Portfolio of Harshdeep Singh, a full stack developer focused on React, TypeScript, Node.js, and AI automation.",
+  publisher: {
+    "@id": `${siteUrl}/#person`,
+  },
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Harshdeep Singh | Full Stack Developer",
   description:
-    "Portfolio of Harshdeep Singh – MERN stack developer, photographer, and creator. Explore my work, projects, and journey.",
-  // Canonical helps search engines index a single preferred URL for this page.
+    "Portfolio of Harshdeep Singh, a Canada-based full stack developer specializing in React, TypeScript, Node.js, AI automation, and production web applications.",
+  authors: [{ name: "Harshdeep Singh", url: siteUrl }],
   alternates: {
     canonical: "https://theharshdeepsingh.com",
   },
@@ -108,6 +133,11 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={inter.className}>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `(function(){var t=localStorage.getItem('theme');if(t){document.documentElement.setAttribute('data-theme',t);}else if(window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','dark');}else{document.documentElement.setAttribute('data-theme','light');}})();`,
+        }}
+      />
       <body>
         <script
           type="application/ld+json"
@@ -121,8 +151,7 @@ export default async function RootLayout({
         <StyledComponentsRegistry>
           <ThemeContextProvider>
             <NavBar basicInformation={basicInformation} />
-            {/* <main>{children}</main> */}
-            {children}
+            <main>{children}</main>
           </ThemeContextProvider>
         </StyledComponentsRegistry>
       </body>

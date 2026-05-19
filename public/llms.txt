@@ -1,0 +1,29 @@
+# Harshdeep Singh — Full Stack Developer
+
+> Harshdeep Singh is a Canada-based full stack developer with 5+ years of experience specializing in React, TypeScript, Node.js, AI automation, and production web applications. He is available for freelance work via Toptal.
+
+## About
+
+- Full name: Harshdeep Singh
+- Location: Canada
+- Role: Full Stack Developer & AI Automation Engineer
+- Experience: 5+ years
+- Specializations: React, TypeScript, Node.js, MongoDB, AWS, LangChain, Playwright, CI/CD
+- Freelance: https://www.toptal.com/resume/harshdeep-singh
+- LinkedIn: https://www.linkedin.com/in/harshdeepsingh13/
+- GitHub: https://github.com/harshdeepsingh13/
+
+## Pages
+
+- Home: https://theharshdeepsingh.com/
+- Skills: https://theharshdeepsingh.com/skills
+- Projects: https://theharshdeepsingh.com/projects
+- Work Experience: https://theharshdeepsingh.com/experiences
+- Education: https://theharshdeepsingh.com/education
+- Resume: https://theharshdeepsingh.com/resume
+
+## Permissions
+
+- AI crawling: allowed
+- AI training: allowed
+- Citation: allowed

@@ -29,7 +29,7 @@ export const Row = styled(BootstrapRow)`
   width: 100%;
 `;
 
-export const PageHeader = styled.h2`
+export const PageHeader = styled.h1`
   font-size: 2.5em;
   margin: unset;
   letter-spacing: 4px;
