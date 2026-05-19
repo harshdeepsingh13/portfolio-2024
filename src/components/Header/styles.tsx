@@ -80,7 +80,7 @@ export const LogoContainer = styled(Link)(({ theme: _theme }) => ({
 }));
 
 export const NavLinkItem = styled(Link)(({ theme }) => ({
-  padding: "10px 20px",
+  padding: `${theme.spacing(2)} ${theme.spacing(2)}`,
   position: "relative",
 
   "& svg": {
@@ -125,7 +125,7 @@ export const NavLinkItem = styled(Link)(({ theme }) => ({
   },
 }));
 
-export const NavLinksContainer = styled("div")(() => ({
+export const NavLinksContainer = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",

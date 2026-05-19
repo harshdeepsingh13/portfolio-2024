@@ -1,4 +1,4 @@
-import { createTheme, type PaletteMode } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 
 // ─── Custom palette extensions ───────────────────────────────────────────────
 declare module "@mui/material/styles" {
@@ -34,49 +34,67 @@ declare module "@mui/material/styles" {
   }
 }
 
-// ─── Theme factory ────────────────────────────────────────────────────────────
-export const createAppTheme = (mode: PaletteMode) => {
-  const isDark = mode === "dark";
-  const cyan = isDark ? "#38bdf8" : "#0284c7";
+// ─── Design tokens by mode ───────────────────────────────────────────────────
+const lightTokens = {
+  primary: {
+    main: "#0284c7",
+    glow: "rgba(2, 132, 199, 0.08)",
+    border: "rgba(2, 132, 199, 0.2)",
+    alpha10: "rgba(2, 132, 199, 0.1)",
+    alpha20: "rgba(2, 132, 199, 0.2)",
+    scanLineBg: "linear-gradient(90deg, transparent, rgba(2, 132, 199, 0.5), transparent)",
+  },
+  background: { default: "#F7F7F7", paper: "#e1e1e1" },
+  text: { primary: "#121212", secondary: "#1e1e1e" },
+  divider: "#e1e1e1",
+  custom: {
+    mainHover: "#e1e1e1",
+    secondaryHover: "#d1d1d1",
+    tertiary: "#d1d1d1",
+    tertiaryText: "#2e2e2e",
+    tertiaryTextHover: "#3e3e3e",
+    accentText: "#3e3e3e",
+    accentTextHover: "#4e4e4e",
+    borderHover: "#717171",
+    main60: "rgba(255, 255, 255, 0.6)",
+  },
+};
 
+const darkTokens = {
+  primary: {
+    main: "#38bdf8",
+    glow: "rgba(56, 189, 248, 0.08)",
+    border: "rgba(56, 189, 248, 0.15)",
+    alpha10: "rgba(56, 189, 248, 0.1)",
+    alpha20: "rgba(56, 189, 248, 0.2)",
+    scanLineBg: "linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.28), transparent)",
+  },
+  background: { default: "#121212", paper: "#1e1e1e" },
+  text: { primary: "#F7F7F7", secondary: "#e1e1e1" },
+  divider: "#2e2e2e",
+  custom: {
+    mainHover: "#1e1e1e",
+    secondaryHover: "#2e2e2e",
+    tertiary: "#2e2e2e",
+    tertiaryText: "#d1d1d1",
+    tertiaryTextHover: "#c1c1c1",
+    accentText: "#c1c1c1",
+    accentTextHover: "#b1b1b1",
+    borderHover: "#818181",
+    main60: "rgba(0, 0, 0, 0.6)",
+  },
+};
+
+// ─── Theme factory ────────────────────────────────────────────────────────────
+export const createAppTheme = () => {
   return createTheme({
-    palette: {
-      mode,
-      primary: {
-        main: cyan,
-        glow: isDark ? "rgba(56, 189, 248, 0.08)" : "rgba(2, 132, 199, 0.08)",
-        border: isDark ? "rgba(56, 189, 248, 0.15)" : "rgba(2, 132, 199, 0.2)",
-        alpha10: isDark ? "rgba(56, 189, 248, 0.1)" : "rgba(2, 132, 199, 0.1)",
-        alpha20: isDark ? "rgba(56, 189, 248, 0.2)" : "rgba(2, 132, 199, 0.2)",
-        scanLineBg: isDark
-          ? "linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.28), transparent)"
-          : "linear-gradient(90deg, transparent, rgba(2, 132, 199, 0.5), transparent)",
-      },
-      background: {
-        default: isDark ? "#121212" : "#F7F7F7",
-        paper: isDark ? "#1e1e1e" : "#e1e1e1",
-      },
-      text: {
-        primary: isDark ? "#F7F7F7" : "#121212",
-        secondary: isDark ? "#e1e1e1" : "#1e1e1e",
-      },
-      divider: isDark ? "#2e2e2e" : "#e1e1e1",
-      custom: {
-        mainHover: isDark ? "#1e1e1e" : "#e1e1e1",
-        secondaryHover: isDark ? "#2e2e2e" : "#d1d1d1",
-        tertiary: isDark ? "#2e2e2e" : "#d1d1d1",
-        tertiaryText: isDark ? "#d1d1d1" : "#2e2e2e",
-        tertiaryTextHover: isDark ? "#c1c1c1" : "#3e3e3e",
-        accentText: isDark ? "#c1c1c1" : "#3e3e3e",
-        accentTextHover: isDark ? "#b1b1b1" : "#4e4e4e",
-        borderHover: isDark ? "#818181" : "#717171",
-        main60: isDark ? "rgba(0, 0, 0, 0.6)" : "rgba(255, 255, 255, 0.6)",
-      },
+    colorSchemes: {
+      light: { palette: lightTokens },
+      dark: { palette: darkTokens },
     },
     typography: {
       fontFamily: '"Outfit", sans-serif',
     },
-    // Match Bootstrap breakpoints used throughout the app
     breakpoints: {
       values: { xs: 0, sm: 576, md: 768, lg: 992, xl: 1200 },
     },
@@ -109,7 +127,7 @@ export const createAppTheme = (mode: PaletteMode) => {
             display: flex;
             flex-direction: column;
             background-color: inherit;
-            color: ${isDark ? "#F7F7F7" : "#121212"};
+            margin: 0;
           }
           main {
             flex: 1;
@@ -121,12 +139,12 @@ export const createAppTheme = (mode: PaletteMode) => {
           code {
             font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
           }
-          a { color: ${isDark ? "#3b82f6" : "#2563eb"}; }
+          a { color: inherit; }
           .code-keyword  { color: #bd2864; }
-          .code-string   { color: ${isDark ? "#62c073" : "#297a3a"}; }
-          .code-function { color: ${isDark ? "#52a8ff" : "#0068d6"}; }
-          .code-constant { color: ${isDark ? "#f8c555" : "#f08d49"}; }
-          .code-operator { color: ${isDark ? "#67cdcc" : "#016464"}; }
+          .code-string   { color: inherit; }
+          .code-function { color: #52a8ff; }
+          .code-constant { color: #f8c555; }
+          .code-operator { color: #67cdcc; }
         `,
       },
     },

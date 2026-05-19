@@ -7,10 +7,10 @@ import { createAppTheme } from "@/theme";
 
 type ThemeContextType = {
   theme: string;
-  setTheme: ((theme: string) => string | void) & ((updater: (prev: string) => string) => string | void);
+  setTheme: (theme: string) => void;
 };
 
-export const ThemeContext = createContext({});
+export const ThemeContext = createContext<ThemeContextType | {}>({});
 export const useThemeContext = () => useContext(ThemeContext) as ThemeContextType;
 export const THEME = { LIGHT: "light", DARK: "dark" };
 
@@ -38,8 +38,7 @@ const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  const muiTheme = useMemo(() => createAppTheme(theme as "dark" | "light"), [theme]);
-
+  const muiTheme = useMemo(() => createAppTheme(), []);
   const value = useMemo(() => ({ theme, setTheme }), [theme]);
 
   return (
