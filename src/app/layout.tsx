@@ -1,4 +1,4 @@
-import { NavBar } from "@/components";
+import { Footer, NavBar, ParticlesBackground } from "@/components";
 import { gaID } from "@/config/config";
 import { ThemeContextProvider } from "@/context";
 import "@/lib/fontawesome";
@@ -7,12 +7,12 @@ import StyledComponentsRegistry from "@/lib/styledComponentsRegistry";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import "bootstrap/dist/css/bootstrap.min.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Outfit } from "next/font/google";
 import React from "react";
 import "./globals.css";
 
-const inter = Inter({
-  weight: ["200", "300", "400", "500", "900"],
+const outfit = Outfit({
+  weight: ["200", "300", "400", "500", "700", "900"],
   subsets: ["latin"],
 });
 
@@ -132,7 +132,7 @@ export default async function RootLayout({
   const basicInformation = await getData.getBasicInformation();
 
   return (
-    <html lang="en" className={inter.className}>
+    <html lang="en" className={outfit.className}>
       <script
         dangerouslySetInnerHTML={{
           __html: `(function(){var t=localStorage.getItem('theme');if(t){document.documentElement.setAttribute('data-theme',t);}else if(window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','dark');}else{document.documentElement.setAttribute('data-theme','light');}})();`,
@@ -150,8 +150,12 @@ export default async function RootLayout({
         <GoogleAnalytics gaId={gaID} />
         <StyledComponentsRegistry>
           <ThemeContextProvider>
+            <ParticlesBackground />
             <NavBar basicInformation={basicInformation} />
-            <main>{children}</main>
+            <main>
+              {children}
+              <Footer />
+            </main>
           </ThemeContextProvider>
         </StyledComponentsRegistry>
       </body>

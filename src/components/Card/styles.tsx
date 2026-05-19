@@ -5,14 +5,16 @@ import styled from "styled-components";
 
 export const CardWrapper = styled(Col)`
   padding: 25px;
-  border: thin solid var(--border);
+  border: 1px solid var(--accent-cyan-border);
   border-radius: 20px;
   color: var(--tertiary-text);
   margin-left: calc(var(--bs-gutter-x));
   margin-right: calc(var(--bs-gutter-x));
   width: calc(100% - var(--bs-gutter-x) * 2) !important;
-  background: linear-gradient(90deg, var(--main) 0%, var(--main) 60%, var(--main-60) 100%),
+  background: linear-gradient(90deg, var(--accent-cyan-glow) 0%, var(--main) 60%, var(--main-60) 100%),
     no-repeat right 40%/40% url(${(props) => props.background});
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 
   @media (min-width: 576px) {
     width: calc(100% - var(--bs-gutter-x) * 2) !important;
@@ -27,15 +29,13 @@ export const CardWrapper = styled(Col)`
   }
 
   &:hover {
-    border-color: var(--border-hover);
+    border-color: var(--accent-cyan-20);
+    box-shadow: 0 8px 32px var(--accent-cyan-glow);
     transform: perspective(1000px) rotateX(var(--rot-x)) rotateY(var(--rot-y)) scale(1.01);
     ${(props) =>
       props.accentColor &&
       `background-image: radial-gradient(circle at var(--drop-x) var(--drop-y),
     ${props.accentColor}, transparent);`};
-    /*background-image: radial-gradient(circle at var(--drop-x) var(--drop-y),
-    ${(props) => props.accentColor},
-    transparent);*/
   }
 `;
 

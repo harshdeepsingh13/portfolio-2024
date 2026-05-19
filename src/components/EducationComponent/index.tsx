@@ -21,13 +21,13 @@ const EducationComponent = ({ educationDetails }: { educationDetails: any }) => 
             <>
               <ExperienceRow className={"gx-2"}>
                 {index % 2 === 0 ? (
-                  <EducationCard key={education._id} education={education} />
+                  <EducationCard key={education._id} education={education} $delay={0.15 + index * 0.1} />
                 ) : (
                   <EducationItem lg={6} className={"hidden"} key={`hidden-${education._id}`} />
                 )}
                 <TimelinePoint />
                 {index % 2 !== 0 ? (
-                  <EducationCard key={education._id} education={education} />
+                  <EducationCard key={education._id} education={education} $delay={0.15 + index * 0.1} />
                 ) : (
                   <EducationItem lg={6} className={"hidden"} key={`hidden-${education._id}`} />
                 )}

@@ -17,5 +17,8 @@ export const SkillsRow = styled(Row)`
   }*/
 `;
 
-export const SkillItem = styled(Card)``;
+export const SkillItem = styled(Card)<{ $delay?: number }>`
+  animation: fadeIn 0.5s ease both;
+  animation-delay: ${(props) => props.$delay ?? 0}s;
+`;
 // export const SkillItem = styled.div``;

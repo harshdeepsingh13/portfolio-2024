@@ -5,9 +5,9 @@ import moment from "moment";
 import { SecondaryInformation } from "../ExperienceComponent/styles";
 import { CourseName, EducationItem } from "./styles";
 
-const EducationCard = ({ education }: { education: any }) => {
+const EducationCard = ({ education, $delay }: { education: any; $delay?: number }) => {
   return (
-    <EducationItem lg={6}>
+    <EducationItem lg={6} $delay={$delay}>
       <CourseName>{education.course}</CourseName>
       <SecondaryInformation>
         <FontAwesomeIcon icon={faCalendar} />

@@ -27,7 +27,7 @@ export const getData = {
           dob: 1,
           website: 1,
           socialMediaLinks: 1,
-        }
+        },
       )
       .lean();
 
@@ -60,5 +60,22 @@ export const getData = {
     await connectToDB();
     const data = await educations.find({ user: userEmail }, undefined, { sort: { priority: 1 } }).lean();
     return JSON.parse(JSON.stringify(data));
+  },
+  getPortfolioStats: async () => {
+    await connectToDB();
+    const [projectCount, experiences, allExperiences] = await Promise.all([
+      project.countDocuments({ user: userEmail }),
+      workExperience.find({ user: userEmail, position: { $not: new RegExp("intern", "i") } }, { startDate: 1 }).lean(),
+      workExperience.find({ user: userEmail }, { company: 1 }).lean(),
+    ]);
+    let yearsExperience = 0;
+    if (experiences.length > 0) {
+      const earliest = experiences.reduce((min: any, e: any) =>
+        new Date(e.startDate) < new Date(min.startDate) ? e : min,
+      );
+      yearsExperience = (Date.now() - new Date(earliest.startDate).getTime()) / (1000 * 60 * 60 * 24 * 365);
+    }
+    const clientsServed = new Set((allExperiences as any[]).map((e) => e.company).filter(Boolean)).size;
+    return JSON.parse(JSON.stringify({ projectCount, yearsExperience, clientsServed }));
   },
 };

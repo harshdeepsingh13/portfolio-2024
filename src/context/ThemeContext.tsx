@@ -28,6 +28,15 @@ const ThemeContextProvider = ({ children }: { children: React.ReactNode }) => {
     } catch {}
   }, [theme]);
 
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = (e: MediaQueryListEvent) => {
+      setTheme(e.matches ? THEME.DARK : THEME.LIGHT);
+    };
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
   const value = useMemo(
     () => ({
       theme,

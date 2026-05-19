@@ -7,7 +7,9 @@ import styled from "styled-components";
 export const HeaderWrapper = styled.div`
   color: var(--secondary-text);
   border-bottom: thin solid var(--secondary);
-  background-color: var(--main);
+  background-color: var(--main-60);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   z-index: 999;
   top: 0;
   position: sticky;
@@ -80,9 +82,26 @@ export const LogoContainer = styled(Link)`
 `;
 export const NavLinkItem = styled(Link)`
   padding: 10px 20px;
+  position: relative;
 
   svg {
     margin-right: 10px;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    right: 50%;
+    height: 2px;
+    background: var(--accent-cyan);
+    transition: left 300ms, right 300ms;
+  }
+
+  &:hover::after {
+    left: 0;
+    right: 0;
   }
 
   @media (max-width: 950px) {

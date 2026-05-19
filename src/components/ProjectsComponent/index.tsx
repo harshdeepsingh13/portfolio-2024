@@ -14,8 +14,8 @@ const ProjectsComponent = ({ projects }: { projects: any }) => {
           dashboards, and full-stack product builds.
         </PageLead>
         <ProjectsRow sm={1} md={2} lg={3} className={"gx-2 gy-3"}>
-          {projects?.map((project: any) => (
-            <ProjectCard key={project._id} project={project} />
+          {projects?.map((project: any, index: number) => (
+            <ProjectCard key={project._id} project={project} $delay={0.15 + index * 0.07} />
           ))}
         </ProjectsRow>
       </Container>

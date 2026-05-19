@@ -46,13 +46,13 @@ const ExperienceComponent = ({ experiences: experiencesProps }: { experiences: a
                 <>
                   <ExperienceRow className={"gx-2"} key={experience._id}>
                     {index % 2 === 0 ? (
-                      <ExperienceCard key={experience._id} experience={experience} />
+                      <ExperienceCard key={experience._id} experience={experience} $delay={0.15 + index * 0.1} />
                     ) : (
                       <ExperienceItem lg={6} className={"hidden"} key={`hidden-${experience._id}`} />
                     )}
                     <TimelinePoint />
                     {index % 2 !== 0 ? (
-                      <ExperienceCard key={experience._id} experience={experience} />
+                      <ExperienceCard key={experience._id} experience={experience} $delay={0.15 + index * 0.1} />
                     ) : (
                       <ExperienceItem lg={6} className={"hidden"} key={`hidden-${experience._id}`} />
                     )}
@@ -68,13 +68,13 @@ const ExperienceComponent = ({ experiences: experiencesProps }: { experiences: a
                 <>
                   <ExperienceRow className={"gx-2"} key={experience._id}>
                     {index % 2 === 0 ? (
-                      <ExperienceCard key={experience._id} experience={experience} />
+                      <ExperienceCard key={experience._id} experience={experience} $delay={0.15 + index * 0.1} />
                     ) : (
                       <ExperienceItem lg={6} className={"hidden"} key={`hidden-${experience._id}`} />
                     )}
                     <TimelinePoint />
                     {index % 2 !== 0 ? (
-                      <ExperienceCard key={experience._id} experience={experience} />
+                      <ExperienceCard key={experience._id} experience={experience} $delay={0.15 + index * 0.1} />
                     ) : (
                       <ExperienceItem lg={6} className={"hidden"} key={`hidden-${experience._id}`} />
                     )}

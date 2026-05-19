@@ -30,13 +30,15 @@ export const Row = styled(BootstrapRow)`
 `;
 
 export const PageHeader = styled.h1`
+  font-family: 'Outfit', sans-serif;
   font-size: 2.5em;
   margin: unset;
-  letter-spacing: 4px;
+  letter-spacing: -1px;
   font-weight: 900;
   color: var(--secondary-text);
   text-align: center;
-
+  text-transform: uppercase;
+  animation: fadeSlideUp 0.6s ease both;
 
   @media (min-width: 640px) {
     font-size: 3em;
@@ -49,7 +51,6 @@ export const PageHeader = styled.h1`
   @media (min-width: 1024px) {
     font-size: 4em;
   }
-
 `;
 
 export const PageLead = styled.p`
@@ -60,6 +61,7 @@ export const PageLead = styled.p`
   font-weight: 300;
   line-height: 1.8;
   letter-spacing: 0.2px;
+  animation: fadeSlideUp 0.6s 0.1s ease both;
 
   @media (min-width: 768px) {
     text-align: center;

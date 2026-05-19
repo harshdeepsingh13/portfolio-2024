@@ -20,8 +20,8 @@ const SkillsComponent = ({ skills }: { skills: string[] }) => {
           applications, automate workflows, and ship reliable digital products.
         </PageLead>
         <SkillsRow sm={1} md={2} lg={3} className={"g-3"}>
-          {skills?.map((skill) => (
-            <SkillItem key={skill} sm background={getBackgroundLogo(skill as SkillName)}>
+          {skills?.map((skill, index) => (
+            <SkillItem key={skill} sm background={getBackgroundLogo(skill as SkillName)} $delay={0.15 + index * 0.06}>
               {skill}
             </SkillItem>
           ))}

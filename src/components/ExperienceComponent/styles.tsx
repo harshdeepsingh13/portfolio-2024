@@ -21,8 +21,9 @@ export const TimelineDivider = styled.div`
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 0.5px;
-  border: thin solid var(--border);
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--accent-cyan), transparent);
+  border: none;
 
   @media (max-width: 992px) {
     display: none;
@@ -34,9 +35,11 @@ export const ExperienceRow = styled(Row)`
   align-items: center;
 `;
 
-export const ExperienceItem = styled(Card)`
+export const ExperienceItem = styled(Card)<{ $delay?: number }>`
   width: calc(50% - 32px) !important;
   margin: unset;
+  animation: fadeIn 0.6s ease both;
+  animation-delay: ${(props) => props.$delay ?? 0}s;
   //width: calc(100% - var(--bs-gutter-x) * 2) !important;
 
   @media (max-width: 992px) {

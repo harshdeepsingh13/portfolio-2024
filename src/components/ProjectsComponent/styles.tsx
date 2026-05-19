@@ -8,8 +8,10 @@ export const ProjectsRow = styled(Row)`
   margin-top: 1.25rem;
 `;
 
-export const ProjectItem = styled(Card)`
+export const ProjectItem = styled(Card)<{ $delay?: number }>`
   display: flex;
+  animation: fadeIn 0.5s ease both;
+  animation-delay: ${(props) => props.$delay ?? 0}s;
   flex-direction: column;
   justify-content: space-between;
 
