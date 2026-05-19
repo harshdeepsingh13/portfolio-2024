@@ -14,10 +14,18 @@ export const useThemeContext = () => useContext(ThemeContext) as ThemeContextTyp
 export const THEME = { LIGHT: "light", DARK: "dark" };
 
 const ThemeContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setTheme] = useState(THEME.LIGHT);
+  const [theme, setTheme] = useState(() => {
+    if (typeof document !== "undefined") {
+      return document.documentElement.getAttribute("data-theme") ?? THEME.LIGHT;
+    }
+    return THEME.LIGHT;
+  });
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
+    try {
+      localStorage.setItem("theme", theme);
+    } catch {}
   }, [theme]);
 
   const value = useMemo(
