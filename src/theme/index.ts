@@ -90,6 +90,7 @@ export const createAppTheme = (mode: PaletteMode = "light") => {
           }
           html {
             overflow-y: scroll;
+            height: 100%;
           }
           html[data-theme="dark"] {
             background-color: #121212;
