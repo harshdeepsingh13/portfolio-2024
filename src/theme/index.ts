@@ -115,9 +115,17 @@ export const createAppTheme = () => {
             background-color: #121212;
             color-scheme: dark;
           }
+          html[data-theme="dark"] body {
+            background-color: #121212;
+            color: #F7F7F7;
+          }
           html[data-theme="light"] {
             background-color: #F7F7F7;
             color-scheme: light;
+          }
+          html[data-theme="light"] body {
+            background-color: #F7F7F7;
+            color: #121212;
           }
           body {
             font-family: 'Outfit', sans-serif;
@@ -126,7 +134,6 @@ export const createAppTheme = () => {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background-color: inherit;
             margin: 0;
           }
           main {
