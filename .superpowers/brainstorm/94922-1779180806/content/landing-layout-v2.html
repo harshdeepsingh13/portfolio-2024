@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landing Layout — More Options</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0d1117; font-family: 'Outfit', sans-serif; color: #f8fafc; padding: 24px; }
+
+h2 { font-size: 20px; font-weight: 700; color: #f8fafc; margin-bottom: 6px; text-align: center; }
+.subtitle { text-align: center; color: #6b7280; font-size: 13px; margin-bottom: 24px; font-weight: 300; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 18px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.option-wrap {
+  cursor: pointer;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,0.06);
+  transition: all 0.2s ease;
+}
+.option-wrap:hover { border-color: rgba(56,189,248,0.3); transform: translateY(-2px); }
+.option-wrap.selected { border-color: #38bdf8; box-shadow: 0 0 0 4px rgba(56,189,248,0.12); }
+
+.option-label {
+  background: #161b27;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #38bdf8;
+  border-bottom: 1px solid rgba(56,189,248,0.1);
+}
+.option-label span { color: #6b7280; font-weight: 300; font-size: 11px; display: block; margin-top: 1px; }
+
+.mockup {
+  background: linear-gradient(160deg, #1a2035 0%, #111827 100%);
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  min-height: 300px;
+}
+
+/* Shared glow */
+.glow { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(56,189,248,0.07) 0%, transparent 70%); pointer-events: none; }
+
+/* Shared nav */
+.mock-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px; padding-bottom: 8px;
+  border-bottom: 1px solid rgba(56,189,248,0.08);
+}
+.nav-logo { font-size: 10px; font-weight: 700; color: #38bdf8; letter-spacing: 2px; }
+.nav-links { display: flex; gap: 8px; }
+.nav-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(248,250,252,0.2); }
+
+/* Shared hero left */
+.hero-left { flex: 1; min-width: 0; }
+.hero-badge { font-size: 8px; letter-spacing: 3px; color: #38bdf8; text-transform: uppercase; margin-bottom: 6px; }
+.hero-name { font-size: 22px; font-weight: 900; line-height: 1; letter-spacing: -1px; text-transform: uppercase; color: #f8fafc; margin-bottom: 5px; }
+.cursor { display: inline-block; width: 2px; height: 22px; background: #38bdf8; margin-left: 2px; animation: blink 1s step-end infinite; vertical-align: middle; }
+@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+.hero-role { font-size: 8px; color: rgba(248,250,252,0.4); font-weight: 300; letter-spacing: 2px; margin-bottom: 8px; }
+.hero-bio { font-size: 9px; color: rgba(248,250,252,0.3); font-weight: 300; line-height: 1.6; margin-bottom: 10px; }
+.social-row { display: flex; gap: 5px; }
+.social-dot { width: 16px; height: 16px; border-radius: 50%; background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.2); }
+
+.option-desc {
+  background: #161b27;
+  padding: 12px 14px;
+  font-size: 11px;
+  color: #6b7280;
+  line-height: 1.5;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+.option-desc strong { color: #f8fafc; }
+
+/* ========== OPTION C: Featured Project ========== */
+.opt-c .hero-layout { display: flex; gap: 14px; align-items: flex-start; }
+.opt-c .project-panel { flex: 0 0 150px; }
+.opt-c .panel-label { font-size: 7px; letter-spacing: 2px; color: rgba(56,189,248,0.5); text-transform: uppercase; margin-bottom: 6px; font-weight: 500; }
+.opt-c .project-card {
+  background: rgba(56,189,248,0.04);
+  border: 1px solid rgba(56,189,248,0.15);
+  border-radius: 10px;
+  padding: 12px;
+}
+.opt-c .proj-tag { font-size: 7px; color: #38bdf8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
+.opt-c .proj-name { font-size: 13px; font-weight: 700; color: #f8fafc; margin-bottom: 4px; line-height: 1.2; }
+.opt-c .proj-desc { font-size: 8px; color: rgba(248,250,252,0.35); line-height: 1.5; margin-bottom: 8px; font-weight: 300; }
+.opt-c .tech-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+.opt-c .tech { font-size: 7px; padding: 2px 6px; background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.15); border-radius: 4px; color: #38bdf8; }
+.opt-c .proj-links { display: flex; gap: 6px; }
+.opt-c .proj-link { font-size: 8px; padding: 4px 8px; border-radius: 5px; border: 1px solid rgba(56,189,248,0.2); color: #38bdf8; font-weight: 500; }
+.opt-c .proj-link.primary { background: rgba(56,189,248,0.1); }
+.opt-c .view-all { margin-top: 8px; font-size: 8px; color: rgba(56,189,248,0.5); text-align: center; letter-spacing: 1px; }
+
+/* ========== OPTION D: Stats Dashboard ========== */
+.opt-d .hero-layout { display: flex; gap: 14px; align-items: flex-start; }
+.opt-d .stats-panel { flex: 0 0 150px; display: flex; flex-direction: column; gap: 6px; }
+.opt-d .panel-label { font-size: 7px; letter-spacing: 2px; color: rgba(56,189,248,0.5); text-transform: uppercase; margin-bottom: 2px; font-weight: 500; }
+.opt-d .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.opt-d .stat-card {
+  background: rgba(56,189,248,0.04);
+  border: 1px solid rgba(56,189,248,0.1);
+  border-radius: 8px;
+  padding: 10px 8px;
+  text-align: center;
+}
+.opt-d .stat-num { font-size: 22px; font-weight: 900; color: #38bdf8; line-height: 1; }
+.opt-d .stat-label { font-size: 7px; color: rgba(248,250,252,0.35); font-weight: 300; margin-top: 2px; letter-spacing: 1px; text-transform: uppercase; }
+.opt-d .cta-row { display: flex; flex-direction: column; gap: 5px; margin-top: 4px; }
+.opt-d .cta-btn {
+  padding: 7px 10px;
+  border-radius: 7px;
+  font-size: 9px;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.opt-d .cta-btn.primary { background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.25); color: #38bdf8; }
+.opt-d .cta-btn.secondary { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: rgba(248,250,252,0.4); }
+
+/* ========== OPTION E: Full-width + Below Fold ========== */
+.opt-e .hero-full {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.opt-e .hero-name { font-size: 30px; }
+.opt-e .cursor { height: 30px; }
+.opt-e .divider { height: 1px; background: linear-gradient(90deg, rgba(56,189,248,0.3), transparent); margin: 14px 0; }
+.opt-e .below-fold-label { font-size: 7px; letter-spacing: 3px; color: rgba(56,189,248,0.4); text-transform: uppercase; margin-bottom: 8px; }
+.opt-e .nav-strip { display: flex; gap: 6px; }
+.opt-e .strip-card {
+  flex: 1;
+  background: rgba(56,189,248,0.04);
+  border: 1px solid rgba(56,189,248,0.1);
+  border-radius: 8px;
+  padding: 8px 6px;
+  text-align: center;
+  transition: all 0.2s;
+}
+.opt-e .strip-icon { font-size: 14px; margin-bottom: 3px; }
+.opt-e .strip-name { font-size: 8px; font-weight: 700; color: #f8fafc; }
+.opt-e .strip-arrow { font-size: 8px; color: rgba(56,189,248,0.4); margin-top: 2px; }
+
+/* particles */
+.p { position: absolute; border-radius: 50%; background: rgba(56,189,248,0.5); pointer-events: none; animation: fp 4s ease-in-out infinite; }
+.p1 { width: 3px; height: 3px; top: 20%; right: 15%; }
+.p2 { width: 2px; height: 2px; top: 60%; right: 8%; animation-duration: 5s; animation-delay: 1s; }
+.p3 { width: 3px; height: 3px; top: 35%; right: 35%; animation-duration: 3.5s; animation-delay: 0.5s; }
+@keyframes fp { 0%,100% { transform: translateY(0); opacity: 0.4; } 50% { transform: translateY(-8px); opacity: 0.9; } }
+</style>
+</head>
+<body>
+
+<h2>More landing page layouts</h2>
+<p class="subtitle">All keep the same hero on the left. The question is what else the page shows and how.</p>
+
+<div class="grid">
+
+  <!-- OPTION C: Featured Project -->
+  <div class="option-wrap" id="opt-c" onclick="selectOption('project')">
+    <div class="option-label">C — Featured Project
+      <span>Right col = pinned project card</span>
+    </div>
+    <div class="mockup">
+      <div class="glow" style="width:160px;height:160px;top:-40px;right:-20px;"></div>
+      <div class="p p1"></div><div class="p p2"></div>
+      <div class="mock-nav">
+        <div class="nav-logo">HS</div>
+        <div class="nav-links"><div class="nav-dot"></div><div class="nav-dot"></div><div class="nav-dot"></div></div>
+      </div>
+      <div class="hero-layout opt-c">
+        <div class="hero-left">
+          <div class="hero-badge">— Portfolio</div>
+          <div class="hero-name">Harsh<br>deep<span class="cursor"></span></div>
+          <div class="hero-role">Full-Stack Engineer</div>
+          <div class="hero-bio">Building clean, scalable products with modern web technologies.</div>
+          <div class="social-row">
+            <div class="social-dot"></div><div class="social-dot"></div><div class="social-dot"></div>
+          </div>
+        </div>
+        <div class="project-panel">
+          <div class="panel-label">Featured Work</div>
+          <div class="project-card">
+            <div class="proj-tag">★ Pinned</div>
+            <div class="proj-name">SpendWise</div>
+            <div class="proj-desc">AI-powered expense tracking with smart categorization.</div>
+            <div class="tech-tags">
+              <span class="tech">React</span>
+              <span class="tech">Node</span>
+              <span class="tech">MongoDB</span>
+            </div>
+            <div class="proj-links">
+              <div class="proj-link primary">Live ↗</div>
+              <div class="proj-link">GitHub</div>
+            </div>
+          </div>
+          <div class="view-all">→ View all projects</div>
+        </div>
+      </div>
+    </div>
+    <div class="option-desc">
+      <strong>Leads with your best work.</strong> Right column is one pinned project — name, description, tech stack, live + GitHub links. Immediately shows a recruiter what you've built.
+    </div>
+  </div>
+
+  <!-- OPTION D: Stats Dashboard -->
+  <div class="option-wrap" id="opt-d" onclick="selectOption('stats')">
+    <div class="option-label">D — Stats + CTAs
+      <span>Right col = metrics dashboard</span>
+    </div>
+    <div class="mockup">
+      <div class="glow" style="width:140px;height:140px;top:-20px;right:10px;"></div>
+      <div class="p p1"></div><div class="p p3"></div>
+      <div class="mock-nav">
+        <div class="nav-logo">HS</div>
+        <div class="nav-links"><div class="nav-dot"></div><div class="nav-dot"></div><div class="nav-dot"></div></div>
+      </div>
+      <div class="hero-layout opt-d">
+        <div class="hero-left">
+          <div class="hero-badge">— Portfolio</div>
+          <div class="hero-name">Harsh<br>deep<span class="cursor"></span></div>
+          <div class="hero-role">Full-Stack Engineer</div>
+          <div class="hero-bio">Building clean, scalable products with modern web technologies.</div>
+          <div class="social-row">
+            <div class="social-dot"></div><div class="social-dot"></div><div class="social-dot"></div>
+          </div>
+        </div>
+        <div class="stats-panel opt-d">
+          <div class="panel-label">At a Glance</div>
+          <div class="stat-row">
+            <div class="stat-card"><div class="stat-num">12+</div><div class="stat-label">Projects</div></div>
+            <div class="stat-card"><div class="stat-num">3+</div><div class="stat-label">Yrs Exp</div></div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-card"><div class="stat-num">20+</div><div class="stat-label">Skills</div></div>
+            <div class="stat-card"><div class="stat-num">5★</div><div class="stat-label">Toptal</div></div>
+          </div>
+          <div class="cta-row">
+            <div class="cta-btn primary">Download Resume</div>
+            <div class="cta-btn secondary">View Projects</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="option-desc">
+      <strong>Numbers speak first.</strong> Projects built, years of experience, skills count, Toptal rating — glowing stat cards. Two prominent CTAs: Resume download and View Projects.
+    </div>
+  </div>
+
+  <!-- OPTION E: Full-width + Below Fold Strip -->
+  <div class="option-wrap" id="opt-e" onclick="selectOption('fullwidth')">
+    <div class="option-label">E — Full-width Hero + Strip
+      <span>No right col; nav strip below fold</span>
+    </div>
+    <div class="mockup">
+      <div class="glow" style="width:200px;height:200px;top:-60px;left:-40px;"></div>
+      <div class="p p2"></div><div class="p p3"></div>
+      <div class="mock-nav">
+        <div class="nav-logo">HS</div>
+        <div class="nav-links"><div class="nav-dot"></div><div class="nav-dot"></div><div class="nav-dot"></div></div>
+      </div>
+      <div class="hero-full opt-e">
+        <div class="hero-badge">— Portfolio</div>
+        <div class="hero-name">Harshdeep Singh<span class="cursor"></span></div>
+        <div class="hero-role">Full-Stack Engineer &nbsp;·&nbsp; Toptal Freelancer</div>
+        <div class="hero-bio" style="max-width:380px; font-size:10px;">Building clean, scalable products with modern web technologies. Open to full-time and freelance opportunities.</div>
+        <div class="social-row" style="margin-bottom: 0;">
+          <div class="social-dot"></div><div class="social-dot"></div><div class="social-dot"></div><div class="social-dot"></div>
+        </div>
+        <div class="divider"></div>
+        <div class="below-fold-label">Quick Access</div>
+        <div class="nav-strip opt-e">
+          <div class="strip-card"><div class="strip-icon">⚡</div><div class="strip-name">Skills</div><div class="strip-arrow">↗</div></div>
+          <div class="strip-card"><div class="strip-icon">🗂</div><div class="strip-name">Projects</div><div class="strip-arrow">↗</div></div>
+          <div class="strip-card"><div class="strip-icon">💼</div><div class="strip-name">Experience</div><div class="strip-arrow">↗</div></div>
+          <div class="strip-card"><div class="strip-icon">🎓</div><div class="strip-name">Education</div><div class="strip-arrow">↗</div></div>
+          <div class="strip-card"><div class="strip-icon">📄</div><div class="strip-name">Resume</div><div class="strip-arrow">↓</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="option-desc">
+      <strong>Max hero breathing room.</strong> Name spans full width — best for the typewriter effect. A horizontal nav strip sits inline below, so nothing is hidden below scroll.
+    </div>
+  </div>
+
+</div>
+
+<script>
+function selectOption(choice) {
+  document.querySelectorAll('.option-wrap').forEach(el => el.classList.remove('selected'));
+  const map = { project: 'opt-c', stats: 'opt-d', fullwidth: 'opt-e' };
+  if (map[choice]) document.getElementById(map[choice]).classList.add('selected');
+  if (window.__companion) window.__companion.select(choice);
+}
+</script>
+</body>
+</html>

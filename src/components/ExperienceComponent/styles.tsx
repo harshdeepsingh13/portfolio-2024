@@ -43,12 +43,21 @@ export const ExperienceItem = styled(Card, {
   margin: "unset",
   animation: `${fadeIn} 0.6s ease both`,
   animationDelay: `${delay}s`,
-
+  // Desktop: hidden placeholder takes up space but is invisible
+  "&.hidden": {
+    visibility: "hidden",
+  },
+  // Explicit ≥992px override beats Card's 33.3% breakpoint rule
+  "@media (min-width: 992px)": {
+    width: "calc(50% - 32px) !important",
+  },
+  // Mobile: remove hidden placeholders from flow, full-width cards
   "@media (max-width: 992px)": {
+    width: "100% !important",
     "&.hidden": {
       display: "none",
+      visibility: "visible",
     },
-    width: "100% !important",
   },
 }));
 

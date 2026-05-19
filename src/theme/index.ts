@@ -90,7 +90,17 @@ export const createAppTheme = (mode: PaletteMode) => {
               margin 300ms, transform 300ms;
             user-select: none;
           }
-          html { overflow-y: scroll; }
+          html {
+            overflow-y: scroll;
+          }
+          html[data-theme="dark"] {
+            background-color: #121212;
+            color-scheme: dark;
+          }
+          html[data-theme="light"] {
+            background-color: #F7F7F7;
+            color-scheme: light;
+          }
           body {
             font-family: 'Outfit', sans-serif;
             -webkit-font-smoothing: antialiased;
@@ -98,6 +108,8 @@ export const createAppTheme = (mode: PaletteMode) => {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            background-color: inherit;
+            color: ${isDark ? "#F7F7F7" : "#121212"};
           }
           main {
             flex: 1;

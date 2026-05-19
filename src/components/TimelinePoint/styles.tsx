@@ -5,7 +5,6 @@ export const TimelinePointWrapper = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  backgroundColor: theme.palette.background.default,
   color: theme.palette.custom.accentText,
   zIndex: 2,
   [theme.breakpoints.down("lg")]: {

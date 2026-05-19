@@ -1,7 +1,7 @@
 import { Container, PageHeader } from "@/app/_globalStyles";
 import { blink, fadeIn, fadeSlideUp, scanAnim } from "@/theme/animations";
-import { styled } from "@mui/material/styles";
 import Grid2 from "@mui/material/Grid";
+import { styled } from "@mui/material/styles";
 
 export const HomeWrapper = styled(Container)({
   flex: "1 1 0%",
@@ -189,7 +189,9 @@ export const DetailsColumn = styled(Grid2)(({ theme }) => ({
     color: theme.palette.custom.tertiaryText,
     margin: "1.5em 0",
     textDecoration: "none",
-    display: "inline-block",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.5rem",
 
     "&:hover": {
       transform: "scale(1.01)",

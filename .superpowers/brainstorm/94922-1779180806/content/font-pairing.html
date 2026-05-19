@@ -1,0 +1,148 @@
+<h2>Which font pairing feels right?</h2>
+<p class="subtitle">You're currently using Inter everywhere. Each option pairs a display font (headings) with a body font. The Clean Glass palette stays the same.</p>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=Syne:wght@700;800&family=Inter:wght@300;400;500&family=Outfit:wght@300;400;500;700;900&family=Space+Grotesk:wght@400;700&family=Playfair+Display:ital,wght@0,700;1,400&family=Manrope:wght@300;400;700;800&display=swap');
+
+.font-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 24px;
+}
+.font-card {
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+.font-card:hover { transform: translateY(-2px); }
+.font-card.selected { border-color: #38bdf8; box-shadow: 0 0 0 4px rgba(56,189,248,0.15); }
+
+.font-preview {
+  background: linear-gradient(160deg, #1a2035 0%, #111827 100%);
+  padding: 24px;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+.font-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #38bdf8;
+  margin-bottom: 4px;
+}
+.font-body {
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(248,250,252,0.55);
+  margin-top: 6px;
+}
+
+/* Option A: Syne + Manrope */
+.opt-syne .font-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 32px;
+  color: #f8fafc;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.opt-syne .font-body { font-family: 'Manrope', sans-serif; font-weight: 300; }
+
+/* Option B: DM Serif + DM Sans */
+.opt-dm .font-name {
+  font-family: 'DM Serif Display', serif;
+  font-weight: 400;
+  font-size: 34px;
+  color: #f8fafc;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+.opt-dm .font-body { font-family: 'DM Sans', sans-serif; font-weight: 300; }
+
+/* Option C: Outfit */
+.opt-outfit .font-name {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 30px;
+  color: #f8fafc;
+  letter-spacing: -1.5px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.opt-outfit .font-body { font-family: 'Outfit', sans-serif; font-weight: 300; }
+
+/* Option D: Playfair + Inter */
+.opt-playfair .font-name {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 32px;
+  color: #f8fafc;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+.opt-playfair .font-body { font-family: 'Inter', sans-serif; font-weight: 300; }
+
+.font-info {
+  padding: 12px 16px;
+  background: #111827;
+}
+.font-title { font-size: 13px; font-weight: 700; color: #f8fafc; margin-bottom: 3px; }
+.font-desc { font-size: 11px; color: #6b7280; }
+</style>
+
+<div class="font-cards">
+  <div class="font-card opt-syne" data-choice="syne" onclick="toggleSelect(this)">
+    <div class="font-preview">
+      <div class="font-label">Display + Body</div>
+      <div class="font-name">Harshdeep Singh</div>
+      <div class="font-body">Full-stack engineer crafting clean, scalable products. Based in India.</div>
+    </div>
+    <div class="font-info">
+      <div class="font-title">A — Syne + Manrope</div>
+      <div class="font-desc">Geometric, modern, tech-forward. Syne feels like it belongs in a design studio or dev conference.</div>
+    </div>
+  </div>
+
+  <div class="font-card opt-dm" data-choice="dm" onclick="toggleSelect(this)">
+    <div class="font-preview">
+      <div class="font-label">Display + Body</div>
+      <div class="font-name">Harshdeep Singh</div>
+      <div class="font-body">Full-stack engineer crafting clean, scalable products. Based in India.</div>
+    </div>
+    <div class="font-info">
+      <div class="font-title">B — DM Serif + DM Sans</div>
+      <div class="font-desc">Elegant contrast between serif headlines and clean body text. Sophisticated and warm.</div>
+    </div>
+  </div>
+
+  <div class="font-card opt-outfit" data-choice="outfit" onclick="toggleSelect(this)">
+    <div class="font-preview">
+      <div class="font-label">Single Family</div>
+      <div class="font-name">Harshdeep<br>Singh</div>
+      <div class="font-body">Full-stack engineer crafting clean, scalable products. Based in India.</div>
+    </div>
+    <div class="font-info">
+      <div class="font-title">C — Outfit (All Weights)</div>
+      <div class="font-desc">One family, full range. Heavy uppercase headings contrast with light body text. Bold and cohesive.</div>
+    </div>
+  </div>
+
+  <div class="font-card opt-playfair" data-choice="playfair" onclick="toggleSelect(this)">
+    <div class="font-preview">
+      <div class="font-label">Display + Body</div>
+      <div class="font-name">Harshdeep Singh</div>
+      <div class="font-body">Full-stack engineer crafting clean, scalable products. Based in India.</div>
+    </div>
+    <div class="font-info">
+      <div class="font-title">D — Playfair Display + Inter</div>
+      <div class="font-desc">High-contrast serif headlines give gravitas. Inter body keeps it readable and familiar. Classic editorial.</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,69 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - link "Harshdeep Singh" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - heading "Harshdeep Singh" [level=1] [ref=e6]:
+        - generic [ref=e7]:
+          - img [ref=e8]
+          - generic [ref=e10]: Harshdeep Singh
+    - generic [ref=e11]:
+      - link "Skills" [ref=e12] [cursor=pointer]:
+        - /url: /skills
+        - img [ref=e13]
+        - text: Skills
+      - link "Projects" [ref=e15] [cursor=pointer]:
+        - /url: /projects
+        - img [ref=e16]
+        - text: Projects
+      - link "Experiences" [ref=e18] [cursor=pointer]:
+        - /url: /experiences
+        - img [ref=e19]
+        - text: Experiences
+      - link "Education" [ref=e21] [cursor=pointer]:
+        - /url: /education
+        - img [ref=e22]
+        - text: Education
+      - link "Resume" [ref=e24] [cursor=pointer]:
+        - /url: /resume
+        - img [ref=e25]
+        - text: Resume
+    - img [ref=e29] [cursor=pointer]
+  - navigation "Breadcrumb" [ref=e32]:
+    - list [ref=e33]:
+      - listitem [ref=e34]:
+        - link "Home" [ref=e35] [cursor=pointer]:
+          - /url: /
+        - text: /
+      - listitem [ref=e36]:
+        - generic [ref=e37]: Skills
+  - generic [ref=e38]:
+    - heading "Skills" [level=2] [ref=e39]
+    - paragraph [ref=e40]: A focused collection of the technologies, frameworks, and delivery tools I use to build production web applications, automate workflows, and ship reliable digital products.
+    - generic [ref=e41]:
+      - generic [ref=e42]: React
+      - generic [ref=e43]: JavaScript
+      - generic [ref=e44]: MongoDB
+      - generic [ref=e45]: Node
+      - generic [ref=e46]: MySQL
+      - generic [ref=e47]: AWS
+      - generic [ref=e48]: TypeScript
+      - generic [ref=e49]: HTML
+      - generic [ref=e50]: CSS
+      - generic [ref=e51]: Sass
+      - generic [ref=e52]: Styled Components
+      - generic [ref=e53]: Nginx
+      - generic [ref=e54]: ExpressJS
+      - generic [ref=e55]: Google Analytics
+      - generic [ref=e56]: Spring Boot
+      - generic [ref=e57]: Java
+      - generic [ref=e58]: Vite
+      - generic [ref=e59]: Chart.js
+      - generic [ref=e60]: Open AI API
+      - generic [ref=e61]: Data Visualization
+      - generic [ref=e62]: Zapier
+      - generic [ref=e63]: LangChain
+      - generic [ref=e64]: Playwright
+      - generic [ref=e65]: CI/CD Pipelines
+      - generic [ref=e66]: User Interface
+      - generic [ref=e67]: User Experience
+  - alert [ref=e68]

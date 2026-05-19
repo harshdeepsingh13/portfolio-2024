@@ -169,7 +169,7 @@ const LandingPage = ({
           <ScanLine />
         </ScanContainer>
         <HeroContent>
-        <Row>
+        <Row spacing={3}>
           <DetailsColumn size={{ xs: 12, lg: 8 }}>
             <Name>
               {displayed}

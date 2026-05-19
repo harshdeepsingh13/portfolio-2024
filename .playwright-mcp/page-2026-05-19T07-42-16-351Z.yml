@@ -1,0 +1,72 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - link "Harshdeep Singh" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e7]:
+        - img [ref=e8]
+        - generic [ref=e10]: Harshdeep Singh
+    - generic [ref=e11]:
+      - link "Skills" [ref=e12] [cursor=pointer]:
+        - /url: /skills
+        - img [ref=e13]
+        - text: Skills
+      - link "Projects" [ref=e15] [cursor=pointer]:
+        - /url: /projects
+        - img [ref=e16]
+        - text: Projects
+      - link "Experiences" [ref=e18] [cursor=pointer]:
+        - /url: /experiences
+        - img [ref=e19]
+        - text: Experiences
+      - link "Education" [ref=e21] [cursor=pointer]:
+        - /url: /education
+        - img [ref=e22]
+        - text: Education
+      - link "Resume" [ref=e24] [cursor=pointer]:
+        - /url: /resume
+        - img [ref=e25]
+        - text: Resume
+    - generic [ref=e27]:
+      - link [ref=e28] [cursor=pointer]:
+        - /url: /search
+        - img [ref=e29]
+      - img [ref=e32] [cursor=pointer]
+  - main [ref=e34]:
+    - navigation "Breadcrumb" [ref=e36]:
+      - list [ref=e37]:
+        - listitem [ref=e38]:
+          - link "Home" [ref=e39] [cursor=pointer]:
+            - /url: /
+          - text: /
+        - listitem [ref=e40]:
+          - generic [ref=e41]: Skills
+    - generic [ref=e42]:
+      - heading "Skills" [level=1] [ref=e43]
+      - paragraph [ref=e44]: A focused collection of the technologies, frameworks, and delivery tools I use to build production web applications, automate workflows, and ship reliable digital products.
+      - generic [ref=e45]:
+        - generic [ref=e46]: React
+        - generic [ref=e47]: JavaScript
+        - generic [ref=e48]: MongoDB
+        - generic [ref=e49]: Node
+        - generic [ref=e50]: MySQL
+        - generic [ref=e51]: AWS
+        - generic [ref=e52]: TypeScript
+        - generic [ref=e53]: HTML
+        - generic [ref=e54]: CSS
+        - generic [ref=e55]: Sass
+        - generic [ref=e56]: Styled Components
+        - generic [ref=e57]: Nginx
+        - generic [ref=e58]: ExpressJS
+        - generic [ref=e59]: Google Analytics
+        - generic [ref=e60]: Spring Boot
+        - generic [ref=e61]: Java
+        - generic [ref=e62]: Vite
+        - generic [ref=e63]: Chart.js
+        - generic [ref=e64]: Open AI API
+        - generic [ref=e65]: Data Visualization
+        - generic [ref=e66]: Zapier
+        - generic [ref=e67]: LangChain
+        - generic [ref=e68]: Playwright
+        - generic [ref=e69]: CI/CD Pipelines
+        - generic [ref=e70]: User Interface
+        - generic [ref=e71]: User Experience

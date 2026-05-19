@@ -12,6 +12,7 @@ import type { GridProps as Grid2Props } from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import type { TypographyProps } from "@mui/material/Typography";
 import MuiTabs from "@mui/material/Tabs";
+import type { TabsProps } from "@mui/material/Tabs";
 import MuiTab from "@mui/material/Tab";
 import { fadeSlideUp } from "@/theme/animations";
 
@@ -57,7 +58,6 @@ export const PageHeader = styled(PageHeaderBase)(({ theme }) => ({
   fontWeight: 900,
   color: theme.palette.text.secondary,
   textAlign: "center",
-  textTransform: "uppercase",
   animation: `${fadeSlideUp} 0.6s ease both`,
 
   [theme.breakpoints.up(640)]: {
@@ -134,25 +134,34 @@ export const CardTitle = styled(CardTitleBase)(() => ({
   fontSize: "1.01em",
 }));
 
-export const CustomTabs = styled(MuiTabs)(({ theme }) => ({
+const StyledTabs = styled(MuiTabs)(({ theme }) => ({
   margin: "2em 0 1em 0",
-  justifyContent: "center",
-
+  "& .MuiTabs-flexContainer": {
+    justifyContent: "center",
+    flexWrap: "wrap",
+    gap: "0.5rem",
+  },
+  "& .MuiTabs-indicator": {
+    display: "none",
+  },
   "& .MuiTab-root": {
     color: theme.palette.custom.accentText,
-
+    borderRadius: "50px",
+    padding: "6px 16px",
+    minHeight: "unset",
+    textTransform: "none",
     "@media (max-width: 460px)": {
       fontSize: "0.8em",
     },
   },
-
   "& .Mui-selected": {
-    color: theme.palette.primary.main,
-  },
-
-  "& .MuiTabs-indicator": {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.custom.accentText,
+    color: theme.palette.background.default,
   },
 }));
+
+export const CustomTabs = (props: TabsProps) => (
+  <StyledTabs centered textColor="inherit" {...props} />
+);
 
 export const CustomTab = styled(MuiTab)(() => ({}));

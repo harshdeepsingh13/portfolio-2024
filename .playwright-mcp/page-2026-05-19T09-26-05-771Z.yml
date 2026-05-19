@@ -1,0 +1,208 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - link "Harshdeep Singh" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e7]:
+        - img [ref=e8]
+        - generic [ref=e10]: Harshdeep Singh
+    - generic [ref=e11]:
+      - link "Skills" [ref=e12] [cursor=pointer]:
+        - /url: /skills
+        - img [ref=e13]
+        - text: Skills
+      - link "Projects" [ref=e15] [cursor=pointer]:
+        - /url: /projects
+        - img [ref=e16]
+        - text: Projects
+      - link "Experiences" [ref=e18] [cursor=pointer]:
+        - /url: /experiences
+        - img [ref=e19]
+        - text: Experiences
+      - link "Education" [ref=e21] [cursor=pointer]:
+        - /url: /education
+        - img [ref=e22]
+        - text: Education
+      - link "Resume" [ref=e24] [cursor=pointer]:
+        - /url: /resume
+        - img [ref=e25]
+        - text: Resume
+    - generic [ref=e27]:
+      - link [ref=e28] [cursor=pointer]:
+        - /url: /search
+        - img [ref=e29]
+      - img [ref=e32] [cursor=pointer]
+  - main [ref=e34]:
+    - navigation "Breadcrumb" [ref=e36]:
+      - list [ref=e37]:
+        - listitem [ref=e38]:
+          - link "Home" [ref=e39] [cursor=pointer]:
+            - /url: /
+          - text: /
+        - listitem [ref=e40]:
+          - generic [ref=e41]: Work Experience
+    - generic [ref=e42]:
+      - heading "Professional Experiences" [level=1] [ref=e43]
+      - paragraph [ref=e44]: A timeline of full-stack, SaaS, eCommerce, consulting, and support roles that shaped my ability to ship production software, improve performance, and work across teams.
+      - tablist [ref=e45]:
+        - tab "Professional Experience" [selected] [ref=e46] [cursor=pointer]
+        - tab "Freelance Experience" [ref=e47] [cursor=pointer]
+      - tabpanel "Professional Experience" [ref=e49]:
+        - generic [ref=e50]:
+          - generic [ref=e52]:
+            - generic [ref=e53]:
+              - heading "Intermediate Full Stack Developer" [level=4] [ref=e54]
+              - heading "June, 2025 - Present" [level=5] [ref=e55]:
+                - img [ref=e56]
+                - text: June, 2025 - Present
+              - heading "The Acquisition Group" [level=5] [ref=e58]:
+                - img [ref=e59]
+                - text: The Acquisition Group
+              - heading "Vancouver, BC, Canada" [level=5] [ref=e61]:
+                - img [ref=e62]
+                - text: Vancouver, BC, Canada
+              - generic [ref=e64]:
+                - list [ref=e65]:
+                  - listitem [ref=e66]: Contributed to the design and production deployment of a full-stack marketplace platform used by internal sales teams, supporting concurrent user activity and real-time data interactions across client–seller workflows.
+                  - listitem [ref=e67]: Engineered scalable React-based frontend modules and reusable component architecture, improving maintainability and reducing feature delivery time across iterative releases.
+                  - listitem [ref=e68]: Designed and optimized RESTful APIs using Node.js and Express, improving data retrieval efficiency and reducing dashboard load time by 20% through query tuning and API payload minimization.
+                  - listitem [ref=e69]: Implemented CI/CD workflows to streamline build validation and controlled production releases, ensuring stable deployments and reducing regression risks.
+                  - listitem [ref=e70]: Integrated logging and runtime error monitoring practices to proactively detect and resolve production issues, improving overall application reliability.
+                  - listitem [ref=e71]: Supported secure authentication flows and role-based access control, strengthening API security and protecting sensitive operational data.
+                - paragraph [ref=e72]
+            - img [ref=e74]
+          - generic [ref=e76]:
+            - img [ref=e78]
+            - generic [ref=e80]:
+              - heading "Junior Full Stack Developer" [level=4] [ref=e81]
+              - heading "June, 2024 - June, 2025" [level=5] [ref=e82]:
+                - img [ref=e83]
+                - text: June, 2024 - June, 2025
+              - heading "The Acquisition Group" [level=5] [ref=e85]:
+                - img [ref=e86]
+                - text: The Acquisition Group
+              - heading "Vancouver, BC, Canada" [level=5] [ref=e88]:
+                - img [ref=e89]
+                - text: Vancouver, BC, Canada
+              - list [ref=e92]:
+                - listitem [ref=e93]: Developed and deployed a marketplace platform from the ground up for client-seller collaboration.
+                - listitem [ref=e94]: Engineered sales dashboards with interactive visualizations using React and Chart.js.
+                - listitem [ref=e95]: Spearheaded back-end services with Node.js and Express, optimizing API performance.
+                - listitem [ref=e96]: Strengthened security through comprehensive threat mitigation strategies.
+                - listitem [ref=e97]: Improved dashboard load times by 20% through performance enhancements.
+                - listitem [ref=e98]: Ensured accurate and secure data management with MongoDB.
+                - listitem [ref=e99]: Collaborated closely with design and QA to ensure UI/UX excellence.
+                - listitem [ref=e100]:
+                  - text: "Skills:"
+                  - emphasis [ref=e101]: React, Node.js, Express.js, MongoDB, Chart.js, API Design, Data Visualization
+          - generic [ref=e102]:
+            - generic [ref=e103]:
+              - heading "Agent Advisor" [level=4] [ref=e104]
+              - heading "October, 2023 - June, 2024" [level=5] [ref=e105]:
+                - img [ref=e106]
+                - text: October, 2023 - June, 2024
+              - heading "Best Buy Canada" [level=5] [ref=e108]:
+                - img [ref=e109]
+                - text: Best Buy Canada
+              - heading "Vancouver, BC, Canada" [level=5] [ref=e111]:
+                - img [ref=e112]
+                - text: Vancouver, BC, Canada
+              - list [ref=e115]:
+                - listitem [ref=e116]: Managed Geek Squad department by serving customers with detailed support in buying their perfect gadgets.
+                - listitem [ref=e117]: Used creative sales techniques to find and develop relationships with prospective customers.
+                - listitem [ref=e118]: Trained new employees regarding product features and customer engagement.
+            - img [ref=e120]
+          - generic [ref=e122]:
+            - img [ref=e124]
+            - generic [ref=e126]:
+              - heading "In-Store Geek Squad Agent" [level=4] [ref=e127]
+              - heading "January, 2023 - October, 2023" [level=5] [ref=e128]:
+                - img [ref=e129]
+                - text: January, 2023 - October, 2023
+              - heading "Best Buy Canada" [level=5] [ref=e131]:
+                - img [ref=e132]
+                - text: Best Buy Canada
+              - heading "Vancouver, BC, Canada" [level=5] [ref=e134]:
+                - img [ref=e135]
+                - text: Vancouver, BC, Canada
+              - list [ref=e138]:
+                - listitem [ref=e139]: Evaluated functionality and performance of software and hardware recommending improvements and solutions.
+                - listitem [ref=e140]: Resolved customer inquiries, complaints, and issues providing insightful solutions.
+                - listitem [ref=e141]: Built strong knowledge of product lines to assist customers in selecting products.
+                - listitem [ref=e142]: Fixed Software bugs in computers, mobile phones and tablets of all Operating Systems and brands. (specialized with Apple)
+                - listitem [ref=e143]: Perform Operating System restore and data recovery and management.
+                - listitem [ref=e144]: Long-term client management and providing them with the best Geek Squad services.
+          - generic [ref=e145]:
+            - generic [ref=e146]:
+              - heading "Sales Associate" [level=4] [ref=e147]
+              - heading "June, 2022 - January, 2023" [level=5] [ref=e148]:
+                - img [ref=e149]
+                - text: June, 2022 - January, 2023
+              - heading "Best Buy Canada" [level=5] [ref=e151]:
+                - img [ref=e152]
+                - text: Best Buy Canada
+              - heading "Vancouver, BC, Canada" [level=5] [ref=e154]:
+                - img [ref=e155]
+                - text: Vancouver, BC, Canada
+              - list [ref=e158]:
+                - listitem [ref=e159]: Supported cashiers and customers to locate products, confirm prices and replenish stock.
+                - listitem [ref=e160]: Managed customer issues, return and exchange related issues.
+                - listitem [ref=e161]: Embodied company mission and values through honesty, integrity, and high-quality performance.
+                - listitem [ref=e162]: Maintained knowledge of current and future promotions to inform customer purchasing decisions.
+                - listitem [ref=e163]: Solved various customer issues and escalated advanced concerns to maintain brand loyalty.
+                - listitem [ref=e164]: Explained technical features and demonstrated products to customers.
+            - img [ref=e166]
+          - generic [ref=e168]:
+            - img [ref=e170]
+            - generic [ref=e172]:
+              - heading "Software Engineer" [level=4] [ref=e173]
+              - heading "June, 2021 - December, 2021" [level=5] [ref=e174]:
+                - img [ref=e175]
+                - text: June, 2021 - December, 2021
+              - heading "Tokopedia India Pvt. Ltd." [level=5] [ref=e177]:
+                - img [ref=e178]
+                - text: Tokopedia India Pvt. Ltd.
+              - heading "Delhi NCR, India" [level=5] [ref=e180]:
+                - img [ref=e181]
+                - text: Delhi NCR, India
+              - list [ref=e184]:
+                - listitem [ref=e185]: Developed scalable React-based frontend features for high-traffic e-commerce applications serving large user volumes.
+                - listitem [ref=e186]: Improved application stability by increasing automated test coverage (+30% test cases, +50% statement coverage).
+                - listitem [ref=e187]: Optimized user flows and UI performance in collaboration with product and design teams.
+                - listitem [ref=e188]: Participated in 30+ technical interviews and mentored junior engineers, contributing to engineering team growth.
+                - listitem [ref=e189]: Maintained clean, modular component architecture aligned with frontend engineering best practices.
+          - generic [ref=e190]:
+            - generic [ref=e191]:
+              - heading "Software Engineer" [level=4] [ref=e192]
+              - heading "August, 2019 - June, 2021" [level=5] [ref=e193]:
+                - img [ref=e194]
+                - text: August, 2019 - June, 2021
+              - heading "TO THE NEW Pvt. Ltd" [level=5] [ref=e196]:
+                - img [ref=e197]
+                - text: TO THE NEW Pvt. Ltd
+              - heading "Delhi NCR, India" [level=5] [ref=e199]:
+                - img [ref=e200]
+                - text: Delhi NCR, India
+              - list [ref=e203]:
+                - listitem [ref=e204]: Built and maintained full-stack web applications using JavaScript, Java, REST APIs, and relational databases.
+                - listitem [ref=e205]: Implemented reusable frontend components and integrated backend services across multiple client projects.
+                - listitem [ref=e206]: Developed API integrations and optimized backend workflows to improve application responsiveness.
+                - listitem [ref=e207]: Contributed to backend query optimization and system maintainability improvements.
+            - img [ref=e209]
+          - generic [ref=e211]:
+            - img [ref=e213]
+            - generic [ref=e215]:
+              - heading "Software Developer Intern" [level=4] [ref=e216]
+              - heading "June, 2018 - July, 2018" [level=5] [ref=e217]:
+                - img [ref=e218]
+                - text: June, 2018 - July, 2018
+              - heading "Solid State Physics Laboratory (SSPL), DRDO" [level=5] [ref=e220]:
+                - img [ref=e221]
+                - text: Solid State Physics Laboratory (SSPL), DRDO
+              - heading "New Delhi, India" [level=5] [ref=e223]:
+                - img [ref=e224]
+                - text: New Delhi, India
+              - paragraph [ref=e227]: I was responsible for developing a couple of in-house desktop applications for the Admin department SSPL, DRDO. Technology stack – Java, JavaFX, SQLite.
+    - generic [ref=e228]:
+      - text: Made with
+      - generic [ref=e229]: ♥
+      - text: by Harshdeep Singh

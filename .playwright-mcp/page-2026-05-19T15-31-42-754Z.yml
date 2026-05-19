@@ -1,0 +1,79 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - link "Harshdeep Singh" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e7]:
+        - img [ref=e8]
+        - generic [ref=e10]: Harshdeep Singh
+    - generic [ref=e11]:
+      - link "Skills" [ref=e12] [cursor=pointer]:
+        - /url: /skills
+        - img [ref=e13]
+        - text: Skills
+      - link "Projects" [ref=e15] [cursor=pointer]:
+        - /url: /projects
+        - img [ref=e16]
+        - text: Projects
+      - link "Experiences" [ref=e18] [cursor=pointer]:
+        - /url: /experiences
+        - img [ref=e19]
+        - text: Experiences
+      - link "Education" [ref=e21] [cursor=pointer]:
+        - /url: /education
+        - img [ref=e22]
+        - text: Education
+      - link "Resume" [ref=e24] [cursor=pointer]:
+        - /url: /resume
+        - img [ref=e25]
+        - text: Resume
+    - generic [ref=e27]:
+      - link [ref=e28] [cursor=pointer]:
+        - /url: /search
+        - img [ref=e29]
+      - img [ref=e32] [cursor=pointer]
+  - main [ref=e34]:
+    - generic [ref=e37]:
+      - generic [ref=e38]:
+        - heading [level=1] [ref=e39]
+        - generic [ref=e41]: Full-stack software engineer with 5+ years of experience building and scaling high-performance web applications using React, TypeScript, Node.js, and cloud-native architectures. Recently focused on AI-driven development, leveraging LLMs, LangChain, and browser automation (Playwright MCP) to design intelligent workflows, automate content pipelines, and accelerate product delivery. Strong advocate of AI-assisted engineering with tools like Claude Code and GitHub Copilot to enhance developer productivity and code quality. Proven track record of owning end-to-end features, optimizing performance and accessibility, and collaborating across cross-functional teams in startup and enterprise environments.
+        - generic [ref=e42]:
+          - link [ref=e43] [cursor=pointer]:
+            - /url: mailto:harshdeepsingh13@gmail.com
+            - img [ref=e44]
+          - link [ref=e46] [cursor=pointer]:
+            - /url: https://fb.com/harshdeepsingh12
+            - img [ref=e47]
+          - link [ref=e49] [cursor=pointer]:
+            - /url: https://github.com/harshdeepsingh13/
+            - img [ref=e50]
+          - link [ref=e52] [cursor=pointer]:
+            - /url: https://instagram.com/harshdeepsingh13
+            - img [ref=e53]
+          - link [ref=e55] [cursor=pointer]:
+            - /url: https://www.linkedin.com/in/harshdeepsingh13/
+            - img [ref=e56]
+        - link "Freelancer atToptal Logo" [ref=e58] [cursor=pointer]:
+          - /url: https://www.toptal.com/resume/harshdeep-singh
+          - text: Freelancer at
+          - img "Toptal Logo" [ref=e59]
+      - generic [ref=e61]:
+        - generic [ref=e62]: At a Glance
+        - generic [ref=e63]:
+          - generic [ref=e64] [cursor=pointer]:
+            - generic [ref=e65]: "0"
+            - generic [ref=e66]: Projects
+          - generic [ref=e67] [cursor=pointer]:
+            - generic [ref=e68]: "0"
+            - generic [ref=e69]: Skills
+          - generic [ref=e70] [cursor=pointer]:
+            - generic [ref=e71]: 0+
+            - generic [ref=e72]: Yrs Exp
+          - generic [ref=e73] [cursor=pointer]:
+            - generic [ref=e74]: "0"
+            - generic [ref=e75]: Roles
+        - link "View Resume →" [ref=e76] [cursor=pointer]:
+          - /url: /resume
+    - generic [ref=e77]:
+      - text: Made with
+      - generic [ref=e78]: ♥
+      - text: by Harshdeep Singh

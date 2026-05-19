@@ -1,0 +1,140 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - link "Harshdeep Singh" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e7]:
+        - img [ref=e8]
+        - generic [ref=e10]: Harshdeep Singh
+    - generic [ref=e11]:
+      - link "Skills" [ref=e12] [cursor=pointer]:
+        - /url: /skills
+        - img [ref=e13]
+        - text: Skills
+      - link "Projects" [ref=e15] [cursor=pointer]:
+        - /url: /projects
+        - img [ref=e16]
+        - text: Projects
+      - link "Experiences" [ref=e18] [cursor=pointer]:
+        - /url: /experiences
+        - img [ref=e19]
+        - text: Experiences
+      - link "Education" [ref=e21] [cursor=pointer]:
+        - /url: /education
+        - img [ref=e22]
+        - text: Education
+      - link "Resume" [ref=e24] [cursor=pointer]:
+        - /url: /resume
+        - img [ref=e25]
+        - text: Resume
+    - generic [ref=e27]:
+      - link [ref=e28] [cursor=pointer]:
+        - /url: /search
+        - img [ref=e29]
+      - img [ref=e32] [cursor=pointer]
+  - main [ref=e34]:
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - heading "Harshdeep Singh" [level=1] [ref=e38]
+        - generic [ref=e39]: Full-stack software engineer with 5+ years of experience building and scaling high-performance web applications using React, TypeScript, Node.js, and cloud-native architectures. Recently focused on AI-driven development, leveraging LLMs, LangChain, and browser automation (Playwright MCP) to design intelligent workflows, automate content pipelines, and accelerate product delivery. Strong advocate of AI-assisted engineering with tools like Claude Code and GitHub Copilot to enhance developer productivity and code quality. Proven track record of owning end-to-end features, optimizing performance and accessibility, and collaborating across cross-functional teams in startup and enterprise environments.
+        - generic [ref=e40]:
+          - link [ref=e41] [cursor=pointer]:
+            - /url: mailto:harshdeepsingh13@gmail.com
+            - img [ref=e42]
+          - link [ref=e44] [cursor=pointer]:
+            - /url: https://fb.com/harshdeepsingh12
+            - img [ref=e45]
+          - link [ref=e47] [cursor=pointer]:
+            - /url: https://github.com/harshdeepsingh13/
+            - img [ref=e48]
+          - link [ref=e50] [cursor=pointer]:
+            - /url: https://instagram.com/harshdeepsingh13
+            - img [ref=e51]
+          - link [ref=e53] [cursor=pointer]:
+            - /url: https://www.linkedin.com/in/harshdeepsingh13/
+            - img [ref=e54]
+        - link "Freelancer atToptal Logo" [ref=e56] [cursor=pointer]:
+          - /url: https://www.toptal.com/resume/harshdeep-singh
+          - text: Freelancer at
+          - img "Toptal Logo" [ref=e57]
+      - generic [ref=e59]:
+        - img [ref=e61] [cursor=pointer]
+        - generic [ref=e63]:
+          - generic [ref=e64]:
+            - img "React" [ref=e65]
+            - generic [ref=e66]: React
+          - generic [ref=e67]:
+            - img "JavaScript" [ref=e68]
+            - generic [ref=e69]: JavaScript
+          - generic [ref=e70]:
+            - img "MongoDB" [ref=e71]
+            - generic [ref=e72]: MongoDB
+          - generic [ref=e73]:
+            - img "Node" [ref=e74]
+            - generic [ref=e75]: Node
+          - generic [ref=e76]:
+            - img "MySQL" [ref=e77]
+            - generic [ref=e78]: MySQL
+          - generic [ref=e79]:
+            - img "AWS" [ref=e80]
+            - generic [ref=e81]: AWS
+          - generic [ref=e82]:
+            - img "TypeScript" [ref=e83]
+            - generic [ref=e84]: TypeScript
+          - generic [ref=e85]:
+            - img "HTML" [ref=e86]
+            - generic [ref=e87]: HTML
+          - generic [ref=e88]:
+            - img "CSS" [ref=e89]
+            - generic [ref=e90]: CSS
+          - generic [ref=e91]:
+            - img "Sass" [ref=e92]
+            - generic [ref=e93]: Sass
+          - generic [ref=e94]:
+            - img "Styled Components" [ref=e95]
+            - generic [ref=e96]: Styled Components
+          - generic [ref=e97]:
+            - img "Nginx" [ref=e98]
+            - generic [ref=e99]: Nginx
+          - generic [ref=e100]:
+            - img "ExpressJS" [ref=e101]
+            - generic [ref=e102]: ExpressJS
+          - generic [ref=e103]:
+            - img "Google Analytics" [ref=e104]
+            - generic [ref=e105]: Google Analytics
+          - generic [ref=e106]:
+            - img "Spring Boot" [ref=e107]
+            - generic [ref=e108]: Spring Boot
+          - generic [ref=e109]:
+            - img "Java" [ref=e110]
+            - generic [ref=e111]: Java
+          - generic [ref=e112]:
+            - img "Vite" [ref=e113]
+            - generic [ref=e114]: Vite
+          - generic [ref=e115]:
+            - img "Chart.js" [ref=e116]
+            - generic [ref=e117]: Chart.js
+          - generic [ref=e118]:
+            - img "Open AI API" [ref=e119]
+            - generic [ref=e120]: Open AI API
+          - generic [ref=e121]:
+            - img "Data Visualization" [ref=e122]
+            - generic [ref=e123]: Data Visualization
+          - generic [ref=e124]:
+            - img "Zapier" [ref=e125]
+            - generic [ref=e126]: Zapier
+          - generic [ref=e127]:
+            - img "LangChain" [ref=e128]
+            - generic [ref=e129]: LangChain
+          - generic [ref=e130]:
+            - img "Playwright" [ref=e131]
+            - generic [ref=e132]: Playwright
+          - generic [ref=e133]:
+            - img "CI/CD Pipelines" [ref=e134]
+            - generic [ref=e135]: CI/CD Pipelines
+          - generic [ref=e136]:
+            - img "User Interface" [ref=e137]
+            - generic [ref=e138]: User Interface
+          - generic [ref=e139]:
+            - img "User Experience" [ref=e140]
+            - generic [ref=e141]: User Experience
+        - img [ref=e143] [cursor=pointer]

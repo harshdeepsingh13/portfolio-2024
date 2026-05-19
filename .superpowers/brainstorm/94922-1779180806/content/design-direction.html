@@ -1,0 +1,269 @@
+<h2>Which aesthetic direction feels like <em>you</em>?</h2>
+<p class="subtitle">Each direction will shape the colors, typography, animations, and overall vibe of every page.</p>
+
+<style>
+.design-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 24px;
+}
+.design-card {
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  position: relative;
+}
+.design-card:hover { transform: translateY(-2px); }
+.design-card.selected { border-color: #6366f1; box-shadow: 0 0 0 4px rgba(99,102,241,0.2); }
+.design-card .preview {
+  height: 220px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.design-card .label-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.design-card .preview-name {
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.design-card .preview-role {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: auto;
+}
+.design-card .preview-tags {
+  display: flex;
+  gap: 6px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.design-card .tag {
+  font-size: 9px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+.design-card .card-info {
+  padding: 14px 16px;
+  background: #1a1a1a;
+}
+.design-card .card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.design-card .card-desc {
+  font-size: 12px;
+  color: #888;
+  line-height: 1.5;
+}
+
+/* Option A: Dark Luxury */
+.option-a .preview {
+  background: #0a0a0a;
+  font-family: 'Georgia', serif;
+}
+.option-a .label-tag { color: #c9a96e; }
+.option-a .preview-name { color: #f5f0e8; font-family: 'Georgia', serif; letter-spacing: -0.5px; font-size: 32px; }
+.option-a .preview-role { color: #8a7d6a; }
+.option-a .tag { background: rgba(201,169,110,0.15); color: #c9a96e; border: 1px solid rgba(201,169,110,0.3); }
+.option-a::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 120px; height: 120px;
+  background: radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.option-a .grid-line {
+  position: absolute;
+  bottom: 60px; left: 0; right: 0;
+  height: 1px;
+  background: rgba(201,169,110,0.2);
+}
+
+/* Option B: Kinetic Gradient */
+.option-b .preview {
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  font-family: 'Arial', sans-serif;
+  position: relative;
+}
+.option-b::after {
+  content: '';
+  position: absolute;
+  top: 20px; right: 20px;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,0.6), transparent);
+  filter: blur(20px);
+  pointer-events: none;
+}
+.option-b .label-tag { color: #a78bfa; }
+.option-b .preview-name {
+  color: #fff;
+  background: linear-gradient(90deg, #a78bfa, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: 'Arial Black', sans-serif;
+  font-size: 30px;
+}
+.option-b .preview-role { color: rgba(255,255,255,0.5); }
+.option-b .tag { background: rgba(167,139,250,0.2); color: #a78bfa; border: 1px solid rgba(167,139,250,0.3); border-radius: 20px; }
+
+/* Option C: Editorial Brutalist */
+.option-c .preview {
+  background: #f0ede8;
+  font-family: 'Courier New', monospace;
+  border-bottom: 3px solid #111;
+}
+.option-c .label-tag { color: #111; font-family: 'Courier New', monospace; }
+.option-c .preview-name {
+  color: #111;
+  font-family: 'Georgia', serif;
+  font-size: 34px;
+  font-weight: 900;
+  letter-spacing: -2px;
+  text-transform: uppercase;
+  line-height: 0.95;
+}
+.option-c .preview-role { color: #555; font-family: 'Courier New', monospace; }
+.option-c .tag { background: #111; color: #f0ede8; font-family: 'Courier New', monospace; border-radius: 0; }
+.option-c .accent-block {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  width: 50px;
+  height: 50px;
+  background: #e63946;
+}
+
+/* Option D: Clean Glass */
+.option-d .preview {
+  background: linear-gradient(160deg, #1a2035 0%, #111827 100%);
+  font-family: 'system-ui', sans-serif;
+}
+.option-d .label-tag { color: #38bdf8; }
+.option-d .preview-name {
+  color: #f8fafc;
+  font-weight: 800;
+  font-size: 28px;
+  letter-spacing: -0.5px;
+}
+.option-d .preview-role { color: rgba(248,250,252,0.4); }
+.option-d .tag {
+  background: rgba(56,189,248,0.1);
+  color: #38bdf8;
+  border: 1px solid rgba(56,189,248,0.2);
+  border-radius: 6px;
+}
+.option-d .glass-card {
+  position: absolute;
+  bottom: 16px; right: 16px;
+  width: 80px; height: 45px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+.option-d .glow {
+  position: absolute;
+  top: -10px; right: 30px;
+  width: 100px; height: 100px;
+  background: radial-gradient(circle, rgba(56,189,248,0.15) 0%, transparent 70%);
+  filter: blur(10px);
+}
+</style>
+
+<div class="design-cards">
+  <!-- Option A: Dark Luxury -->
+  <div class="design-card option-a" data-choice="luxury" onclick="toggleSelect(this)">
+    <div class="preview">
+      <div class="grid-line"></div>
+      <span class="label-tag">— Portfolio —</span>
+      <div class="preview-name">Harshdeep<br>Singh</div>
+      <div class="preview-role">Full-Stack Engineer</div>
+      <div class="preview-tags">
+        <span class="tag">React</span>
+        <span class="tag">Node.js</span>
+        <span class="tag">TypeScript</span>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-title">A — Dark Luxury</div>
+      <div class="card-desc">Deep blacks, gold accents, serif display type. Refined, editorial feel. Animations: slow reveals, parallax, elegant fade-ins.</div>
+    </div>
+  </div>
+
+  <!-- Option B: Kinetic Gradient -->
+  <div class="design-card option-b" data-choice="kinetic" onclick="toggleSelect(this)">
+    <div class="preview">
+      <span class="label-tag">— Portfolio —</span>
+      <div class="preview-name">Harshdeep<br>Singh</div>
+      <div class="preview-role">Full-Stack Engineer</div>
+      <div class="preview-tags">
+        <span class="tag">React</span>
+        <span class="tag">Node.js</span>
+        <span class="tag">TypeScript</span>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-title">B — Kinetic Gradient</div>
+      <div class="card-desc">Animated gradient mesh background, purple/pink palette, bold motion. Three.js particle field on hero. High-energy, modern.</div>
+    </div>
+  </div>
+
+  <!-- Option C: Editorial Brutalist -->
+  <div class="design-card option-c" data-choice="brutalist" onclick="toggleSelect(this)">
+    <div class="preview">
+      <div class="accent-block"></div>
+      <span class="label-tag">// PORTFOLIO</span>
+      <div class="preview-name">HARSH-<br>DEEP</div>
+      <div class="preview-role">$ full-stack-engineer</div>
+      <div class="preview-tags">
+        <span class="tag">REACT</span>
+        <span class="tag">NODE</span>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-title">C — Editorial Brutalist</div>
+      <div class="card-desc">Warm off-white, heavy typography, stark contrast. Newspaper meets code terminal. Bold, unforgettable, high-personality.</div>
+    </div>
+  </div>
+
+  <!-- Option D: Clean Glass -->
+  <div class="design-card option-d" data-choice="glass" onclick="toggleSelect(this)">
+    <div class="preview">
+      <div class="glow"></div>
+      <div class="glass-card"></div>
+      <span class="label-tag">Portfolio</span>
+      <div class="preview-name">Harshdeep<br>Singh</div>
+      <div class="preview-role">Full-Stack Engineer</div>
+      <div class="preview-tags">
+        <span class="tag">React</span>
+        <span class="tag">Node.js</span>
+        <span class="tag">TypeScript</span>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-title">D — Clean Glass</div>
+      <div class="card-desc">Dark navy base, glassmorphism cards, cyan accent. Crisp, tech-forward, clean lines. Smooth scroll animations.</div>
+    </div>
+  </div>
+</div>

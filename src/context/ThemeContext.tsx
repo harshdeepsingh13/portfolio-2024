@@ -45,7 +45,7 @@ const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
   return (
     <ThemeContext.Provider value={value}>
       <ThemeProvider theme={muiTheme}>
-        <CssBaseline />
+        <CssBaseline key={theme} />
         {children}
       </ThemeProvider>
     </ThemeContext.Provider>
