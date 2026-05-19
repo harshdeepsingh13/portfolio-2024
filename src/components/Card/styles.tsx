@@ -1,9 +1,9 @@
 "use client";
 
+import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import Grid2 from "@mui/material/Grid";
 
-export const CardWrapper = styled(Grid2, {
+export const CardWrapper = styled(Box, {
   shouldForwardProp: (prop) =>
     prop !== "background" && prop !== "accentColor" && prop !== "sm" && prop !== "lg",
 })<{ background?: string; accentColor?: string; sm?: boolean; lg?: number | boolean }>(
@@ -12,8 +12,8 @@ export const CardWrapper = styled(Grid2, {
     border: `1px solid ${theme.palette.primary.border}`,
     borderRadius: "20px",
     color: theme.palette.custom.tertiaryText,
-    marginLeft: "1.5rem",
-    marginRight: "1.5rem",
+    // marginLeft: "1.5rem",
+    // marginRight: "1.5rem",
     width: "calc(100% - 1.5rem * 2) !important",
     background: background
       ? `linear-gradient(90deg, ${theme.palette.primary.glow} 0%, ${theme.palette.background.default} 60%, ${theme.palette.custom.main60} 100%), no-repeat right 40%/40% url(${background})`

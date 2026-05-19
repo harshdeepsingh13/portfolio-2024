@@ -19,7 +19,7 @@ const SkillsComponent = ({ skills }: { skills: string[] }) => {
           A focused collection of the technologies, frameworks, and delivery tools I use to build production web
           applications, automate workflows, and ship reliable digital products.
         </PageLead>
-        <SkillsRow>
+        <SkillsRow spacing={2}>
           {skills?.map((skill, index) => (
             <SkillItem key={skill} sm background={getBackgroundLogo(skill as SkillName)} delay={0.15 + index * 0.06}>
               {skill}
