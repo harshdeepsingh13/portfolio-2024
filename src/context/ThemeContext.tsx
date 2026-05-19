@@ -1,9 +1,9 @@
 "use client";
 
+import { createAppTheme } from "@/theme";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { createAppTheme } from "@/theme";
 
 type ThemeContextType = {
   theme: string;
@@ -38,7 +38,7 @@ const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  const muiTheme = useMemo(() => createAppTheme(), []);
+  const muiTheme = useMemo(() => createAppTheme(theme as "light" | "dark"), [theme]);
   const value = useMemo(() => ({ theme, setTheme }), [theme]);
 
   return (

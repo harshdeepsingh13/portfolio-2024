@@ -1,9 +1,9 @@
 import { Footer, NavBar, ParticlesBackground } from "@/components";
 import { gaID } from "@/config/config";
 import { ThemeContextProvider } from "@/context";
+import EmotionRegistry from "@/lib/emotionRegistry";
 import "@/lib/fontawesome";
 import { getData } from "@/lib/getData";
-import EmotionRegistry from "@/lib/emotionRegistry";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";

@@ -1,4 +1,4 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme, type PaletteMode } from "@mui/material/styles";
 
 // ─── Custom palette extensions ───────────────────────────────────────────────
 declare module "@mui/material/styles" {
@@ -34,63 +34,43 @@ declare module "@mui/material/styles" {
   }
 }
 
-// ─── Design tokens by mode ───────────────────────────────────────────────────
-const lightTokens = {
-  primary: {
-    main: "#0284c7",
-    glow: "rgba(2, 132, 199, 0.08)",
-    border: "rgba(2, 132, 199, 0.2)",
-    alpha10: "rgba(2, 132, 199, 0.1)",
-    alpha20: "rgba(2, 132, 199, 0.2)",
-    scanLineBg: "linear-gradient(90deg, transparent, rgba(2, 132, 199, 0.5), transparent)",
-  },
-  background: { default: "#F7F7F7", paper: "#e1e1e1" },
-  text: { primary: "#121212", secondary: "#1e1e1e" },
-  divider: "#e1e1e1",
-  custom: {
-    mainHover: "#e1e1e1",
-    secondaryHover: "#d1d1d1",
-    tertiary: "#d1d1d1",
-    tertiaryText: "#2e2e2e",
-    tertiaryTextHover: "#3e3e3e",
-    accentText: "#3e3e3e",
-    accentTextHover: "#4e4e4e",
-    borderHover: "#717171",
-    main60: "rgba(255, 255, 255, 0.6)",
-  },
-};
-
-const darkTokens = {
-  primary: {
-    main: "#38bdf8",
-    glow: "rgba(56, 189, 248, 0.08)",
-    border: "rgba(56, 189, 248, 0.15)",
-    alpha10: "rgba(56, 189, 248, 0.1)",
-    alpha20: "rgba(56, 189, 248, 0.2)",
-    scanLineBg: "linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.28), transparent)",
-  },
-  background: { default: "#121212", paper: "#1e1e1e" },
-  text: { primary: "#F7F7F7", secondary: "#e1e1e1" },
-  divider: "#2e2e2e",
-  custom: {
-    mainHover: "#1e1e1e",
-    secondaryHover: "#2e2e2e",
-    tertiary: "#2e2e2e",
-    tertiaryText: "#d1d1d1",
-    tertiaryTextHover: "#c1c1c1",
-    accentText: "#c1c1c1",
-    accentTextHover: "#b1b1b1",
-    borderHover: "#818181",
-    main60: "rgba(0, 0, 0, 0.6)",
-  },
-};
-
 // ─── Theme factory ────────────────────────────────────────────────────────────
-export const createAppTheme = () => {
+export const createAppTheme = (mode: PaletteMode = "light") => {
+  const isDark = mode === "dark";
+
   return createTheme({
-    colorSchemes: {
-      light: { palette: lightTokens },
-      dark: { palette: darkTokens },
+    palette: {
+      mode,
+      primary: {
+        main: isDark ? "#38bdf8" : "#0284c7",
+        glow: isDark ? "rgba(56, 189, 248, 0.08)" : "rgba(2, 132, 199, 0.08)",
+        border: isDark ? "rgba(56, 189, 248, 0.15)" : "rgba(2, 132, 199, 0.2)",
+        alpha10: isDark ? "rgba(56, 189, 248, 0.1)" : "rgba(2, 132, 199, 0.1)",
+        alpha20: isDark ? "rgba(56, 189, 248, 0.2)" : "rgba(2, 132, 199, 0.2)",
+        scanLineBg: isDark
+          ? "linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.28), transparent)"
+          : "linear-gradient(90deg, transparent, rgba(2, 132, 199, 0.5), transparent)",
+      },
+      background: {
+        default: isDark ? "#121212" : "#F7F7F7",
+        paper: isDark ? "#1e1e1e" : "#e1e1e1",
+      },
+      text: {
+        primary: isDark ? "#F7F7F7" : "#121212",
+        secondary: isDark ? "#e1e1e1" : "#1e1e1e",
+      },
+      divider: isDark ? "#2e2e2e" : "#e1e1e1",
+      custom: {
+        mainHover: isDark ? "#1e1e1e" : "#e1e1e1",
+        secondaryHover: isDark ? "#2e2e2e" : "#d1d1d1",
+        tertiary: isDark ? "#2e2e2e" : "#d1d1d1",
+        tertiaryText: isDark ? "#d1d1d1" : "#2e2e2e",
+        tertiaryTextHover: isDark ? "#c1c1c1" : "#3e3e3e",
+        accentText: isDark ? "#c1c1c1" : "#3e3e3e",
+        accentTextHover: isDark ? "#b1b1b1" : "#4e4e4e",
+        borderHover: isDark ? "#818181" : "#717171",
+        main60: isDark ? "rgba(0, 0, 0, 0.6)" : "rgba(255, 255, 255, 0.6)",
+      },
     },
     typography: {
       fontFamily: '"Outfit", sans-serif',
