@@ -3,13 +3,11 @@ import { gaID } from "@/config/config";
 import { ThemeContextProvider } from "@/context";
 import "@/lib/fontawesome";
 import { getData } from "@/lib/getData";
-import StyledComponentsRegistry from "@/lib/styledComponentsRegistry";
+import EmotionRegistry from "@/lib/emotionRegistry";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import "bootstrap/dist/css/bootstrap.min.css";
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import React from "react";
-import "./globals.css";
 
 const outfit = Outfit({
   weight: ["200", "300", "400", "500", "700", "900"],
@@ -141,7 +139,7 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
         <GoogleAnalytics gaId={gaID} />
-        <StyledComponentsRegistry>
+        <EmotionRegistry>
           <ThemeContextProvider>
             <ParticlesBackground />
             <NavBar basicInformation={basicInformation} />
@@ -150,7 +148,7 @@ export default async function RootLayout({
               <Footer />
             </main>
           </ThemeContextProvider>
-        </StyledComponentsRegistry>
+        </EmotionRegistry>
       </body>
     </html>
   );

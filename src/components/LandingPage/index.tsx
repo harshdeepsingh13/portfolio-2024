@@ -6,10 +6,10 @@ import Image from "@/elements/Image";
 import { faFacebookF, faGithub, faInstagram, faLinkedinIn } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Grid2 from "@mui/material/Grid";
 import { sendGAEvent } from "@next/third-parties/google";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { Col } from "react-bootstrap";
 import {
   DetailsColumn,
   HeroContent,
@@ -72,7 +72,7 @@ const AnimatedStatCard = ({
 }) => {
   const count = useCountUp(value, 1200, delay * 1000);
   const card = (
-    <StatCard $delay={delay}>
+    <StatCard delay={delay}>
       <StatNum>
         {count}
         {suffix}
@@ -170,7 +170,7 @@ const LandingPage = ({
         </ScanContainer>
         <HeroContent>
         <Row>
-          <DetailsColumn lg={8}>
+          <DetailsColumn size={{ xs: 12, lg: 8 }}>
             <Name>
               {displayed}
               <TypewriterCursor />
@@ -203,7 +203,7 @@ const LandingPage = ({
               />
             </a>
           </DetailsColumn>
-          <Col lg={4}>
+          <Grid2 size={{ xs: 12, lg: 4 }}>
             <StatsPanel>
               <StatsPanelLabel>At a Glance</StatsPanelLabel>
               <StatsGrid>
@@ -221,7 +221,7 @@ const LandingPage = ({
               </StatsGrid>
               <ResumeBtn as={Link} href="/resume">View Resume →</ResumeBtn>
             </StatsPanel>
-          </Col>
+          </Grid2>
         </Row>
         </HeroContent>
       </HomeWrapper>

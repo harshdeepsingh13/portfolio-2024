@@ -1,63 +1,66 @@
-import { Row } from "@/app/_globalStyles";
-import styled from "styled-components";
+import Image from "@/elements/Image";
+import { fadeIn } from "@/theme/animations";
+import { styled } from "@mui/material/styles";
 import Card from "../Card";
 import { CardTag } from "../Card/styles";
-import Image from "@/elements/Image";
+import { Row } from "@/app/_globalStyles";
 
-export const ProjectsRow = styled(Row)`
-  margin-top: 1.25rem;
-`;
+export const ProjectsRow = styled(Row)({
+  marginTop: "1.25rem",
+});
 
-export const ProjectItem = styled(Card)<{ $delay?: number }>`
-  display: flex;
-  animation: fadeIn 0.5s ease both;
-  animation-delay: ${(props) => props.$delay ?? 0}s;
-  flex-direction: column;
-  justify-content: space-between;
+export const ProjectItem = styled(Card, {
+  shouldForwardProp: (prop) => prop !== "delay",
+})<{ delay?: number }>(({ theme, delay = 0 }) => ({
+  display: "flex",
+  animation: `${fadeIn} 0.5s ease both`,
+  animationDelay: `${delay}s`,
+  flexDirection: "column",
+  justifyContent: "space-between",
 
-  .name-container {
-    display: flex;
-    align-items: stretch;
-    justify-content: space-between;
-    gap: 1em;
-    margin: 10px 0;
-    border-bottom: thin solid var(--border);
-    padding: 10px 0;
-    font-weight: 400;
-  }
+  "& .name-container": {
+    display: "flex",
+    alignItems: "stretch",
+    justifyContent: "space-between",
+    gap: "1em",
+    margin: "10px 0",
+    borderBottom: `thin solid ${theme.palette.divider}`,
+    padding: "10px 0",
+    fontWeight: 400,
+  },
 
-  .tag-line-container {
-    color: var(--tertiary-text);
-    font-style: italic;
-    font-weight: 300;
-    margin: 10px 0;
-  }
+  "& .tag-line-container": {
+    color: theme.palette.custom.tertiaryText,
+    fontStyle: "italic",
+    fontWeight: 300,
+    margin: "10px 0",
+  },
 
-  .technology-stack-container {
-    color: var(--tertiary-text);
-    font-size: 0.8em;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1em;
-    margin-top: 15px;
-    border-top: thin solid var(--border);
-    padding-top: 10px;
-    font-weight: 400;
-    justify-self: flex-end;
-  }
+  "& .technology-stack-container": {
+    color: theme.palette.custom.tertiaryText,
+    fontSize: "0.8em",
+    display: "flex",
+    alignItems: "center",
+    flexWrap: "wrap",
+    gap: "1em",
+    marginTop: "15px",
+    borderTop: `thin solid ${theme.palette.divider}`,
+    paddingTop: "10px",
+    fontWeight: 400,
+    justifySelf: "flex-end",
+  },
 
-  .summary-container {
-    font-size: 0.9em;
-    color: var(--secondary-text);
-    font-weight: 300;
-    margin: 1.5em 0 1.8em 0;
-  }
-`;
+  "& .summary-container": {
+    fontSize: "0.9em",
+    color: theme.palette.text.secondary,
+    fontWeight: 300,
+    margin: "1.5em 0 1.8em 0",
+  },
+}));
 
-export const ProjectLogo = styled(Image)`
-  aspect-ratio: 1/1;
-  display: block;
-`;
+export const ProjectLogo = styled(Image)({
+  aspectRatio: "1/1",
+  display: "block",
+});
 
-export const TechItem = styled(CardTag)``;
+export const TechItem = styled(CardTag)({});
