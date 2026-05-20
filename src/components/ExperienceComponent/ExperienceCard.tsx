@@ -4,9 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import { ExperienceItem, Position, Responsibilities, SecondaryInformation } from "./styles";
 
-const ExperienceCard = ({ experience, $delay }: { experience: any; $delay?: number }) => {
+const ExperienceCard = ({ experience, delay }: { experience: any; delay?: number }) => {
   return (
-    <ExperienceItem lg={6} $delay={$delay}>
+    <ExperienceItem delay={delay}>
       <Position>{experience.position}</Position>
       <SecondaryInformation>
         <FontAwesomeIcon icon={faCalendar} />

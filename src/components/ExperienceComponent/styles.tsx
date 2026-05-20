@@ -1,96 +1,95 @@
 import { CardTitle, Row } from "@/app/_globalStyles";
-import styled from "styled-components";
+import { fadeIn } from "@/theme/animations";
+import { styled } from "@mui/material/styles";
 import Card from "../Card";
 
-export const ExperiencesWrapper = styled.div`
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  align-items: center;
-  padding: 2em 0;
-  margin-top: 2rem;
-  gap: 1.2em;
+export const ExperiencesWrapper = styled("div")({
+  display: "flex",
+  position: "relative",
+  flexDirection: "column",
+  alignItems: "center",
+  padding: "2em 0",
+  marginTop: "2rem",
+  gap: "1.2em",
 
-  @media (max-width: 992px) {
-    margin-top: 1em;
-    padding-top: unset;
-  }
-`;
+  "@media (max-width: 992px)": {
+    marginTop: "1em",
+    paddingTop: "unset",
+  },
+});
 
-export const TimelineDivider = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: linear-gradient(to bottom, transparent, var(--accent-cyan), transparent);
-  border: none;
+export const TimelineDivider = styled("div")(({ theme }) => ({
+  position: "absolute",
+  top: 0,
+  bottom: 0,
+  width: "1px",
+  background: `linear-gradient(to bottom, transparent, ${theme.palette.primary.main}, transparent)`,
+  border: "none",
 
-  @media (max-width: 992px) {
-    display: none;
-  }
-`;
+  "@media (max-width: 992px)": {
+    display: "none",
+  },
+}));
 
-export const ExperienceRow = styled(Row)`
-  justify-content: space-between;
-  align-items: center;
-`;
+export const ExperienceRow = styled(Row)({
+  justifyContent: "space-between",
+  alignItems: "center",
+});
 
-export const ExperienceItem = styled(Card)<{ $delay?: number }>`
-  width: calc(50% - 32px) !important;
-  margin: unset;
-  animation: fadeIn 0.6s ease both;
-  animation-delay: ${(props) => props.$delay ?? 0}s;
-  //width: calc(100% - var(--bs-gutter-x) * 2) !important;
+export const ExperienceItem = styled(Card, {
+  shouldForwardProp: (prop) => prop !== "delay",
+})<{ delay?: number }>(({ delay = 0 }) => ({
+  width: "calc(50% - 32px) !important",
+  margin: "unset",
+  animation: `${fadeIn} 0.6s ease both`,
+  animationDelay: `${delay}s`,
+  // Desktop: hidden placeholder takes up space but is invisible
+  "&.hidden": {
+    visibility: "hidden",
+  },
+  // Explicit ≥992px override beats Card's 33.3% breakpoint rule
+  "@media (min-width: 992px)": {
+    width: "calc(50% - 32px) !important",
+  },
+  // Mobile: remove hidden placeholders from flow, full-width cards
+  "@media (max-width: 992px)": {
+    width: "100% !important",
+    "&.hidden": {
+      display: "none",
+      visibility: "visible",
+    },
+  },
+}));
 
-  @media (max-width: 992px) {
-    &.hidden {
-      display: none;
-    }
-    width: 100% !important;
-  }
+export const Position = styled(CardTitle)({
+  fontSize: "1.2em",
+  fontWeight: 500,
+  margin: "10px 0",
+});
 
-  /*@media (min-width: 576px) {
-    width: calc(50% - 32px); !important;
-  }
+export const SecondaryInformation = styled("h5")(({ theme }) => ({
+  margin: "10px 0",
+  fontSize: "0.9em",
+  fontWeight: 400,
+  color: theme.palette.custom.tertiaryText,
+  display: "flex",
 
-  @media (min-width: 768px) {
-    width: calc(50% - 32px); !important;
-  }
+  "& svg": {
+    marginRight: "1em",
+  },
+}));
 
-  @media (min-width: 992px) {
-    width: calc(50% - 32px); !important;
-  }*/
-`;
+export const Responsibilities = styled("div")(({ theme }) => ({
+  margin: "15px 0",
+  fontSize: "0.9em",
+  fontWeight: 400,
+  color: theme.palette.custom.tertiaryText,
 
-export const Position = styled(CardTitle)`
-  font-size: 1.2em;
-  font-weight: 500;
-  margin: 10px 0;
-`;
+  "& ul": {
+    paddingLeft: "1rem",
 
-export const SecondaryInformation = styled.h5`
-  margin: 10px 0;
-  font-size: 0.9em;
-  font-weight: 400;
-  color: var(--tertiary-text);
-  display: flex;
-
-  svg {
-    margin-right: 1em;
-  }
-`;
-
-export const Responsibilities = styled.div`
-  margin: 15px 0;
-  font-size: 0.9em;
-  font-weight: 400;
-  color: var(--tertiary-text);
-
-  ul {
-    padding-left: 1rem;
-
-    li {
-      margin-bottom: 5px;
-    }
-  }
-`;
+    "& li": {
+      marginBottom: "5px",
+    },
+  },
+}));

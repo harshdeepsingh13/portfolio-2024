@@ -29,9 +29,6 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  compiler: {
-    styledComponents: true,
-  },
   eslint: {
     ignoreDuringBuilds: true,
   },

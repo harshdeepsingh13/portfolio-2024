@@ -13,7 +13,6 @@ const ResumeComponent = () => {
     let a = document.createElement("a");
     a.target = "_blank";
     a.href = `${cloudinaryResLink}Resume%20-%20Harshdeep%20Singh.pdf`;
-    console.log(a.href);
     a.click();
     sendGAEvent("event", "download_resume");
   };

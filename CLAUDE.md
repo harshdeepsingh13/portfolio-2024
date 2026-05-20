@@ -38,13 +38,26 @@ Pages call `getData.*` helpers from `src/lib/getData.ts`, which connect to Mongo
 
 ### Theming
 
-The design system uses **CSS custom properties** (not MUI or Tailwind). Theme variables are defined in `src/app/globals.css` under `:root[data-theme="dark"]` and `:root[data-theme="light"]`. `ThemeContext` (`src/context/ThemeContext.tsx`) sets the `data-theme` attribute on `<html>`. Use `var(--main)`, `var(--main-text)`, `var(--border)`, etc. in all styled components — never hardcode colors.
+The design system uses **MUI (Material UI v9)**. The theme factory is in `src/theme/index.ts` — it exports `createAppTheme(mode)` which maps all design tokens to MUI palette keys. `ThemeContext` (`src/context/ThemeContext.tsx`) reads/writes `localStorage` and `document.documentElement.setAttribute('data-theme', ...)`, then instantiates the MUI theme via `ThemeProvider`. **Never hardcode colors — always use `theme.palette.*`**.
+
+Key palette tokens:
+- `theme.palette.background.default` — page background
+- `theme.palette.background.paper` — secondary/card background
+- `theme.palette.text.primary` / `text.secondary` — body text
+- `theme.palette.divider` — borders
+- `theme.palette.primary.main` — accent cyan
+- `theme.palette.primary.glow / border / alpha10 / alpha20 / scanLineBg` — cyan variants
+- `theme.palette.custom.*` — mainHover, secondaryHover, tertiary, tertiaryText, tertiaryTextHover, accentText, accentTextHover, borderHover, main60
+
+Global base styles (body, main, code, transitions, user-select) are in `MuiCssBaseline.styleOverrides` inside the theme factory.
 
 ### Styling conventions
 
-- **styled-components** for component styles (each component has a co-located `styles.tsx`)
-- **React-Bootstrap + Bootstrap 5** for layout primitives (Container, Row, Col)
-- Shared layout primitives (`Container`, `Row`, `PageHeader`, `PageLead`, `BreadcrumbsNav`, `CardTitle`, `CustomTabs`) are in `src/app/_globalStyles.tsx` — use these instead of creating duplicates
+- **`@mui/material/styles` styled** for component styles (each component has a co-located `styles.tsx`)
+- **MUI Grid** (`@mui/material/Grid`) for layout — replaces React-Bootstrap Col/Row
+- Shared layout primitives (`Container`, `Row`, `PageHeader`, `PageLead`, `BreadcrumbsNav`, `CardTitle`, `CustomTabs`, `CustomTab`) are in `src/app/_globalStyles.tsx` — use these instead of creating duplicates
+- Keyframe animations are pre-defined in `src/theme/animations.ts` using `@emotion/react` keyframes
+- SSR emotion cache is in `src/lib/emotionRegistry.tsx` (registered in layout.tsx)
 
 ### Security
 

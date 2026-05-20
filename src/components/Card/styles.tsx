@@ -1,70 +1,75 @@
 "use client";
 
-import { Col } from "react-bootstrap";
-import styled from "styled-components";
+import { Grid } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
-export const CardWrapper = styled(Col)`
-  padding: 25px;
-  border: 1px solid var(--accent-cyan-border);
-  border-radius: 20px;
-  color: var(--tertiary-text);
-  margin-left: calc(var(--bs-gutter-x));
-  margin-right: calc(var(--bs-gutter-x));
-  width: calc(100% - var(--bs-gutter-x) * 2) !important;
-  background: linear-gradient(90deg, var(--accent-cyan-glow) 0%, var(--main) 60%, var(--main-60) 100%),
-    no-repeat right 40%/40% url(${(props) => props.background});
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+export const CardWrapper = styled(Grid, {
+  shouldForwardProp: (prop) =>
+    prop !== "background" && prop !== "accentColor" && prop !== "sm" && prop !== "lg",
+})<{ background?: string; accentColor?: string; sm?: boolean; lg?: number | boolean }>(
+  ({ theme, background, accentColor }) => ({
+    padding: "25px",
+    border: `1px solid ${theme.palette.primary.border}`,
+    borderRadius: "20px",
+    color: theme.palette.custom.tertiaryText,
+    // marginLeft: "1.5rem",
+    // marginRight: "1.5rem",
+    // width: "calc(100% - 1.5rem * 2) !important",
+    background: background
+      ? `linear-gradient(90deg, ${theme.palette.primary.glow} 0%, ${theme.palette.background.default} 60%, ${theme.palette.custom.main60} 100%), no-repeat right 40%/40% url(${background})`
+      : `linear-gradient(90deg, ${theme.palette.primary.glow} 0%, ${theme.palette.background.default} 60%, ${theme.palette.custom.main60} 100%)`,
+    backdropFilter: "blur(8px)",
+    WebkitBackdropFilter: "blur(8px)",
 
-  @media (min-width: 576px) {
-    width: calc(100% - var(--bs-gutter-x) * 2) !important;
-  }
+    // [`@media (min-width: 576px)`]: {
+    //   width: "calc(100% - 1.5rem * 2) !important",
+    // },
 
-  @media (min-width: 768px) {
-    width: calc(50% - var(--bs-gutter-x) * 2) !important;
-  }
+    // [`@media (min-width: 768px)`]: {
+    //   width: "calc(50% - 1.5rem * 2) !important",
+    // },
 
-  @media (min-width: 992px) {
-    width: calc(33.3333% - var(--bs-gutter-x) * 2) !important;
-  }
+    // [`@media (min-width: 992px)`]: {
+    //   width: "calc(33.3333% - 1.5rem * 2) !important",
+    // },
 
-  &:hover {
-    border-color: var(--accent-cyan-20);
-    box-shadow: 0 8px 32px var(--accent-cyan-glow);
-    transform: perspective(1000px) rotateX(var(--rot-x)) rotateY(var(--rot-y)) scale(1.01);
-    ${(props) =>
-      props.accentColor &&
-      `background-image: radial-gradient(circle at var(--drop-x) var(--drop-y),
-    ${props.accentColor}, transparent);`};
-  }
-`;
+    "&:hover": {
+      borderColor: theme.palette.primary.alpha20,
+      boxShadow: `0 8px 32px ${theme.palette.primary.glow}`,
+      transform: "perspective(1000px) rotateX(var(--rot-x)) rotateY(var(--rot-y)) scale(1.01)",
+      ...(accentColor && {
+        backgroundImage: `radial-gradient(circle at var(--drop-x) var(--drop-y), ${accentColor}, transparent)`,
+      }),
+    },
+  })
+);
 
-export const CardLinksContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 5px;
-`;
+export const CardLinksContainer = styled("div")({
+  display: "flex",
+  alignItems: "center",
+  gap: "5px",
+});
 
-export const CardLink = styled.a`
-  color: var(--tertiary-text);
-  padding: 5px;
-  border: thin solid var(--border);
-  background-color: var(--main-60);
-  border-radius: 10px;
+export const CardLink = styled("a")(({ theme }) => ({
+  color: theme.palette.custom.tertiaryText,
+  padding: "5px",
+  border: `thin solid ${theme.palette.divider}`,
+  backgroundColor: theme.palette.custom.main60,
+  borderRadius: "10px",
 
-  &:hover {
-    border-color: var(--border-hover);
-  }
-`;
+  "&:hover": {
+    borderColor: theme.palette.custom.borderHover,
+  },
+}));
 
-export const CardTag = styled.div`
-  color: var(--tertiary-text);
-  padding: 5px;
-  border: thin solid var(--border);
-  background-color: var(--main-60);
-  border-radius: 10px;
+export const CardTag = styled("div")(({ theme }) => ({
+  color: theme.palette.custom.tertiaryText,
+  padding: "5px",
+  border: `thin solid ${theme.palette.divider}`,
+  backgroundColor: theme.palette.custom.main60,
+  borderRadius: "10px",
 
-  &:hover {
-    border-color: var(--border-hover);
-  }
-`;
+  "&:hover": {
+    borderColor: theme.palette.custom.borderHover,
+  },
+}));

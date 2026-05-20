@@ -15,10 +15,10 @@ const LOGO_MAP: Record<string, string> = {
   "StockFlow AI": "/assets/logos/stockflowAI.png",
 };
 
-const ProjectCard = ({ project, $delay }: { project: any; $delay?: number }) => {
+const ProjectCard = ({ project, delay }: { project: any; delay?: number }) => {
 
   return (
-    <ProjectItem key={project._id} $delay={$delay}>
+    <ProjectItem key={project._id} delay={delay}>
       <div>
         <ProjectLogo src={LOGO_MAP[project.name]} alt={`${project.name} Logo`} width={60} height={60} />
         <div className="name-container">
