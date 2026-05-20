@@ -32,58 +32,28 @@ const ExperienceComponent = ({ experiences: experiencesProps }: { experiences: a
           A timeline of full-stack, SaaS, eCommerce, consulting, and support roles that shaped my ability to ship
           production software, improve performance, and work across teams.
         </PageLead>
-        <CustomTabs
-          variant={"pills"}
-          activeKey={activeTab}
-          onSelect={(key: any) => setActiveTab(key)}
-          mountOnEnter
-          unmountOnExit
-        >
-          <CustomTab eventKey={TAB.PROFESSIONAL_EXPERIENCE.KEY} title={TAB.PROFESSIONAL_EXPERIENCE.TEXT}>
-            <ExperiencesWrapper>
-              <TimelineDivider />
-              {experiences?.map((experience: any, index: number) => (
-                <>
-                  <ExperienceRow className={"gx-2"} key={experience._id}>
-                    {index % 2 === 0 ? (
-                      <ExperienceCard key={experience._id} experience={experience} />
-                    ) : (
-                      <ExperienceItem lg={6} className={"hidden"} key={`hidden-${experience._id}`} />
-                    )}
-                    <TimelinePoint />
-                    {index % 2 !== 0 ? (
-                      <ExperienceCard key={experience._id} experience={experience} />
-                    ) : (
-                      <ExperienceItem lg={6} className={"hidden"} key={`hidden-${experience._id}`} />
-                    )}
-                  </ExperienceRow>
-                </>
-              ))}
-            </ExperiencesWrapper>
-          </CustomTab>
-          <CustomTab eventKey={TAB.FREELANCE_EXPERIENCE.KEY} title={TAB.FREELANCE_EXPERIENCE.TEXT}>
-            <ExperiencesWrapper>
-              <TimelineDivider />
-              {experiences?.map((experience: any, index: number) => (
-                <>
-                  <ExperienceRow className={"gx-2"} key={experience._id}>
-                    {index % 2 === 0 ? (
-                      <ExperienceCard key={experience._id} experience={experience} />
-                    ) : (
-                      <ExperienceItem lg={6} className={"hidden"} key={`hidden-${experience._id}`} />
-                    )}
-                    <TimelinePoint />
-                    {index % 2 !== 0 ? (
-                      <ExperienceCard key={experience._id} experience={experience} />
-                    ) : (
-                      <ExperienceItem lg={6} className={"hidden"} key={`hidden-${experience._id}`} />
-                    )}
-                  </ExperienceRow>
-                </>
-              ))}
-            </ExperiencesWrapper>
-          </CustomTab>
+        <CustomTabs value={activeTab} onChange={(_: any, v: string) => setActiveTab(v)}>
+          <CustomTab value={TAB.PROFESSIONAL_EXPERIENCE.KEY} label={TAB.PROFESSIONAL_EXPERIENCE.TEXT} />
+          <CustomTab value={TAB.FREELANCE_EXPERIENCE.KEY} label={TAB.FREELANCE_EXPERIENCE.TEXT} />
         </CustomTabs>
+        <ExperiencesWrapper>
+          <TimelineDivider />
+          {experiences?.map((experience: any, index: number) => (
+            <ExperienceRow className={"gx-2"} key={experience._id}>
+              {index % 2 === 0 ? (
+                <ExperienceCard key={experience._id} experience={experience} delay={0.15 + index * 0.1} />
+              ) : (
+                <ExperienceItem className={"hidden"} key={`hidden-${experience._id}`} />
+              )}
+              <TimelinePoint />
+              {index % 2 !== 0 ? (
+                <ExperienceCard key={experience._id} experience={experience} delay={0.15 + index * 0.1} />
+              ) : (
+                <ExperienceItem className={"hidden"} key={`hidden2-${experience._id}`} />
+              )}
+            </ExperienceRow>
+          ))}
+        </ExperiencesWrapper>
       </Container>
     </>
   );

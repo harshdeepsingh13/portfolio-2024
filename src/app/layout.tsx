@@ -1,18 +1,16 @@
-import { NavBar } from "@/components";
+import { Footer, NavBar, ParticlesBackground } from "@/components";
 import { gaID } from "@/config/config";
 import { ThemeContextProvider } from "@/context";
+import EmotionRegistry from "@/lib/emotionRegistry";
 import "@/lib/fontawesome";
 import { getData } from "@/lib/getData";
-import StyledComponentsRegistry from "@/lib/styledComponentsRegistry";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import "bootstrap/dist/css/bootstrap.min.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Outfit } from "next/font/google";
 import React from "react";
-import "./globals.css";
 
-const inter = Inter({
-  weight: ["200", "300", "400", "500", "900"],
+const outfit = Outfit({
+  weight: ["200", "300", "400", "500", "700", "900"],
   subsets: ["latin"],
 });
 
@@ -82,16 +80,9 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      {
-        media: "(prefers-color-scheme: light)",
-        url: "/assets/favicon_light.ico",
-        href: "/assets/favicon_light.ico",
-      },
-      {
-        media: "(prefers-color-scheme: dark)",
-        url: "/assets/favicon_dark.ico",
-        href: "/assets/favicon_dark.ico",
-      },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { media: "(prefers-color-scheme: light)", url: "/assets/favicon_light.ico" },
+      { media: "(prefers-color-scheme: dark)",  url: "/assets/favicon_dark.ico"  },
     ],
   },
   openGraph: {
@@ -132,13 +123,13 @@ export default async function RootLayout({
   const basicInformation = await getData.getBasicInformation();
 
   return (
-    <html lang="en" className={inter.className}>
+    <html lang="en" className={outfit.className} suppressHydrationWarning>
       <script
         dangerouslySetInnerHTML={{
           __html: `(function(){var t=localStorage.getItem('theme');if(t){document.documentElement.setAttribute('data-theme',t);}else if(window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','dark');}else{document.documentElement.setAttribute('data-theme','light');}})();`,
         }}
       />
-      <body>
+      <body suppressHydrationWarning>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
@@ -148,12 +139,16 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
         <GoogleAnalytics gaId={gaID} />
-        <StyledComponentsRegistry>
+        <EmotionRegistry>
           <ThemeContextProvider>
+            <ParticlesBackground />
             <NavBar basicInformation={basicInformation} />
-            <main>{children}</main>
+            <main>
+              {children}
+              <Footer />
+            </main>
           </ThemeContextProvider>
-        </StyledComponentsRegistry>
+        </EmotionRegistry>
       </body>
     </html>
   );

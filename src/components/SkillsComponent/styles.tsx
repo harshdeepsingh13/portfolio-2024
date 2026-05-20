@@ -1,21 +1,17 @@
 "use client";
 
 import { Row } from "@/app/_globalStyles";
-import styled from "styled-components";
+import { fadeIn } from "@/theme/animations";
+import { styled } from "@mui/material/styles";
 import Card from "../Card";
 
-export const SkillsRow = styled(Row)`
-  margin-top: 2.5rem;
-  /*gap: 0.5rem;
+export const SkillsRow = styled(Row)({
+  marginTop: "2.5rem",
+});
 
-  @media (min-width: 1024px) {
-    gap: 1.25rem;
-  }
-
-  @media (min-width: 768px) {
-    gap: 0.75rem;
-  }*/
-`;
-
-export const SkillItem = styled(Card)``;
-// export const SkillItem = styled.div``;
+export const SkillItem = styled(Card, {
+  shouldForwardProp: (prop) => prop !== "delay",
+})<{ delay?: number }>(({ delay = 0 }) => ({
+  animation: `${fadeIn} 0.5s ease both`,
+  animationDelay: `${delay}s`,
+}));

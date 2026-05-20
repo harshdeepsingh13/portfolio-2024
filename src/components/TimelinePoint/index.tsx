@@ -5,7 +5,7 @@ import { TimelinePointWrapper } from "./styles";
 const TimelinePoint = () => {
   return (
     <>
-      <TimelinePointWrapper lg={"auto"}>
+      <TimelinePointWrapper>
         <FontAwesomeIcon icon={faCircle} />
       </TimelinePointWrapper>
     </>

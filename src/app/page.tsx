@@ -1,5 +1,6 @@
 import { LandingPage } from "@/components";
 import { getData } from "@/lib/getData";
+import { getGitHubStats } from "@/lib/github";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -56,8 +57,12 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default async function Home() {
-  const skills: any = await getData.getSkills();
-  const basicInformation = await getData.getBasicInformation();
+  const [skills, basicInformation, stats, githubStats] = await Promise.all([
+    getData.getSkills(),
+    getData.getBasicInformation(),
+    getData.getPortfolioStats(),
+    getGitHubStats(),
+  ]);
 
   return (
     <>
@@ -65,7 +70,7 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(profilePageJsonLd) }}
       />
-      <LandingPage basicInformation={basicInformation} skills={skills?.skills} />
+      <LandingPage basicInformation={basicInformation} skills={(skills as any)?.skills} stats={stats} githubStats={githubStats} />
     </>
   );
 }
