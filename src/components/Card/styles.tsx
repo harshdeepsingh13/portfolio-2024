@@ -1,9 +1,9 @@
 "use client";
 
-import { Box } from "@mui/material";
+import { Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-export const CardWrapper = styled(Box, {
+export const CardWrapper = styled(Grid, {
   shouldForwardProp: (prop) =>
     prop !== "background" && prop !== "accentColor" && prop !== "sm" && prop !== "lg",
 })<{ background?: string; accentColor?: string; sm?: boolean; lg?: number | boolean }>(
@@ -14,24 +14,24 @@ export const CardWrapper = styled(Box, {
     color: theme.palette.custom.tertiaryText,
     // marginLeft: "1.5rem",
     // marginRight: "1.5rem",
-    width: "calc(100% - 1.5rem * 2) !important",
+    // width: "calc(100% - 1.5rem * 2) !important",
     background: background
       ? `linear-gradient(90deg, ${theme.palette.primary.glow} 0%, ${theme.palette.background.default} 60%, ${theme.palette.custom.main60} 100%), no-repeat right 40%/40% url(${background})`
       : `linear-gradient(90deg, ${theme.palette.primary.glow} 0%, ${theme.palette.background.default} 60%, ${theme.palette.custom.main60} 100%)`,
     backdropFilter: "blur(8px)",
     WebkitBackdropFilter: "blur(8px)",
 
-    [`@media (min-width: 576px)`]: {
-      width: "calc(100% - 1.5rem * 2) !important",
-    },
+    // [`@media (min-width: 576px)`]: {
+    //   width: "calc(100% - 1.5rem * 2) !important",
+    // },
 
-    [`@media (min-width: 768px)`]: {
-      width: "calc(50% - 1.5rem * 2) !important",
-    },
+    // [`@media (min-width: 768px)`]: {
+    //   width: "calc(50% - 1.5rem * 2) !important",
+    // },
 
-    [`@media (min-width: 992px)`]: {
-      width: "calc(33.3333% - 1.5rem * 2) !important",
-    },
+    // [`@media (min-width: 992px)`]: {
+    //   width: "calc(33.3333% - 1.5rem * 2) !important",
+    // },
 
     "&:hover": {
       borderColor: theme.palette.primary.alpha20,

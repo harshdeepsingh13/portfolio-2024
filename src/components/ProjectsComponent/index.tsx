@@ -15,9 +15,9 @@ const ProjectsComponent = ({ projects }: { projects: any }) => {
           Case studies and portfolio projects spanning AI automation, resume tools, marketplaces, photography
           dashboards, and full-stack product builds.
         </PageLead>
-        <ProjectsRow spacing={3}>
+        <ProjectsRow spacing={3} sx={{alignItems: "stretch"}} >
           {projects?.map((project: any, index: number) => (
-            <Grid2 key={project._id} size={{ xs: 12, sm: 6, md: 4 }}>
+            <Grid2 key={project._id} size={{ xs: 12, sm: 6, md: 4 }} sx={{alignItems: "stretch", display: "flex"}} >
               <ProjectCard project={project} delay={0.15 + index * 0.07} />
             </Grid2>
           ))}

@@ -4,17 +4,17 @@
 //        </CustomTabs>
 // Render tab content separately based on activeTab value.
 
-import { forwardRef } from "react";
-import { styled } from "@mui/material/styles";
-import MuiContainer from "@mui/material/Container";
-import Grid2 from "@mui/material/Grid";
-import type { GridProps as Grid2Props } from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import type { TypographyProps } from "@mui/material/Typography";
-import MuiTabs from "@mui/material/Tabs";
-import type { TabsProps } from "@mui/material/Tabs";
-import MuiTab from "@mui/material/Tab";
 import { fadeSlideUp } from "@/theme/animations";
+import MuiContainer from "@mui/material/Container";
+import type { GridProps } from "@mui/material/Grid";
+import Grid from "@mui/material/Grid";
+import { styled } from "@mui/material/styles";
+import MuiTab from "@mui/material/Tab";
+import type { TabsProps } from "@mui/material/Tabs";
+import MuiTabs from "@mui/material/Tabs";
+import type { TypographyProps } from "@mui/material/Typography";
+import Typography from "@mui/material/Typography";
+import { forwardRef } from "react";
 
 export const Container = styled(MuiContainer)(({ theme }) => ({
   maxWidth: "1200px !important",
@@ -34,8 +34,8 @@ export const Container = styled(MuiContainer)(({ theme }) => ({
   },
 }));
 
-const RowBase = forwardRef<HTMLDivElement, Grid2Props>((props, ref) => (
-  <Grid2 container ref={ref} {...props} />
+const RowBase = forwardRef<HTMLDivElement, GridProps>((props, ref) => (
+  <Grid container ref={ref} {...props} />
 ));
 RowBase.displayName = "Row";
 

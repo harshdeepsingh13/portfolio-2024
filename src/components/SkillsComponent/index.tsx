@@ -2,6 +2,7 @@
 
 import { PageLead } from "@/app/_globalStyles";
 import { SkillName, SKILLS_ASSETS_MAPPING } from "@/config/config";
+import Grid2 from "@mui/material/Grid";
 import { useCallback } from "react";
 import { Container, PageHeader } from "../../app/_globalStyles";
 import { SkillItem, SkillsRow } from "./styles";
@@ -21,9 +22,11 @@ const SkillsComponent = ({ skills }: { skills: string[] }) => {
         </PageLead>
         <SkillsRow spacing={2}>
           {skills?.map((skill, index) => (
-            <SkillItem key={skill} sm background={getBackgroundLogo(skill as SkillName)} delay={0.15 + index * 0.06}>
-              {skill}
-            </SkillItem>
+            <Grid2 key={skill} size={{ xs: 12, sm: 6, md: 4 }}>
+              <SkillItem background={getBackgroundLogo(skill as SkillName)} delay={0.15 + index * 0.06}>
+                {skill}
+              </SkillItem>
+            </Grid2>
           ))}
         </SkillsRow>
       </Container>
