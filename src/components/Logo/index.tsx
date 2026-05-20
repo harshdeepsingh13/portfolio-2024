@@ -12,7 +12,7 @@ const Logo = ({ name }: { name: string }) => {
     setDisplayed("");
     const n = name ?? "";
     let i = 0;
-    let intervalId: ReturnType<typeof setInterval>;
+    let intervalId: ReturnType<typeof setInterval> | undefined;
     const timeoutId = setTimeout(() => {
       intervalId = setInterval(() => {
         setDisplayed(n.slice(0, ++i));
