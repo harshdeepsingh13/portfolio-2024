@@ -1,7 +1,7 @@
-import styled from "styled-components";
+import { styled } from "@mui/material/styles";
 
-export const LogoWrapper = styled.div`
-  svg {
-    margin-right: 1em;
-  }
-`;
+export const LogoWrapper = styled("div")({
+  "& svg": {
+    marginRight: "1em",
+  },
+});

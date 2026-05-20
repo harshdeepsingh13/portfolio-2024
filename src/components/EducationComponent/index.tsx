@@ -18,21 +18,19 @@ const EducationComponent = ({ educationDetails }: { educationDetails: any }) => 
         <EducationWrapper>
           <TimelineDivider />
           {educationDetails?.map((education: any, index: number) => (
-            <>
-              <ExperienceRow className={"gx-2"}>
-                {index % 2 === 0 ? (
-                  <EducationCard key={education._id} education={education} />
-                ) : (
-                  <EducationItem lg={6} className={"hidden"} key={`hidden-${education._id}`} />
-                )}
-                <TimelinePoint />
-                {index % 2 !== 0 ? (
-                  <EducationCard key={education._id} education={education} />
-                ) : (
-                  <EducationItem lg={6} className={"hidden"} key={`hidden-${education._id}`} />
-                )}
-              </ExperienceRow>
-            </>
+            <ExperienceRow className={"gx-2"} key={education._id}>
+              {index % 2 === 0 ? (
+                <EducationCard key={education._id} education={education} delay={0.15 + index * 0.1} />
+              ) : (
+                <EducationItem className={"hidden"} key={`hidden-${education._id}`} />
+              )}
+              <TimelinePoint />
+              {index % 2 !== 0 ? (
+                <EducationCard key={education._id} education={education} delay={0.15 + index * 0.1} />
+              ) : (
+                <EducationItem className={"hidden"} key={`hidden2-${education._id}`} />
+              )}
+            </ExperienceRow>
           ))}
         </EducationWrapper>
       </Container>

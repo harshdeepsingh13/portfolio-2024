@@ -1,15 +1,13 @@
-import {Col} from "react-bootstrap";
-import styled from "styled-components";
+import { styled } from "@mui/material/styles";
 
-export const TimelinePointWrapper = styled(Col)`
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--main);
-  color: var(--accent-text);
-  z-index: 2;
-  @media (max-width: 992px) {
-    display: none;
-  }
-`;
+export const TimelinePointWrapper = styled("div")(({ theme }) => ({
+  height: "50px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: theme.palette.custom.accentText,
+  zIndex: 2,
+  [theme.breakpoints.down("lg")]: {
+    display: "none",
+  },
+}));

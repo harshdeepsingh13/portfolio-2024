@@ -1,152 +1,167 @@
-import { Container as BootstrapContainer, Row as BootstrapRow, Tab, Tabs } from "react-bootstrap";
-import styled from "styled-components";
+// NOTE: CustomTabs/CustomTab now use MUI API.
+// Usage: <CustomTabs value={activeTab} onChange={(_, v) => setActiveTab(v)}>
+//          <CustomTab value="key" label="Label" />
+//        </CustomTabs>
+// Render tab content separately based on activeTab value.
 
-export const Container = styled(BootstrapContainer)`
-  max-width: 1200px;
-  min-width: 1200px;
-  margin: 0px auto;
-  padding: 3rem 15px;
-  width: 100%;
+import { fadeSlideUp } from "@/theme/animations";
+import MuiContainer from "@mui/material/Container";
+import type { GridProps } from "@mui/material/Grid";
+import Grid from "@mui/material/Grid";
+import { styled } from "@mui/material/styles";
+import MuiTab from "@mui/material/Tab";
+import type { TabsProps } from "@mui/material/Tabs";
+import MuiTabs from "@mui/material/Tabs";
+import type { TypographyProps } from "@mui/material/Typography";
+import Typography from "@mui/material/Typography";
+import { forwardRef } from "react";
 
-  @media (max-width: 1350px) {
-    & {
-      max-width: 1000px;
-      min-width: 1000px;
-    }
-  }
+export const Container = styled(MuiContainer)(({ theme }) => ({
+  maxWidth: "1200px !important",
+  minWidth: "1200px",
+  margin: "0px auto",
+  padding: "3rem 15px",
+  width: "100%",
 
-  @media (max-width: 1075px) {
-    & {
-      max-width: -webkit-fill-available;
-      min-width: -webkit-fill-available;
-      max-width: -moz-available;
-      min-width: -moz-available;
-    }
-  }
-`
+  [theme.breakpoints.down(1350)]: {
+    maxWidth: "1000px !important",
+    minWidth: "1000px",
+  },
 
-export const Row = styled(BootstrapRow)`
-  width: 100%;
-`;
+  [theme.breakpoints.down(1075)]: {
+    maxWidth: "-webkit-fill-available !important",
+    minWidth: "-webkit-fill-available",
+  },
+}));
 
-export const PageHeader = styled.h1`
-  font-size: 2.5em;
-  margin: unset;
-  letter-spacing: 4px;
-  font-weight: 900;
-  color: var(--secondary-text);
-  text-align: center;
+const RowBase = forwardRef<HTMLDivElement, GridProps>((props, ref) => (
+  <Grid container ref={ref} {...props} />
+));
+RowBase.displayName = "Row";
 
+export const Row = styled(RowBase)(() => ({
+  width: "100%",
+}));
 
-  @media (min-width: 640px) {
-    font-size: 3em;
-  }
+const PageHeaderBase = forwardRef<HTMLHeadingElement, TypographyProps>(
+  (props, ref) => (
+    <Typography ref={ref} component="h1" variant="h1" {...props} />
+  )
+);
+PageHeaderBase.displayName = "PageHeader";
 
-  @media (min-width: 768px) {
-    font-size: 3.5em;
-  }
+export const PageHeader = styled(PageHeaderBase)(({ theme }) => ({
+  fontFamily: "'Outfit', sans-serif",
+  fontSize: "2.5em",
+  margin: "unset",
+  letterSpacing: "-1px",
+  fontWeight: 900,
+  color: theme.palette.text.secondary,
+  textAlign: "center",
+  animation: `${fadeSlideUp} 0.6s ease both`,
 
-  @media (min-width: 1024px) {
-    font-size: 4em;
-  }
+  [theme.breakpoints.up(640)]: {
+    fontSize: "3em",
+  },
+  [theme.breakpoints.up("md")]: {
+    fontSize: "3.5em",
+  },
+  [theme.breakpoints.up(1024)]: {
+    fontSize: "4em",
+  },
+}));
 
-`;
+export const PageLead = styled(Typography)(({ theme }) => ({
+  margin: "1rem auto",
+  maxWidth: "760px",
+  textAlign: "center",
+  color: theme.palette.custom.tertiaryText,
+  fontWeight: 300,
+  lineHeight: 1.8,
+  letterSpacing: "0.2px",
+  animation: `${fadeSlideUp} 0.6s 0.1s ease both`,
 
-export const PageLead = styled.p`
-  margin: 1rem auto;
-  max-width: 760px;
-  text-align: center;
-  color: var(--tertiary-text);
-  font-weight: 300;
-  line-height: 1.8;
-  letter-spacing: 0.2px;
+  [theme.breakpoints.up("md")]: {
+    textAlign: "center",
+  },
+}));
 
-  @media (min-width: 768px) {
-    text-align: center;
-    /* margin-left: 0; */
-    /* margin-right: 0; */
-  }
-`;
+export const BreadcrumbsNav = styled("nav")(({ theme }) => ({
+  marginBottom: "1rem",
+  color: theme.palette.custom.tertiaryText,
+  fontSize: "0.85rem",
+}));
 
-export const BreadcrumbsNav = styled.nav`
-  margin-bottom: 1rem;
-  color: var(--tertiary-text);
-  font-size: 0.85rem;
-`;
+export const BreadcrumbsList = styled("ol")(() => ({
+  display: "flex",
+  flexWrap: "wrap" as const,
+  gap: "0.35rem",
+  listStyle: "none",
+  padding: 0,
+  margin: 0,
+}));
 
-export const BreadcrumbsList = styled.ol`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-`;
+export const BreadcrumbItem = styled("li")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
 
-export const BreadcrumbItem = styled.li`
-  display: flex;
-  align-items: center;
+  "&:not(:last-child)::after": {
+    content: '"/"',
+    marginLeft: "0.35rem",
+    color: theme.palette.custom.accentText,
+  },
+}));
 
-  &:not(:last-child)::after {
-    content: "/";
-    margin-left: 0.35rem;
-    color: var(--accent-text);
-  }
-`;
+export const BreadcrumbLink = styled("a")(({ theme }) => ({
+  color: "inherit",
+  textDecoration: "none",
 
-export const BreadcrumbLink = styled.a`
-  color: inherit;
-  text-decoration: none;
+  "&:hover": {
+    color: theme.palette.custom.mainHover,
+    textDecoration: "underline",
+  },
+}));
 
-  &:hover {
-    color: var(--main-text-hover);
-    text-decoration: underline;
-  }
-`;
+const CardTitleBase = forwardRef<HTMLHeadingElement, TypographyProps>(
+  (props, ref) => (
+    <Typography ref={ref} component="h4" variant="h4" {...props} />
+  )
+);
+CardTitleBase.displayName = "CardTitle";
 
-export const CardTitle = styled.h4`
-  margin: 5px 0;
-  font-size: 1.01em;
-`;
+export const CardTitle = styled(CardTitleBase)(() => ({
+  margin: "5px 0",
+  fontSize: "1.01em",
+}));
 
-export const CustomTabs = styled(Tabs)`
-  /*justify-content: center;
-  border-color: var(--border);
-  --bs-nav-tabs-border-color: var(--border);
-  margin: 1em 0;
+const StyledTabs = styled(MuiTabs)(({ theme }) => ({
+  margin: "2em 0 1em 0",
+  "& .MuiTabs-flexContainer": {
+    justifyContent: "center",
+    flexWrap: "wrap",
+    gap: "0.5rem",
+  },
+  "& .MuiTabs-indicator": {
+    display: "none",
+  },
+  "& .MuiTab-root": {
+    color: theme.palette.custom.accentText,
+    borderRadius: "50px",
+    padding: "6px 16px",
+    minHeight: "unset",
+    textTransform: "none",
+    "@media (max-width: 460px)": {
+      fontSize: "0.8em",
+    },
+  },
+  "& .Mui-selected": {
+    backgroundColor: theme.palette.custom.accentText,
+    color: theme.palette.background.default,
+  },
+}));
 
-  .nav-link{
-    border-bottom: unset;
-    background-color: unset;
-    color: var(--accent-text);
+export const CustomTabs = (props: TabsProps) => (
+  <StyledTabs centered textColor="inherit" {...props} />
+);
 
-    &.active{
-      background-color: var(--main);
-      border-color: var(--border);
-      color: var(--main-text);
-    }
-    &:hover{
-      border-color: var(--border);
-      --bs-nav-tabs-link-hover-border-color: var(--border);
-    }
-  }*/
-
-  margin: 2em 0 1em 0;
-  justify-content: center;
-
-  .nav-link{
-    color: var(--accent-text);
-
-    &.active{
-      background-color: var(--accent-text);
-    }
-
-    @media (max-width: 460px) {
-      font-size: 0.8em;
-    }
-
-  }
-
-`;
-
-export const CustomTab = styled(Tab)``;
+export const CustomTab = styled(MuiTab)(() => ({}));
