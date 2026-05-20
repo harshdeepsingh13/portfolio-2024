@@ -3,11 +3,11 @@
 import { createAppTheme } from "@/theme";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type Dispatch, type SetStateAction, type ReactNode } from "react";
 
 type ThemeContextType = {
   theme: string;
-  setTheme: (theme: string) => void;
+  setTheme: Dispatch<SetStateAction<string>>;
 };
 
 export const ThemeContext = createContext<ThemeContextType | {}>({});
