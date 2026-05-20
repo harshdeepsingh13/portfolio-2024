@@ -1,6 +1,6 @@
+import { blink } from "@/theme/animations";
 import { keyframes } from "@emotion/react";
 import { styled } from "@mui/material/styles";
-import { blink } from "@/theme/animations";
 
 const drawStem = keyframes`
   from { stroke-dashoffset: 17; }
@@ -21,6 +21,7 @@ export const LogoWrapper = styled("div")({
   display: "flex",
   alignItems: "center",
   gap: "8px",
+  minWidth: "200px",
 });
 
 export const LogoSvg = styled("svg")({
