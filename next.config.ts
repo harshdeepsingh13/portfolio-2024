@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const isDev = process.env.NODE_ENV === "development";
+
 const securityHeaders = [
   {
     key: "X-Frame-Options",
@@ -22,10 +24,12 @@ const securityHeaders = [
     value:
       "default-src 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'; form-action 'self'; img-src 'self' data: blob: https:; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https:; connect-src 'self' https:; upgrade-insecure-requests",
   },
-  {
+  // HSTS only in production — sending it from the dev server causes browsers
+  // to cache "always use HTTPS for localhost", breaking subsequent HTTP dev sessions.
+  ...(!isDev ? [{
     key: "Strict-Transport-Security",
     value: "max-age=31536000; includeSubDomains; preload",
-  },
+  }] : []),
 ];
 
 const nextConfig: NextConfig = {

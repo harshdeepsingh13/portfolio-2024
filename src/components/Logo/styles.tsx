@@ -17,12 +17,15 @@ const popIn = keyframes`
   to   { opacity: 1; transform: scale(1); }
 `;
 
-export const LogoWrapper = styled("div")({
+export const LogoWrapper = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   gap: "8px",
-  minWidth: "200px",
-});
+  minWidth: "167px",
+  [theme.breakpoints.down("md")]: {
+    minWidth: "unset",
+  },
+}));
 
 export const LogoSvg = styled("svg")({
   flexShrink: 0,

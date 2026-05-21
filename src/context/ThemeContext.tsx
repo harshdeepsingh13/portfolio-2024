@@ -3,7 +3,16 @@
 import { createAppTheme } from "@/theme";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
-import { createContext, useContext, useEffect, useMemo, useState, type Dispatch, type SetStateAction, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type Dispatch,
+  type ReactNode,
+  type SetStateAction,
+} from "react";
 
 type ThemeContextType = {
   theme: string;
@@ -15,12 +24,28 @@ export const useThemeContext = () => useContext(ThemeContext) as ThemeContextTyp
 export const THEME = { LIGHT: "light", DARK: "dark" };
 
 const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<string>(() => {
-    if (typeof document !== "undefined") {
-      return document.documentElement.getAttribute("data-theme") ?? THEME.LIGHT;
+  // Always start with LIGHT on both server and client so SSR HTML matches the
+  // initial client render (no hydration mismatch). The correct theme is applied
+  // in the first useEffect, after hydration is complete.
+  const [theme, setTheme] = useState<string>(
+    document?.documentElement?.getAttribute?.("data-theme")
+      ? document.documentElement.getAttribute("data-theme") === THEME.LIGHT
+        ? THEME.LIGHT
+        : THEME.DARK
+      : THEME.LIGHT,
+  );
+
+  useEffect(() => {
+    console.debug("ThemeContext initialized with theme:", theme);
+  }, [theme]);
+
+  useEffect(() => {
+    const domTheme = document.documentElement.getAttribute("data-theme");
+    console.debug("Detected theme from DOM:", domTheme);
+    if (domTheme === THEME.DARK || domTheme === THEME.LIGHT) {
+      setTheme(domTheme);
     }
-    return THEME.LIGHT;
-  });
+  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);

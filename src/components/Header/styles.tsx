@@ -58,7 +58,7 @@ export const HeaderContainer = styled(Container)(({ theme: _theme }) => ({
   },
 }));
 
-export const LogoContainer = styled(Link)(({ theme: _theme }) => ({
+export const LogoContainer = styled(Link)(({ theme }) => ({
   paddingLeft: "1rem",
   paddingRight: "1rem",
   display: "flex !important",
@@ -69,7 +69,7 @@ export const LogoContainer = styled(Link)(({ theme: _theme }) => ({
     fontSize: "initial",
   },
 
-  "@media (max-width: 950px)": {
+  [theme.breakpoints.down("md")]: {
     "& svg": {
       marginRight: "unset !important",
     },

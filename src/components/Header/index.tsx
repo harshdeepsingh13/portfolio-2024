@@ -7,7 +7,6 @@ import {
   faDiagramProject,
   faDice,
   faGraduationCap,
-  faMagnifyingGlass,
   faUserTie,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,7 +18,6 @@ import {
   LogoContainer,
   NavLinkItem,
   NavLinksContainer,
-  SearchLink,
   ThemeButton,
 } from "./styles";
 
@@ -61,11 +59,11 @@ const Header = ({ basicInformation }: { basicInformation: any }) => {
             ))}
           </NavLinksContainer>
           <div className="right">
-            {process.env.REACT_APP_MODE === "dev" && (
+            {/* {process.env.NEXT_PUBLIC_APP_MODE === "dev" && (
               <SearchLink href={LINK_MAPPING.SEARCH} className="action-item">
                 <FontAwesomeIcon icon={faMagnifyingGlass} />
               </SearchLink>
-            )}
+            )} */}
             <ThemeButton onClick={onThemeToggle} className={"action-item"}>
               <FontAwesomeIcon icon={theme === THEME.DARK ? faMoon : faLightbulb} />
             </ThemeButton>

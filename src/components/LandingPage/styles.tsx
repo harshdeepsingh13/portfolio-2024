@@ -199,7 +199,7 @@ export const DetailsColumn = styled(Grid2)(({ theme }) => ({
     },
 
     "& img": {
-      width: "150px",
+      display: "block",
     },
   },
 

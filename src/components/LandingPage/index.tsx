@@ -2,7 +2,6 @@
 
 import { Row } from "@/app/_globalStyles";
 import { THEME, useThemeContext } from "@/context/ThemeContext";
-import Image from "@/elements/Image";
 import { faFacebookF, faGithub, faInstagram, faLinkedinIn } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -197,9 +196,11 @@ const LandingPage = ({
               onClick={onToptalLinkClick}
             >
               Freelancer at
-              <Image
-                src={theme === THEME.DARK ? "assets/logos/toptal-logo-dark.svg" : "assets/logos/toptal-logo.svg"}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={theme === THEME.DARK ? "/assets/logos/toptal-logo-dark.svg" : "/assets/logos/toptal-logo.svg"}
                 alt="Toptal Logo"
+                style={{ width: "150px", height: "auto" }}
               />
             </a>
           </DetailsColumn>
