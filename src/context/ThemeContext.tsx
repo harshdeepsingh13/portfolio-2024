@@ -24,24 +24,10 @@ export const useThemeContext = () => useContext(ThemeContext) as ThemeContextTyp
 export const THEME = { LIGHT: "light", DARK: "dark" };
 
 const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
-  // Always start with LIGHT on both server and client so SSR HTML matches the
-  // initial client render (no hydration mismatch). The correct theme is applied
-  // in the first useEffect, after hydration is complete.
-  const [theme, setTheme] = useState<string>(
-    document?.documentElement?.getAttribute?.("data-theme")
-      ? document.documentElement.getAttribute("data-theme") === THEME.LIGHT
-        ? THEME.LIGHT
-        : THEME.DARK
-      : THEME.LIGHT,
-  );
-
-  useEffect(() => {
-    console.debug("ThemeContext initialized with theme:", theme);
-  }, [theme]);
+  const [theme, setTheme] = useState<string>(THEME.DARK);
 
   useEffect(() => {
     const domTheme = document.documentElement.getAttribute("data-theme");
-    console.debug("Detected theme from DOM:", domTheme);
     if (domTheme === THEME.DARK || domTheme === THEME.LIGHT) {
       setTheme(domTheme);
     }
