@@ -4,18 +4,24 @@ import { LINK_MAPPING } from "@/config/config";
 import { THEME, useThemeContext } from "@/context/ThemeContext";
 import { faClipboard, faLightbulb, faMoon } from "@fortawesome/free-regular-svg-icons";
 import {
+  faBars,
   faDiagramProject,
   faDice,
   faGraduationCap,
   faUserTie,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { sendGAEvent } from "@next/third-parties/google";
+import { useState } from "react";
 import Logo from "../Logo";
 import {
+  DrawerNavItem,
+  HamburgerButton,
   HeaderContainer,
   HeaderWrapper,
   LogoContainer,
+  MobileDrawer,
   NavLinkItem,
   NavLinksContainer,
   ThemeButton,
@@ -31,6 +37,7 @@ const NAV_LINKS = [
 
 const Header = ({ basicInformation }: { basicInformation: any }) => {
   const { theme, setTheme } = useThemeContext();
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const onThemeToggle = () => {
     sendGAEvent("event", "toggle_theme");
@@ -39,11 +46,15 @@ const Header = ({ basicInformation }: { basicInformation: any }) => {
       return THEME.LIGHT;
     });
   };
+
   return (
     <>
       <HeaderWrapper>
         <HeaderContainer>
           <div className="left">
+            <HamburgerButton onClick={() => setDrawerOpen((v) => !v)}>
+              <FontAwesomeIcon icon={drawerOpen ? faXmark : faBars} />
+            </HamburgerButton>
             <LogoContainer href={LINK_MAPPING.HOME} className={"action-item"}>
               <span>
                 <Logo name={basicInformation?.name} />
@@ -59,17 +70,26 @@ const Header = ({ basicInformation }: { basicInformation: any }) => {
             ))}
           </NavLinksContainer>
           <div className="right">
-            {/* {process.env.NEXT_PUBLIC_APP_MODE === "dev" && (
-              <SearchLink href={LINK_MAPPING.SEARCH} className="action-item">
-                <FontAwesomeIcon icon={faMagnifyingGlass} />
-              </SearchLink>
-            )} */}
             <ThemeButton onClick={onThemeToggle} className={"action-item"}>
               <FontAwesomeIcon icon={theme === THEME.DARK ? faMoon : faLightbulb} />
             </ThemeButton>
           </div>
         </HeaderContainer>
       </HeaderWrapper>
+
+      <MobileDrawer
+        anchor="left"
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        ModalProps={{ BackdropProps: { invisible: true } }}
+      >
+        {NAV_LINKS.map(({ text, to, icon }) => (
+          <DrawerNavItem key={to} href={to} onClick={() => setDrawerOpen(false)}>
+            <FontAwesomeIcon icon={icon} />
+            <span>{text}</span>
+          </DrawerNavItem>
+        ))}
+      </MobileDrawer>
     </>
   );
 };
