@@ -81,7 +81,7 @@ const Header = ({ basicInformation }: { basicInformation: any }) => {
         anchor="left"
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        ModalProps={{ BackdropProps: { invisible: true } }}
+        slotProps={{ backdrop: { invisible: true } }}
       >
         {NAV_LINKS.map(({ text, to, icon }) => (
           <DrawerNavItem key={to} href={to} onClick={() => setDrawerOpen(false)}>
