@@ -1,11 +1,13 @@
 "use client";
 
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { LogoSvg, LogoWrapper, TextCursor } from "./styles";
 
 const Logo = ({ name }: { name: string }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [displayed, setDisplayed] = useState("");
 
   useEffect(() => {
@@ -18,12 +20,12 @@ const Logo = ({ name }: { name: string }) => {
         setDisplayed(n.slice(0, ++i));
         if (i >= n.length) clearInterval(intervalId);
       }, 75);
-    }, 1300);
+    }, isMobile ? 300 : 1300);
     return () => {
       clearTimeout(timeoutId);
       clearInterval(intervalId);
     };
-  }, [name]);
+  }, [name, isMobile]);
 
   return (
     <LogoWrapper>

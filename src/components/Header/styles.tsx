@@ -71,14 +71,6 @@ export const LogoContainer = styled(Link)(({ theme }) => ({
     fontSize: "initial",
   },
 
-  [theme.breakpoints.down("md")]: {
-    "& svg": {
-      marginRight: "unset !important",
-    },
-    "& .text": {
-      display: "none",
-    },
-  },
 }));
 
 export const NavLinkItem = styled(Link)(({ theme }) => ({
