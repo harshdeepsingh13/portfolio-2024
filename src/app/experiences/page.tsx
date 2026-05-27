@@ -3,9 +3,7 @@ import ExperienceComponent from "@/components/ExperienceComponent";
 import { getData } from "@/lib/getData";
 import { Metadata } from "next";
 
-// Keep this route dynamic so latest work history is always server-rendered.
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Work Experience | Full Stack Developer Experience | Harshdeep Singh",

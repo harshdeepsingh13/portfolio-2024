@@ -14,9 +14,7 @@ const outfit = Outfit({
   subsets: ["latin"],
 });
 
-// Force request-time rendering so navbar/profile data from DB is always fresh.
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 3600;
 
 const siteUrl = "https://theharshdeepsingh.com";
 

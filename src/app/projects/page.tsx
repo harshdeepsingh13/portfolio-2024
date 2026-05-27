@@ -3,9 +3,7 @@ import ProjectsComponent from "@/components/ProjectsComponent";
 import { getData } from "@/lib/getData";
 import { Metadata } from "next";
 
-// Keep this route dynamic so project updates appear without redeploying.
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Projects | Full-Stack, AI Automation & SaaS Case Studies | Harshdeep Singh",

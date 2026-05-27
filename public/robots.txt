@@ -1,9 +1,0 @@
-# *
-User-agent: *
-Allow: /
-
-# Host
-Host: https://theharshdeepsingh.com
-
-# Sitemaps
-Sitemap: https://theharshdeepsingh.com/sitemap.xml

@@ -3,9 +3,7 @@ import SkillsComponent from "@/components/SkillsComponent";
 import { getData } from "@/lib/getData";
 import { Metadata } from "next";
 
-// Keep this route dynamic so skill changes are visible immediately after DB updates.
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Skills | React, Node.js, TypeScript & AI Automation | Harshdeep Singh",

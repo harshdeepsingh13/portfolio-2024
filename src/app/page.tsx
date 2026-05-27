@@ -38,6 +38,45 @@ export const metadata: Metadata = {
 
 const siteUrl = "https://theharshdeepsingh.com";
 
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "What technologies does Harshdeep Singh specialize in?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "React, TypeScript, Node.js, MongoDB, AWS, LangChain, and AI automation tools including OpenAI API and Zapier.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Is Harshdeep Singh available for freelance work?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. Harshdeep is a Toptal-vetted freelance full stack developer available for contract and project-based engagements.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Where is Harshdeep Singh located?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Harshdeep Singh is based in Canada and works with clients globally.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What kind of projects has Harshdeep Singh built?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Harshdeep has built AI automation tools, SaaS platforms, marketplace applications, resume builders, and production-grade full-stack web apps using React, Node.js, and cloud infrastructure.",
+      },
+    },
+  ],
+};
+
 const profilePageJsonLd = {
   "@context": "https://schema.org",
   "@type": "ProfilePage",
@@ -52,9 +91,7 @@ const profilePageJsonLd = {
   mainEntity: { "@id": `${siteUrl}/#person` },
 };
 
-// Render at request time so home page reflects latest DB updates without rebuild.
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 3600;
 
 export default async function Home() {
   const [skills, basicInformation, stats, githubStats] = await Promise.all([
@@ -69,6 +106,10 @@ export default async function Home() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(profilePageJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <LandingPage basicInformation={basicInformation} skills={(skills as any)?.skills} stats={stats} githubStats={githubStats} />
     </>

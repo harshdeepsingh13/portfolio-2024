@@ -3,9 +3,7 @@ import EducationComponent from "@/components/EducationComponent";
 import { getData } from "@/lib/getData";
 import { Metadata } from "next";
 
-// Keep this route dynamic so education entries stay in sync with MongoDB.
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Education & Certifications | Harshdeep Singh — Full Stack Developer",
