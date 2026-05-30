@@ -32,7 +32,9 @@ export type SkillName =
   | "Zapier"
   | "LangChain"
   | "Playwright"
-  | "CI/CD Pipelines";
+  | "CI/CD Pipelines"
+  | "REST APIs"
+  | "gRPC";
 
 export const SKILLS_ASSETS_MAPPING: Record<SkillName, string> = {
   HTML: "/assets/logos/html.svg",
@@ -60,6 +62,8 @@ export const SKILLS_ASSETS_MAPPING: Record<SkillName, string> = {
   LangChain: "/assets/logos/langchain.svg",
   Playwright: "/assets/logos/playwright.svg",
   "CI/CD Pipelines": "/assets/logos/cicd.svg",
+  "REST APIs": "/assets/logos/code-default.svg",
+  "gRPC": "/assets/logos/grpc.svg",
 };
 
 export const LINK_MAPPING = {
