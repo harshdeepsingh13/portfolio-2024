@@ -1,5 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Local planning docs and one-time scripts (never commit)
+seo-plan.md
+scripts/
+
 # dependencies
 node_modules/
 /.pnp

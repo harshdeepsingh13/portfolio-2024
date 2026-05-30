@@ -4,6 +4,7 @@ import { Row } from "@/app/_globalStyles";
 import { THEME, useThemeContext } from "@/context/ThemeContext";
 import { faFacebookF, faGithub, faInstagram, faLinkedinIn } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
+import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Grid2 from "@mui/material/Grid";
 import { sendGAEvent } from "@next/third-parties/google";
@@ -13,6 +14,7 @@ import {
   DetailsColumn,
   HeroContent,
   HomeWrapper,
+  LocationLine,
   Name,
   ProfessionalSummary,
   ResumeBtn,
@@ -174,6 +176,12 @@ const LandingPage = ({
               {displayed}
               <TypewriterCursor />
             </Name>
+            {basicInformation?.currentLocation && (
+              <LocationLine>
+                <FontAwesomeIcon icon={faLocationDot} />
+                {basicInformation.currentLocation}
+              </LocationLine>
+            )}
             <ProfessionalSummary>{basicInformation?.objective}</ProfessionalSummary>
             <SocialMediaContainer>
               {accounts?.map(({ icon, link, text }) => (

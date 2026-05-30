@@ -8,6 +8,16 @@ const skillSchema = new Schema(
       index: true,
     },
     skills: Array,
+    skillCategories: {
+      type: [
+        {
+          category: { type: String },
+          description: { type: String },
+          skills: [String],
+        },
+      ],
+      default: [],
+    },
   },
   {
     timestamps: true,

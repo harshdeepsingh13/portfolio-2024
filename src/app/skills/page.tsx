@@ -43,7 +43,7 @@ const Skills = async () => {
   return (
     <>
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Skills", href: "/skills" }]} />
-      <SkillsComponent skills={skillsInformation?.skills} />
+      <SkillsComponent skills={skillsInformation?.skills} skillCategories={skillsInformation?.skillCategories} />
     </>
   );
 };

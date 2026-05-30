@@ -1,5 +1,6 @@
 import { Container, PageHeader } from "@/app/_globalStyles";
 import { blink, fadeIn, fadeSlideUp, scanAnim } from "@/theme/animations";
+import Box from "@mui/material/Box";
 import Grid2 from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 
@@ -43,6 +44,23 @@ export const Name = styled(PageHeader)({
     textAlign: "left",
   },
 });
+
+export const LocationLine = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "0.4rem",
+  fontSize: "0.85rem",
+  color: theme.palette.text.secondary,
+  animation: `${fadeSlideUp} 0.6s 0.2s ease both`,
+  "& svg": {
+    color: theme.palette.primary.main,
+    fontSize: "0.8rem",
+  },
+  "@media (min-width: 768px)": {
+    justifyContent: "flex-start",
+  },
+}));
 
 export const ProfessionalSummary = styled("div")(({ theme }) => ({
   color: theme.palette.custom.tertiaryText,

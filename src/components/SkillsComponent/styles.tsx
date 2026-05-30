@@ -15,3 +15,19 @@ export const SkillItem = styled(Card, {
   animation: `${fadeIn} 0.5s ease both`,
   animationDelay: `${delay}s`,
 }));
+
+export const CategorySection = styled("section")({
+  marginBottom: "2.5rem",
+});
+
+export const CategoryTitle = styled("h2")(({ theme }) => ({
+  fontWeight: 700,
+  fontSize: "1.25rem",
+  marginBottom: "0.5rem",
+  color: theme.palette.text.primary,
+}));
+
+export const CategoryDescription = styled("p")(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  margin: "0 0 1.5rem",
+}));
