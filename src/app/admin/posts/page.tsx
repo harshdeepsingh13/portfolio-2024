@@ -50,17 +50,23 @@ const StatusBadge = styled("span")<{ status: "draft" | "published" }>(({ theme, 
   fontWeight: 600,
   letterSpacing: "0.4px",
   textTransform: "uppercase",
-  backgroundColor: status === "published" ? "rgba(34,197,94,0.12)" : "rgba(234,179,8,0.12)",
-  color: status === "published" ? "#22c55e" : "#eab308",
-  border: status === "published" ? "1px solid rgba(34,197,94,0.3)" : "1px solid rgba(234,179,8,0.3)",
+  backgroundColor:
+    status === "published"
+      ? `${theme.palette.success.main}1f`
+      : `${theme.palette.warning.main}1f`,
+  color: status === "published" ? theme.palette.success.main : theme.palette.warning.main,
+  border:
+    status === "published"
+      ? `1px solid ${theme.palette.success.main}4d`
+      : `1px solid ${theme.palette.warning.main}4d`,
 }));
 
 const ActionBtn = styled("button")<{ variant?: "edit" | "delete" }>(({ theme, variant }) => ({
   padding: "5px 12px",
   borderRadius: "6px",
-  border: `1px solid ${variant === "delete" ? "rgba(239,68,68,0.3)" : theme.palette.divider}`,
+  border: `1px solid ${variant === "delete" ? `${theme.palette.error.main}4d` : theme.palette.divider}`,
   backgroundColor: "transparent",
-  color: variant === "delete" ? "#ef4444" : theme.palette.custom.tertiaryText,
+  color: variant === "delete" ? theme.palette.error.main : theme.palette.custom.tertiaryText,
   cursor: "pointer",
   fontSize: "0.8rem",
   fontFamily: "inherit",
@@ -68,8 +74,9 @@ const ActionBtn = styled("button")<{ variant?: "edit" | "delete" }>(({ theme, va
 
   "&:hover": {
     backgroundColor:
-      variant === "delete" ? "rgba(239,68,68,0.08)" : theme.palette.custom.secondaryHover,
-    borderColor: variant === "delete" ? "rgba(239,68,68,0.5)" : theme.palette.custom.borderHover,
+      variant === "delete" ? `${theme.palette.error.main}14` : theme.palette.custom.secondaryHover,
+    borderColor:
+      variant === "delete" ? `${theme.palette.error.main}80` : theme.palette.custom.borderHover,
   },
 }));
 

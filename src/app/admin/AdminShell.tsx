@@ -34,7 +34,7 @@ const SidebarHeader = styled(Box)(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
-const NavItem = styled("a")<{ active?: boolean }>(({ theme, active }) => ({
+const NavItem = styled(Link, { shouldForwardProp: (p) => p !== "active" })<{ active?: boolean }>(({ theme, active }) => ({
   display: "block",
   padding: "10px 16px",
   color: active ? theme.palette.primary.main : theme.palette.custom.tertiaryText,
@@ -101,7 +101,10 @@ function AdminSidebarContent() {
           const isActive =
             link.href === "/admin"
               ? pathname === "/admin"
-              : pathname?.startsWith(link.href);
+              : link.href === "/admin/posts"
+              ? pathname === "/admin/posts" ||
+                (pathname.startsWith("/admin/posts/") && !pathname.startsWith("/admin/posts/new"))
+              : pathname === link.href;
           return (
             <NavItem key={link.href} href={link.href} active={isActive}>
               {link.label}

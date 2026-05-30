@@ -29,6 +29,29 @@ lowlight.register("typescript", typescript);
 lowlight.register("css", css);
 lowlight.register("python", python);
 
+function ToolbarBtn({
+  onClick,
+  isActive,
+  title,
+  children,
+}: {
+  onClick: () => void;
+  isActive?: boolean;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`toolbar-btn${isActive ? " is-active" : ""}`}
+      title={title}
+    >
+      {children}
+    </button>
+  );
+}
+
 interface BlogEditorProps {
   /** Initial TipTap JSON document */
   content?: Record<string, unknown>;
@@ -98,27 +121,6 @@ export default function BlogEditor({
   }, [editor, content]);
 
   if (!editor) return null;
-
-  const ToolbarBtn = ({
-    onClick,
-    isActive,
-    title,
-    children,
-  }: {
-    onClick: () => void;
-    isActive?: boolean;
-    title: string;
-    children: React.ReactNode;
-  }) => (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`toolbar-btn${isActive ? " is-active" : ""}`}
-      title={title}
-    >
-      {children}
-    </button>
-  );
 
   const charCount = editor.storage.characterCount?.characters?.() ?? 0;
   const wordCount = editor.storage.characterCount?.words?.() ?? 0;
