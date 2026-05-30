@@ -1,0 +1,63 @@
+export interface BlogSeo {
+  metaTitle?: string;
+  metaDescription?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+}
+
+export interface BlogPost {
+  _id: string;
+  title: string;
+  slug: string;
+  author: string;
+  coAuthors: string[];
+  status: "draft" | "published";
+  publishedAt?: string;
+  excerpt?: string;
+  coverImage?: string;
+  tags: string[];
+  body_json?: Record<string, unknown>;
+  body_html?: string;
+  readingTime?: number;
+  seo?: BlogSeo;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BlogPostPreview {
+  _id: string;
+  title: string;
+  slug: string;
+  author: string;
+  status: "draft" | "published";
+  publishedAt?: string;
+  excerpt?: string;
+  coverImage?: string;
+  tags: string[];
+  readingTime?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BlogAuthorSocialLinks {
+  twitter?: string;
+  github?: string;
+  linkedin?: string;
+}
+
+export interface BlogAuthor {
+  _id: string;
+  email: string;
+  name: string;
+  bio?: string;
+  avatar?: string;
+  website?: string;
+  socialLinks?: BlogAuthorSocialLinks;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BlogPostForSitemap {
+  slug: string;
+  updatedAt: string;
+}

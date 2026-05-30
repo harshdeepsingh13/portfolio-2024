@@ -1,9 +1,11 @@
 import educations from "../../modals/educations";
+import blogPost from "../../modals/blogPost";
 import project from "../../modals/project";
 import skill from "../../modals/skill";
 import user from "../../modals/user";
 import workExperience from "../../modals/workExperience";
 import { connectToDB } from "./mongoose";
+import type { BlogPost, BlogPostForSitemap, BlogPostPreview } from "@/types/blog";
 
 const userEmail = process.env.UESR_EMAIL;
 
@@ -59,6 +61,55 @@ export const getData = {
     // noStore();
     await connectToDB();
     const data = await educations.find({ user: userEmail }, undefined, { sort: { priority: 1 } }).lean();
+    return JSON.parse(JSON.stringify(data));
+  },
+  getPublishedPosts: async (tag?: string): Promise<BlogPostPreview[]> => {
+    await connectToDB();
+    const filter: Record<string, unknown> = { status: "published" };
+    if (tag) filter.tags = tag;
+    const data = await blogPost
+      .find(filter, {
+        title: 1,
+        slug: 1,
+        author: 1,
+        status: 1,
+        publishedAt: 1,
+        excerpt: 1,
+        coverImage: 1,
+        tags: 1,
+        readingTime: 1,
+        createdAt: 1,
+        updatedAt: 1,
+      })
+      .sort({ publishedAt: -1 })
+      .lean();
+    return JSON.parse(JSON.stringify(data));
+  },
+  getBlogPostBySlug: async (slug: string): Promise<BlogPost | null> => {
+    await connectToDB();
+    const data = await blogPost.findOne({ slug, status: "published" }).lean();
+    return data ? JSON.parse(JSON.stringify(data)) : null;
+  },
+  getRelatedPosts: async (slug: string, limit = 3): Promise<BlogPostPreview[]> => {
+    await connectToDB();
+    const current = await blogPost.findOne({ slug }, { tags: 1 }).lean();
+    if (!current) return [];
+    const tags = (current as any).tags ?? [];
+    const data = await blogPost
+      .find(
+        { status: "published", slug: { $ne: slug }, tags: { $in: tags } },
+        { title: 1, slug: 1, author: 1, publishedAt: 1, excerpt: 1, coverImage: 1, tags: 1, readingTime: 1, createdAt: 1, updatedAt: 1 }
+      )
+      .sort({ publishedAt: -1 })
+      .limit(limit)
+      .lean();
+    return JSON.parse(JSON.stringify(data));
+  },
+  getBlogPostsForSitemap: async (): Promise<BlogPostForSitemap[]> => {
+    await connectToDB();
+    const data = await blogPost
+      .find({ status: "published" }, { slug: 1, updatedAt: 1 })
+      .lean();
     return JSON.parse(JSON.stringify(data));
   },
   getPortfolioStats: async () => {
