@@ -36,6 +36,7 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  serverExternalPackages: ["isomorphic-dompurify", "jsdom"],
   poweredByHeader: false,
   reactStrictMode: true,
   async redirects() {
