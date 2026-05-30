@@ -3,6 +3,7 @@
 # Local planning docs and one-time scripts (never commit)
 seo-plan.md
 scripts/
+docs/superpowers/
 
 # dependencies
 node_modules/
