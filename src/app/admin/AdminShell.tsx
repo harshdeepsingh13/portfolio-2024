@@ -5,28 +5,32 @@ import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import EmotionRegistry from "@/lib/emotionRegistry";
-import { ThemeContextProvider } from "@/context";
+
+// ── Constants ─────────────────────────────────────────────────────────────────
+
+const NAVBAR_HEIGHT = "3rem";
+const SIDEBAR_WIDTH = "220px";
 
 // ── Sidebar styled components ────────────────────────────────────────────────
 
 const AdminLayout = styled(Box)(() => ({
   display: "flex",
-  minHeight: "100vh",
+  minHeight: `calc(100vh - ${NAVBAR_HEIGHT})`,
 }));
 
 const Sidebar = styled(Box)(({ theme }) => ({
-  width: "220px",
+  width: SIDEBAR_WIDTH,
   flexShrink: 0,
   backgroundColor: theme.palette.background.paper,
   borderRight: `1px solid ${theme.palette.divider}`,
   display: "flex",
   flexDirection: "column",
   padding: "0",
-  position: "sticky",
-  top: 0,
-  height: "100vh",
+  position: "fixed",
+  top: NAVBAR_HEIGHT,
+  height: `calc(100vh - ${NAVBAR_HEIGHT})`,
   overflowY: "auto",
+  zIndex: 100,
 }));
 
 const SidebarHeader = styled(Box)(({ theme }) => ({
@@ -55,12 +59,14 @@ const NavItem = styled(Link, { shouldForwardProp: (p) => p !== "active" })<{ act
 
 const MainContent = styled(Box)(({ theme }) => ({
   flex: 1,
+  marginLeft: SIDEBAR_WIDTH,
   backgroundColor: theme.palette.background.default,
   minWidth: 0,
+  minHeight: `calc(100vh - ${NAVBAR_HEIGHT})`,
   overflowX: "auto",
 }));
 
-// ── Inner shell (needs theme access) ─────────────────────────────────────────
+// ── Sidebar content ───────────────────────────────────────────────────────────
 
 function AdminSidebarContent() {
   const pathname = usePathname();
@@ -127,17 +133,13 @@ function AdminSidebarContent() {
   );
 }
 
-// ── Exported shell (wraps providers) ─────────────────────────────────────────
+// ── Exported shell ────────────────────────────────────────────────────────────
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {
   return (
-    <EmotionRegistry>
-      <ThemeContextProvider>
-        <AdminLayout>
-          <AdminSidebarContent />
-          <MainContent>{children}</MainContent>
-        </AdminLayout>
-      </ThemeContextProvider>
-    </EmotionRegistry>
+    <AdminLayout>
+      <AdminSidebarContent />
+      <MainContent>{children}</MainContent>
+    </AdminLayout>
   );
 }

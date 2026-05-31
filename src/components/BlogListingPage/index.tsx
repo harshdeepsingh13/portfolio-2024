@@ -19,9 +19,9 @@ const BlogListingPage = ({ posts, allPosts, activeTag }: BlogListingPageProps) =
 
   return (
     <Container>
-      <PageHeader>Blog</PageHeader>
+      <PageHeader>Stdout</PageHeader>
       <PageLead>
-        Thoughts on full stack development, React, TypeScript, Node.js, AI automation, and building for the web.
+        Developer output. Thoughts on full-stack dev, React, TypeScript, Node.js, and AI automation.
       </PageLead>
 
       {uniqueTags.length > 0 && (

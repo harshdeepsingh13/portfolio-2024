@@ -1,4 +1,4 @@
-import mongoose, { model, Schema } from "mongoose";
+import { Schema } from "mongoose";
 
 const SocialLinksSchema = new Schema(
   {
@@ -9,7 +9,7 @@ const SocialLinksSchema = new Schema(
   { _id: false }
 );
 
-const blogAuthorSchema = new Schema(
+export const blogAuthorSchema = new Schema(
   {
     email: { type: String, required: true, unique: true, index: true },
     name: { type: String, required: true },
@@ -20,5 +20,3 @@ const blogAuthorSchema = new Schema(
   },
   { timestamps: true }
 );
-
-export default mongoose?.models?.blogAuthor || model("blogAuthor", blogAuthorSchema);

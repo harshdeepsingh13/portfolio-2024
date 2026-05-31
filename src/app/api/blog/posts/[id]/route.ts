@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
-import blogPost from "../../../../../../modals/blogPost";
-import { connectToDB } from "@/lib/mongoose";
+import { blogPostSchema } from "../../../../../../modals/blogPost";
+import { connectToBlogsDB } from "@/lib/mongoose";
 import { auth } from "@/auth";
 
 // ---------------------------------------------------------------------------
@@ -23,7 +23,8 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
   }
 
   try {
-    await connectToDB();
+    const conn = await connectToBlogsDB();
+    const BlogPost = conn.models.blogPost || conn.model("blogPost", blogPostSchema);
 
     const session = await auth();
     const filter: Record<string, unknown> = { _id: id };
@@ -31,7 +32,7 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
       filter.status = "published";
     }
 
-    const post = await blogPost.findOne(filter).lean();
+    const post = await BlogPost.findOne(filter).lean();
     if (!post) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
@@ -61,7 +62,8 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
   }
 
   try {
-    await connectToDB();
+    const conn = await connectToBlogsDB();
+    const BlogPost = conn.models.blogPost || conn.model("blogPost", blogPostSchema);
 
     const body = await req.json();
 
@@ -81,7 +83,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
 
     // Set publishedAt when transitioning to published if not already set
     if (updateData.status === "published" && !updateData.publishedAt) {
-      const existing = await blogPost.findById(id, { publishedAt: 1 }).lean();
+      const existing = await BlogPost.findById(id, { publishedAt: 1 }).lean();
       if (!existing) {
         return NextResponse.json({ error: "Post not found" }, { status: 404 });
       }
@@ -90,7 +92,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
       }
     }
 
-    const updated = await blogPost
+    const updated = await BlogPost
       .findByIdAndUpdate(id, { $set: updateData }, { new: true, runValidators: true })
       .lean();
 
@@ -151,9 +153,10 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
   }
 
   try {
-    await connectToDB();
+    const conn = await connectToBlogsDB();
+    const BlogPost = conn.models.blogPost || conn.model("blogPost", blogPostSchema);
 
-    const deleted = await blogPost.findByIdAndDelete(id).lean();
+    const deleted = await BlogPost.findByIdAndDelete(id).lean();
     if (!deleted) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
@@ -184,9 +187,10 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
   }
 
   try {
-    await connectToDB();
+    const conn = await connectToBlogsDB();
+    const BlogPost = conn.models.blogPost || conn.model("blogPost", blogPostSchema);
 
-    const existing = await blogPost.findById(id, { status: 1, publishedAt: 1 }).lean();
+    const existing = await BlogPost.findById(id, { status: 1, publishedAt: 1 }).lean();
     if (!existing) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
@@ -200,7 +204,7 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
       updatePayload.publishedAt = new Date();
     }
 
-    const updated = await blogPost
+    const updated = await BlogPost
       .findByIdAndUpdate(id, { $set: updatePayload }, { new: true })
       .lean();
 

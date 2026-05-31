@@ -8,6 +8,7 @@ import {
   faDiagramProject,
   faDice,
   faGraduationCap,
+  faTerminal,
   faUserTie,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
@@ -33,6 +34,7 @@ const NAV_LINKS = [
   { icon: faUserTie, text: "Experiences", to: LINK_MAPPING.EXPERIENCES },
   { icon: faGraduationCap, text: "Education", to: LINK_MAPPING.EDUCATION },
   { icon: faClipboard, text: "Resume", to: LINK_MAPPING.RESUME },
+  { icon: faTerminal, text: "Stdout", to: LINK_MAPPING.BLOG },
 ];
 
 const Header = ({ basicInformation }: { basicInformation: any }) => {

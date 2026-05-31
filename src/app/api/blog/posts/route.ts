@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import slugify from "slugify";
-import blogPost from "../../../../../modals/blogPost";
-import { connectToDB } from "@/lib/mongoose";
+import { blogPostSchema } from "../../../../../modals/blogPost";
+import { connectToBlogsDB } from "@/lib/mongoose";
 import { auth } from "@/auth";
 
 // ---------------------------------------------------------------------------
@@ -36,7 +36,8 @@ const PREVIEW_PROJECTION = {
 // ---------------------------------------------------------------------------
 export async function GET(req: NextRequest) {
   try {
-    await connectToDB();
+    const conn = await connectToBlogsDB();
+    const BlogPost = conn.models.blogPost || conn.model("blogPost", blogPostSchema);
 
     const { searchParams } = new URL(req.url);
     const tag = searchParams.get("tag") ?? undefined;
@@ -56,7 +57,7 @@ export async function GET(req: NextRequest) {
       filter.tags = tag;
     }
 
-    const data = await blogPost
+    const data = await BlogPost
       .find(filter, PREVIEW_PROJECTION)
       .sort({ publishedAt: -1 })
       .lean();
@@ -81,7 +82,8 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    await connectToDB();
+    const conn = await connectToBlogsDB();
+    const BlogPost = conn.models.blogPost || conn.model("blogPost", blogPostSchema);
 
     const body = await req.json();
 
@@ -146,7 +148,7 @@ export async function POST(req: NextRequest) {
       newPost.publishedAt = new Date();
     }
 
-    const created = await blogPost.create(newPost);
+    const created = await BlogPost.create(newPost);
     return NextResponse.json(JSON.parse(JSON.stringify(created.toObject())), { status: 201 });
   } catch (err: unknown) {
     console.error("[POST /api/blog/posts]", err);

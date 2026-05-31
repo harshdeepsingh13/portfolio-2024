@@ -1,4 +1,4 @@
-import mongoose, { model, Schema } from "mongoose";
+import { Schema } from "mongoose";
 
 const SeoSchema = new Schema(
   {
@@ -10,7 +10,7 @@ const SeoSchema = new Schema(
   { _id: false }
 );
 
-const blogPostSchema = new Schema(
+export const blogPostSchema = new Schema(
   {
     title: { type: String, required: true },
     slug: { type: String, required: true, unique: true, index: true },
@@ -28,5 +28,3 @@ const blogPostSchema = new Schema(
   },
   { timestamps: true }
 );
-
-export default mongoose?.models?.blogPost || model("blogPost", blogPostSchema);

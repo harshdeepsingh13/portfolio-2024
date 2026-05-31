@@ -47,7 +47,7 @@ const BlogPage = async ({
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Blog", href: "/blog" },
+          { label: "Stdout", href: "/blog" },
         ]}
       />
       <BlogListingPage posts={posts} allPosts={allPosts} activeTag={activeTag} />

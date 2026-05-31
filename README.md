@@ -66,30 +66,6 @@ cd portfolio-2024
 npm install --ignore-scripts   # skip the postinstall build step during local setup
 ```
 
-Create a `.env` file in the project root:
-
-```env
-# MongoDB connection string
-MONGODB_URI=mongodb+srv://<user>:<password>@<cluster>.mongodb.net/<db>
-
-# Email used to key portfolio content across all MongoDB collections
-# Note: intentional typo in the variable name — use exactly as shown
-UESR_EMAIL=your@email.com
-
-# Cloudinary base URL for images
-NEXT_PUBLIC_CLOUDINARY_RES_LINK=https://res.cloudinary.com/<cloud-name>/image/upload
-
-# Google Analytics
-NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
-
-# GitHub API — optional, stats show as 0 if omitted
-GITHUB_USERNAME=your-github-username
-GITHUB_TOKEN=ghp_xxxxxxxxxxxx
-
-# NextAuth.js — required for the blog admin panel
-# Generate with: openssl rand -base64 32
-AUTH_SECRET=your-random-secret-here
-```
 
 ```bash
 npm run dev      # http://localhost:3000 with Turbopack
@@ -104,7 +80,7 @@ npm run lint     # ESLint
 
 I'm a full stack developer based in Vancouver, Canada — React, TypeScript, Node.js, and cloud infrastructure are my daily tools. Vetted by Toptal, top 3% of applicants globally. I write about what I'm building at [theharshdeepsingh.com/blog](https://theharshdeepsingh.com/blog).
 
-- **Portfolio** — [theharshdeepsingh.com](https://theharshdeepsingh.com)
-- **LinkedIn** — [linkedin.com/in/harshdeepsingh13](https://www.linkedin.com/in/harshdeepsingh13/)
-- **GitHub** — [github.com/harshdeepsingh13](https://github.com/harshdeepsingh13/)
-- **Toptal** — [toptal.com/resume/harshdeep-singh](https://www.toptal.com/resume/harshdeep-singh)
+- **Portfolio** — [https://theharshdeepsingh.com](https://theharshdeepsingh.com)
+- **LinkedIn** — [https://linkedin.com/in/harshdeepsingh13](https://www.linkedin.com/in/harshdeepsingh13/)
+- **GitHub** — [https://github.com/harshdeepsingh13](https://github.com/harshdeepsingh13/)
+- **Toptal** — [https://toptal.com/resume/harshdeep-singh](https://www.toptal.com/resume/harshdeep-singh)

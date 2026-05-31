@@ -1,18 +1,15 @@
 import Breadcrumbs from "@/components/Breadcrumbs";
 import BlogPostContent from "@/components/BlogPostContent";
+import PreviewBanner from "@/components/PreviewBanner";
 import { getData } from "@/lib/getData";
 import { sanitizeHtml } from "@/lib/sanitize";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { auth } from "@/auth";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 const SITE_URL = "https://theharshdeepsingh.com";
-
-export async function generateStaticParams() {
-  const posts = await getData.getBlogPostsForSitemap();
-  return posts.map((p) => ({ slug: p.slug }));
-}
 
 export async function generateMetadata({
   params,
@@ -48,8 +45,41 @@ export async function generateMetadata({
   };
 }
 
-const BlogPostPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
+const BlogPostPage = async ({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ preview?: string }>;
+}) => {
   const { slug } = await params;
+  const sp = await searchParams;
+  const isPreview = sp.preview === "1";
+
+  if (isPreview) {
+    const session = await auth();
+    if (!session) redirect("/admin/login");
+
+    const post = await getData.getBlogPostBySlugForPreview(slug);
+    if (!post) notFound();
+
+    const safeHtml = post.body_html ? await sanitizeHtml(post.body_html) : "";
+
+    return (
+      <>
+        <PreviewBanner postId={String((post as any)._id)} slug={slug} />
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Stdout", href: "/blog" },
+            { label: post.title, href: `/blog/${post.slug}` },
+          ]}
+        />
+        <BlogPostContent post={post} relatedPosts={[]} safeHtml={safeHtml} />
+      </>
+    );
+  }
+
   const [post, relatedPosts] = await Promise.all([
     getData.getBlogPostBySlug(slug),
     getData.getRelatedPosts(slug, 3),
@@ -88,7 +118,7 @@ const BlogPostPage = async ({ params }: { params: Promise<{ slug: string }> }) =
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Blog", href: "/blog" },
+          { label: "Stdout", href: "/blog" },
           { label: post.title, href: `/blog/${post.slug}` },
         ]}
       />

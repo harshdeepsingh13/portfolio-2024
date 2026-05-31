@@ -10,11 +10,10 @@ import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
-import slugify from "slugify";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { BlogPost } from "@/types/blog";
 
-// ── Styled components (shared with /new) ─────────────────────────────────────
+// ── Styled components ─────────────────────────────────────────────────────────
 
 const PageWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -111,6 +110,26 @@ interface PostFormState {
   body_html: string;
 }
 
+function buildPayload(form: PostFormState) {
+  return {
+    title: form.title.trim(),
+    slug: form.slug.trim(),
+    excerpt: form.excerpt.trim() || undefined,
+    tags: form.tags.split(",").map((t) => t.trim()).filter(Boolean),
+    status: form.status,
+    coverImage: form.coverImage.trim() || undefined,
+    body_json: form.body_json,
+    body_html: form.body_html,
+    seo: {
+      metaTitle: form.seoTitle.trim() || undefined,
+      metaDescription: form.seoDescription.trim() || undefined,
+    },
+    readingTime: form.body_html
+      ? Math.max(1, Math.round(form.body_html.replace(/<[^>]+>/g, "").split(/\s+/).length / 200))
+      : undefined,
+  };
+}
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 interface EditPostPageProps {
@@ -126,13 +145,22 @@ export default function EditPostPage({ params }: EditPostPageProps) {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [autoSaveStatus, setAutoSaveStatus] = useState<string>("");
 
-  // Resolve async params in Next.js 15
+  // Refs for auto-save (avoid stale closures)
+  const formRef = useRef<PostFormState | null>(null);
+  const postIdRef = useRef<string | null>(null);
+  const isDirtyRef = useRef(false);
+
+  // Resolve async params
   useEffect(() => {
-    params.then((p) => setPostId(p.id));
+    params.then((p) => {
+      setPostId(p.id);
+      postIdRef.current = p.id;
+    });
   }, [params]);
 
-  // Fetch post data once we have the ID
+  // Fetch post data
   useEffect(() => {
     if (!postId) return;
 
@@ -142,7 +170,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const post: BlogPost = await res.json();
 
-        setForm({
+        const loaded: PostFormState = {
           title: post.title,
           slug: post.slug,
           excerpt: post.excerpt ?? "",
@@ -153,7 +181,10 @@ export default function EditPostPage({ params }: EditPostPageProps) {
           seoDescription: post.seo?.metaDescription ?? "",
           body_json: post.body_json ?? null,
           body_html: post.body_html ?? "",
-        });
+        };
+        setForm(loaded);
+        formRef.current = loaded;
+        isDirtyRef.current = false;
       } catch {
         setLoadError("Failed to load post. The API may not be available yet.");
       }
@@ -161,6 +192,13 @@ export default function EditPostPage({ params }: EditPostPageProps) {
 
     load();
   }, [postId]);
+
+  // Keep formRef in sync with state
+  useEffect(() => {
+    if (!form) return;
+    formRef.current = form;
+    isDirtyRef.current = true;
+  }, [form]);
 
   const set = useCallback(<K extends keyof PostFormState>(key: K, value: PostFormState[K]) => {
     setForm((prev) => (prev ? { ...prev, [key]: value } : prev));
@@ -173,6 +211,52 @@ export default function EditPostPage({ params }: EditPostPageProps) {
     []
   );
 
+  // Auto-save function
+  const autoSave = useCallback(async () => {
+    const current = formRef.current;
+    const id = postIdRef.current;
+    if (!current || !id || !current.title.trim()) return;
+
+    setAutoSaveStatus("Saving…");
+    try {
+      const res = await fetch(`/api/blog/posts/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(buildPayload(current)),
+      });
+
+      if (res.ok) {
+        isDirtyRef.current = false;
+        const now = new Date();
+        setAutoSaveStatus(
+          `Last saved at ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+        );
+      } else {
+        setAutoSaveStatus("Auto-save failed");
+      }
+    } catch {
+      setAutoSaveStatus("Auto-save failed");
+    }
+  }, []);
+
+  // 30-second auto-save (start once postId is ready)
+  useEffect(() => {
+    if (!postId) return;
+    const interval = setInterval(autoSave, 30_000);
+    return () => clearInterval(interval);
+  }, [postId, autoSave]);
+
+  // Warn before browser navigation when dirty
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (isDirtyRef.current) {
+        e.preventDefault();
+      }
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, []);
+
   const handleSave = async () => {
     if (!form || !postId) return;
     setSaveError(null);
@@ -182,28 +266,10 @@ export default function EditPostPage({ params }: EditPostPageProps) {
 
     setSaving(true);
     try {
-      const payload = {
-        title: form.title.trim(),
-        slug: form.slug.trim(),
-        excerpt: form.excerpt.trim() || undefined,
-        tags: form.tags.split(",").map((t) => t.trim()).filter(Boolean),
-        status: form.status,
-        coverImage: form.coverImage.trim() || undefined,
-        body_json: form.body_json,
-        body_html: form.body_html,
-        seo: {
-          metaTitle: form.seoTitle.trim() || undefined,
-          metaDescription: form.seoDescription.trim() || undefined,
-        },
-        readingTime: form.body_html
-          ? Math.max(1, Math.round(form.body_html.replace(/<[^>]+>/g, "").split(/\s+/).length / 200))
-          : undefined,
-      };
-
       const res = await fetch(`/api/blog/posts/${postId}`, {
-        method: "PATCH",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(buildPayload(form)),
       });
 
       if (!res.ok) {
@@ -211,11 +277,20 @@ export default function EditPostPage({ params }: EditPostPageProps) {
         throw new Error(body.error ?? `HTTP ${res.status}`);
       }
 
+      isDirtyRef.current = false;
       router.push("/admin/posts");
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : "Failed to save post.");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handlePreview = async () => {
+    if (formRef.current?.title.trim()) await autoSave();
+    const slug = formRef.current?.slug.trim();
+    if (slug) {
+      window.open(`/blog/${slug}?preview=1`, "_blank");
     }
   };
 
@@ -275,6 +350,14 @@ export default function EditPostPage({ params }: EditPostPageProps) {
           placeholder="Write your post content here…"
         />
 
+        {autoSaveStatus && (
+          <Typography
+            sx={{ fontSize: "0.75rem", color: "custom.accentText", textAlign: "right" }}
+          >
+            {autoSaveStatus}
+          </Typography>
+        )}
+
         {saveError && (
           <Typography
             sx={{
@@ -330,6 +413,22 @@ export default function EditPostPage({ params }: EditPostPageProps) {
             }}
           >
             {saving ? "Saving…" : "Update Post"}
+          </Button>
+          <Button
+            onClick={handlePreview}
+            fullWidth
+            variant="outlined"
+            sx={{
+              borderColor: theme.palette.divider,
+              color: theme.palette.text.secondary,
+              fontWeight: 500,
+              textTransform: "none",
+              borderRadius: "8px",
+              fontSize: "0.85rem",
+              "&:hover": { borderColor: theme.palette.custom.borderHover },
+            }}
+          >
+            Preview
           </Button>
         </SidebarCard>
 

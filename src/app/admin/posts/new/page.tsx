@@ -9,7 +9,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import slugify from "slugify";
 
 // ── Styled components ─────────────────────────────────────────────────────────
@@ -100,13 +100,36 @@ function generateSlug(title: string): string {
   return slugify(title, { lower: true, strict: true, trim: true });
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
+function buildPayload(form: PostFormState) {
+  return {
+    title: form.title.trim(),
+    slug: form.slug.trim(),
+    excerpt: form.excerpt.trim() || undefined,
+    tags: form.tags
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean),
+    status: form.status,
+    coverImage: form.coverImage.trim() || undefined,
+    body_json: form.body_json,
+    body_html: form.body_html,
+    seo: {
+      metaTitle: form.seoTitle.trim() || undefined,
+      metaDescription: form.seoDescription.trim() || undefined,
+    },
+    readingTime: form.body_html
+      ? Math.max(1, Math.round(form.body_html.replace(/<[^>]+>/g, "").split(/\s+/).length / 200))
+      : undefined,
+  };
+}
+
+// ── Types ─────────────────────────────────────────────────────────────────────
 
 interface PostFormState {
   title: string;
   slug: string;
   excerpt: string;
-  tags: string;           // comma-separated raw input
+  tags: string;
   status: "draft" | "published";
   coverImage: string;
   seoTitle: string;
@@ -128,6 +151,8 @@ const DEFAULT_FORM: PostFormState = {
   body_html: "",
 };
 
+// ── Page ──────────────────────────────────────────────────────────────────────
+
 export default function NewPostPage() {
   const router = useRouter();
   const theme = useTheme();
@@ -136,13 +161,23 @@ export default function NewPostPage() {
   const [slugEdited, setSlugEdited] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [autoSaveStatus, setAutoSaveStatus] = useState<string>("");
 
-  // Update a field in the form
+  // Refs for auto-save (avoid stale closures)
+  const formRef = useRef<PostFormState>(DEFAULT_FORM);
+  const savedPostId = useRef<string | null>(null);
+  const isDirtyRef = useRef(false);
+
+  // Keep formRef in sync with state
+  useEffect(() => {
+    formRef.current = form;
+    isDirtyRef.current = true;
+  }, [form]);
+
   const set = useCallback(<K extends keyof PostFormState>(key: K, value: PostFormState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   }, []);
 
-  // Auto-generate slug from title (unless the user has manually edited it)
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const title = e.target.value;
     set("title", title);
@@ -163,57 +198,110 @@ export default function NewPostPage() {
     []
   );
 
+  // Auto-save function (reads from ref to avoid stale closure)
+  const autoSave = useCallback(async () => {
+    const current = formRef.current;
+    if (!current.title.trim()) return;
+
+    setAutoSaveStatus("Saving…");
+    try {
+      const payload = buildPayload(current);
+      let ok = false;
+
+      if (!savedPostId.current) {
+        const res = await fetch("/api/blog/posts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          savedPostId.current = data._id;
+          ok = true;
+        }
+      } else {
+        const res = await fetch(`/api/blog/posts/${savedPostId.current}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        ok = res.ok;
+      }
+
+      if (ok) {
+        isDirtyRef.current = false;
+        const now = new Date();
+        setAutoSaveStatus(
+          `Last saved at ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+        );
+      } else {
+        setAutoSaveStatus("Auto-save failed");
+      }
+    } catch {
+      setAutoSaveStatus("Auto-save failed");
+    }
+  }, []);
+
+  // 30-second auto-save interval
+  useEffect(() => {
+    const interval = setInterval(autoSave, 30_000);
+    return () => clearInterval(interval);
+  }, [autoSave]);
+
+  // Warn before browser navigation when dirty
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (isDirtyRef.current) {
+        e.preventDefault();
+      }
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, []);
+
   const handleSave = async () => {
     setError(null);
-    if (!form.title.trim()) {
-      setError("Title is required.");
-      return;
-    }
-    if (!form.slug.trim()) {
-      setError("Slug is required.");
-      return;
-    }
+    if (!form.title.trim()) { setError("Title is required."); return; }
+    if (!form.slug.trim()) { setError("Slug is required."); return; }
 
     setSaving(true);
     try {
-      const payload = {
-        title: form.title.trim(),
-        slug: form.slug.trim(),
-        excerpt: form.excerpt.trim() || undefined,
-        tags: form.tags
-          .split(",")
-          .map((t) => t.trim())
-          .filter(Boolean),
-        status: form.status,
-        coverImage: form.coverImage.trim() || undefined,
-        body_json: form.body_json,
-        body_html: form.body_html,
-        seo: {
-          metaTitle: form.seoTitle.trim() || undefined,
-          metaDescription: form.seoDescription.trim() || undefined,
-        },
-        // Reading time: rough estimate (~200 wpm)
-        readingTime: form.body_html
-          ? Math.max(1, Math.round(form.body_html.replace(/<[^>]+>/g, "").split(/\s+/).length / 200))
-          : undefined,
-      };
+      const payload = buildPayload(form);
 
-      const res = await fetch("/api/blog/posts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      let res: Response;
+      if (!savedPostId.current) {
+        res = await fetch("/api/blog/posts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      } else {
+        res = await fetch(`/api/blog/posts/${savedPostId.current}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      }
 
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body.error ?? `HTTP ${res.status}`);
       }
 
+      isDirtyRef.current = false;
       router.push("/admin/posts");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save post.");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handlePreview = async () => {
+    if (form.title.trim()) await autoSave();
+    const slug = formRef.current.slug.trim();
+    if (slug) {
+      window.open(`/blog/${slug}?preview=1`, "_blank");
     }
   };
 
@@ -224,12 +312,7 @@ export default function NewPostPage() {
         <Box>
           <Typography
             component="h1"
-            sx={{
-              fontSize: "1.5rem",
-              fontWeight: 700,
-              color: "text.primary",
-              marginBottom: "4px",
-            }}
+            sx={{ fontSize: "1.5rem", fontWeight: 700, color: "text.primary", marginBottom: "4px" }}
           >
             New Post
           </Typography>
@@ -238,7 +321,6 @@ export default function NewPostPage() {
           </Typography>
         </Box>
 
-        {/* Title field */}
         <StyledTextField
           label="Post Title"
           value={form.title}
@@ -249,8 +331,15 @@ export default function NewPostPage() {
           slotProps={{ input: { style: { fontSize: "1.1rem", fontWeight: 600 } } }}
         />
 
-        {/* TipTap Editor */}
         <BlogEditor onChange={handleEditorChange} placeholder="Write your post content here…" />
+
+        {autoSaveStatus && (
+          <Typography
+            sx={{ fontSize: "0.75rem", color: "custom.accentText", textAlign: "right" }}
+          >
+            {autoSaveStatus}
+          </Typography>
+        )}
 
         {error && (
           <Typography
@@ -270,7 +359,6 @@ export default function NewPostPage() {
 
       {/* ── Right: Metadata sidebar ─────────────────────── */}
       <Sidebar>
-        {/* Publish controls */}
         <SidebarCard>
           <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "text.primary" }}>
             Publish
@@ -311,9 +399,26 @@ export default function NewPostPage() {
           >
             {saving ? "Saving…" : form.status === "published" ? "Publish Post" : "Save Draft"}
           </Button>
+
+          <Button
+            onClick={handlePreview}
+            disabled={!savedPostId.current && !form.slug.trim()}
+            fullWidth
+            variant="outlined"
+            sx={{
+              borderColor: theme.palette.divider,
+              color: theme.palette.text.secondary,
+              fontWeight: 500,
+              textTransform: "none",
+              borderRadius: "8px",
+              fontSize: "0.85rem",
+              "&:hover": { borderColor: theme.palette.custom.borderHover },
+            }}
+          >
+            Preview
+          </Button>
         </SidebarCard>
 
-        {/* Slug */}
         <SidebarCard>
           <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "text.primary" }}>
             URL
@@ -332,7 +437,6 @@ export default function NewPostPage() {
           </Box>
         </SidebarCard>
 
-        {/* Post details */}
         <SidebarCard>
           <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "text.primary" }}>
             Details
@@ -376,7 +480,6 @@ export default function NewPostPage() {
           </Box>
         </SidebarCard>
 
-        {/* SEO */}
         <SidebarCard>
           <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "text.primary" }}>
             SEO

@@ -11,4 +11,8 @@ declare global {
         conn: typeof mongooseLib | null;
         promise: Promise<typeof mongooseLib> | null;
     };
+    var __mongooseBlog: {
+        conn: mongooseLib.Connection | null;
+        promise: Promise<mongooseLib.Connection> | null;
+    };
 }

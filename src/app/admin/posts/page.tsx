@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { BlogPostPreview } from "@/types/blog";
 
 // ── Styled components ─────────────────────────────────────────────────────────
@@ -84,6 +85,7 @@ const ActionBtn = styled("button")<{ variant?: "edit" | "delete" }>(({ theme, va
 
 export default function AdminPostsPage() {
   const theme = useTheme();
+  const router = useRouter();
   const [posts, setPosts] = useState<BlogPostPreview[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -256,9 +258,7 @@ export default function AdminPostsPage() {
                       <Box sx={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
                         <ActionBtn
                           variant="edit"
-                          onClick={() =>
-                            (window.location.href = `/admin/posts/${post._id}/edit`)
-                          }
+                          onClick={() => router.push(`/admin/posts/${post._id}/edit`)}
                         >
                           Edit
                         </ActionBtn>
