@@ -8,7 +8,13 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  if (!session) redirect("/admin/login");
+
+  // Login page must render without the admin shell so unauthenticated users
+  // can actually see the form. The middleware handles redirecting all other
+  // /admin/* paths to /admin/login when there's no session.
+  if (!session) {
+    return <>{children}</>;
+  }
 
   return <AdminShell>{children}</AdminShell>;
 }
