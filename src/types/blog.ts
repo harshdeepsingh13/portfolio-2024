@@ -21,6 +21,7 @@ export interface BlogPost {
   title: string;
   slug: string;
   author: string;
+  authorName?: string;
   coAuthors: string[];
   status: "draft" | "published";
   publishedAt?: string;
@@ -42,6 +43,7 @@ export interface BlogPostPreview {
   title: string;
   slug: string;
   author: string;
+  authorName?: string;
   status: "draft" | "published";
   publishedAt?: string;
   excerpt?: string;

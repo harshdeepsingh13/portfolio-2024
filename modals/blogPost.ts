@@ -31,8 +31,8 @@ export const blogPostSchema = new Schema(
   {
     title: { type: String, required: true },
     slug: { type: String, required: true, unique: true, index: true },
-    author: { type: String, required: true, index: true },
-    coAuthors: { type: [String], default: [] },
+    author: { type: Schema.Types.ObjectId, ref: "user", required: true, index: true },
+    coAuthors: { type: [Schema.Types.ObjectId], ref: "user", default: [] },
     status: { type: String, enum: ["draft", "published"], default: "draft" },
     publishedAt: { type: Date },
     excerpt: { type: String },

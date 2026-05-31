@@ -84,13 +84,33 @@ export const getData = {
       })
       .sort({ publishedAt: -1 })
       .lean();
-    return JSON.parse(JSON.stringify(data));
+    const posts: BlogPostPreview[] = JSON.parse(JSON.stringify(data));
+    if (posts.length > 0 && posts[0].author) {
+      try {
+        await connectToDB();
+        const authorDoc = await user.findById(posts[0].author).select("name").lean() as { name?: string } | null;
+        if (authorDoc?.name) {
+          const authorName = authorDoc.name;
+          return posts.map((p) => ({ ...p, authorName }));
+        }
+      } catch { /* author not yet an ObjectId — migration pending */ }
+    }
+    return posts;
   },
   getBlogPostBySlug: async (slug: string): Promise<BlogPost | null> => {
     const conn = await connectToBlogsDB();
     const BlogPost = conn.models.blogPost || conn.model("blogPost", blogPostSchema);
     const data = await BlogPost.findOne({ slug, status: "published" }).lean();
-    return data ? JSON.parse(JSON.stringify(data)) : null;
+    if (!data) return null;
+    const post: BlogPost = JSON.parse(JSON.stringify(data));
+    if (post.author) {
+      try {
+        await connectToDB();
+        const authorDoc = await user.findById(post.author).select("name").lean() as { name?: string } | null;
+        if (authorDoc?.name) post.authorName = authorDoc.name;
+      } catch { /* author not yet an ObjectId — migration pending */ }
+    }
+    return post;
   },
   getBlogPostBySlugForPreview: async (slug: string): Promise<BlogPost | null> => {
     const conn = await connectToBlogsDB();
@@ -98,10 +118,18 @@ export const getData = {
     const data = await BlogPost.findOne({ slug }).lean() as (BlogPost & { draft?: Partial<BlogPost> }) | null;
     if (!data) return null;
     // Merge draft over root so preview shows the last-saved (unpublished) content
-    const post = data.hasDraft && data.draft
+    const merged = data.hasDraft && data.draft
       ? { ...data, ...data.draft }
       : data;
-    return JSON.parse(JSON.stringify(post));
+    const post: BlogPost = JSON.parse(JSON.stringify(merged));
+    if (post.author) {
+      try {
+        await connectToDB();
+        const authorDoc = await user.findById(post.author).select("name").lean() as { name?: string } | null;
+        if (authorDoc?.name) post.authorName = authorDoc.name;
+      } catch { /* author not yet an ObjectId — migration pending */ }
+    }
+    return post;
   },
   getRelatedPosts: async (slug: string, limit = 3): Promise<BlogPostPreview[]> => {
     const conn = await connectToBlogsDB();
@@ -117,7 +145,18 @@ export const getData = {
       .sort({ publishedAt: -1 })
       .limit(limit)
       .lean();
-    return JSON.parse(JSON.stringify(data));
+    const posts: BlogPostPreview[] = JSON.parse(JSON.stringify(data));
+    if (posts.length > 0 && posts[0].author) {
+      try {
+        await connectToDB();
+        const authorDoc = await user.findById(posts[0].author).select("name").lean() as { name?: string } | null;
+        if (authorDoc?.name) {
+          const authorName = authorDoc.name;
+          return posts.map((p) => ({ ...p, authorName }));
+        }
+      } catch { /* author not yet an ObjectId — migration pending */ }
+    }
+    return posts;
   },
   getBlogPostsForSitemap: async (): Promise<BlogPostForSitemap[]> => {
     const conn = await connectToBlogsDB();

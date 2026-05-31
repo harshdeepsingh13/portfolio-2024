@@ -89,7 +89,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
       "title", "excerpt", "coverImage", "tags",
       "body_json", "body_html", "readingTime", "seo",
     ] as const;
-    const ROOT_ONLY_FIELDS = ["slug", "author", "coAuthors"] as const;
+    const ROOT_ONLY_FIELDS = ["slug"] as const;
 
     // ── Save mode + post is already published → write to draft subdoc only ──
     if (mode === "save" && existing.status === "published") {

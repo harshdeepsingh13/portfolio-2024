@@ -2,10 +2,11 @@ import "dotenv/config";
 import mongoose from "mongoose";
 
 const BLOGS_MONGODB_URI = process.env.BLOGS_MONGODB_URI;
+const MONGODB_URI = process.env.MONGODB_URI;
 const UESR_EMAIL = process.env.UESR_EMAIL;
 
-if (!BLOGS_MONGODB_URI || !UESR_EMAIL) {
-  console.error("Missing BLOGS_MONGODB_URI or UESR_EMAIL in .env");
+if (!BLOGS_MONGODB_URI || !MONGODB_URI || !UESR_EMAIL) {
+  console.error("Missing BLOGS_MONGODB_URI, MONGODB_URI, or UESR_EMAIL in .env");
   process.exit(1);
 }
 
@@ -13,7 +14,7 @@ const BlogPostSchema = new mongoose.Schema(
   {
     title: String,
     slug: String,
-    author: String,
+    author: mongoose.Schema.Types.ObjectId,
     status: String,
     publishedAt: Date,
     excerpt: String,
@@ -419,6 +420,19 @@ const bodyText = body_html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 const wordCount = bodyText.split(" ").filter((w) => w.length > 0).length;
 const readingTime = Math.ceil(wordCount / 200);
 
+// Look up portfolio owner's ObjectId from main DB
+const mainConn = await mongoose.createConnection(MONGODB_URI).asPromise();
+const UserSchema = new mongoose.Schema({ name: String, email: String });
+const User = mainConn.model("user", UserSchema);
+const ownerUser = await User.findOne({ email: UESR_EMAIL }).select("_id");
+if (!ownerUser) {
+  console.error(`User not found for email: ${UESR_EMAIL}`);
+  await mainConn.close();
+  process.exit(1);
+}
+const authorId = ownerUser._id;
+await mainConn.close();
+
 await mongoose.connect(BLOGS_MONGODB_URI);
 
 const existing = await BlogPost.findOne({ slug });
@@ -431,7 +445,7 @@ if (existing) {
 const post = await BlogPost.create({
   title: "Deploying a Next.js App to AWS with CI/CD Pipelines (Step-by-Step)",
   slug,
-  author: UESR_EMAIL,
+  author: authorId,
   status: "published",
   publishedAt: new Date(),
   excerpt:

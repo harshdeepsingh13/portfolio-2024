@@ -2,15 +2,11 @@ import "dotenv/config";
 import mongoose from "mongoose";
 
 const BLOGS_MONGODB_URI = process.env.BLOGS_MONGODB_URI;
+const MONGODB_URI = process.env.MONGODB_URI;
 const USER_EMAIL = process.env.UESR_EMAIL;
 
-if (!BLOGS_MONGODB_URI) {
-  console.error("Missing BLOGS_MONGODB_URI in .env");
-  process.exit(1);
-}
-
-if (!USER_EMAIL) {
-  console.error("Missing UESR_EMAIL in .env");
+if (!BLOGS_MONGODB_URI || !MONGODB_URI || !USER_EMAIL) {
+  console.error("Missing BLOGS_MONGODB_URI, MONGODB_URI, or UESR_EMAIL in .env");
   process.exit(1);
 }
 
@@ -18,7 +14,7 @@ const BlogPostSchema = new mongoose.Schema(
   {
     title: String,
     slug: String,
-    author: String,
+    author: mongoose.Schema.Types.ObjectId,
     status: String,
     publishedAt: Date,
     excerpt: String,
@@ -552,12 +548,25 @@ const readingTime = Math.ceil(wordCount / 200);
 // ---------------------------------------------------------------------------
 // Post document
 // ---------------------------------------------------------------------------
+// Look up portfolio owner's ObjectId from main DB
+const mainConn = await mongoose.createConnection(MONGODB_URI).asPromise();
+const UserSchema = new mongoose.Schema({ name: String, email: String });
+const User = mainConn.model("user", UserSchema);
+const ownerUser = await User.findOne({ email: USER_EMAIL }).select("_id");
+if (!ownerUser) {
+  console.error(`User not found for email: ${USER_EMAIL}`);
+  await mainConn.close();
+  process.exit(1);
+}
+const authorId = ownerUser._id;
+await mainConn.close();
+
 const slug = "react-typescript-best-practices-2025";
 
 const post = {
   title: "React + TypeScript Best Practices in 2025: What Actually Matters",
   slug,
-  author: USER_EMAIL,
+  author: authorId,
   status: "published",
   publishedAt: new Date(),
   excerpt:

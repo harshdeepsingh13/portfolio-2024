@@ -44,11 +44,11 @@ const BlogCard = ({ post, delay }: { post: BlogPostPreview; delay?: number }) =>
             </BlogCardTagsRow>
           )}
           <BlogCardMeta>
-            {post.author && (
+            {(post.authorName ?? post.author) && (
               <>
                 <span>
                   <FontAwesomeIcon icon={faUser} style={{ marginRight: "4px", fontSize: "0.7rem" }} />
-                  {post.author}
+                  {post.authorName ?? "Harshdeep Singh"}
                 </span>
                 <BlogCardMetaDot aria-hidden="true">·</BlogCardMetaDot>
               </>

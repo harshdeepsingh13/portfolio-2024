@@ -61,10 +61,10 @@ const BlogPostContent = ({ post, relatedPosts, safeHtml }: BlogPostContentProps)
           opacity: 0.75,
         }}
       >
-        {post.author && (
+        {(post.authorName ?? post.author) && (
           <span>
             <FontAwesomeIcon icon={faUser} style={{ marginRight: "6px" }} />
-            {post.author}
+            {post.authorName ?? "Harshdeep Singh"}
           </span>
         )}
         {post.readingTime != null && (
