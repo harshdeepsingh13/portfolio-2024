@@ -1,6 +1,7 @@
 "use client";
 
 import BlogEditor from "@/components/BlogEditor";
+import type { BlogPost } from "@/types/blog";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
@@ -11,7 +12,6 @@ import { styled, useTheme } from "@mui/material/styles";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { BlogPost } from "@/types/blog";
 
 // ── Styled components ─────────────────────────────────────────────────────────
 
@@ -20,7 +20,7 @@ const PageWrapper = styled(Box)(({ theme }) => ({
   flexDirection: "row",
   gap: "24px",
   padding: "32px",
-  minHeight: "100vh",
+  // minHeight: "100vh",
   alignItems: "flex-start",
 
   [theme.breakpoints.down("md")]: {
@@ -145,6 +145,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [savingInPlace, setSavingInPlace] = useState(false);
   const [autoSaveStatus, setAutoSaveStatus] = useState<string>("");
 
   // Refs for auto-save (avoid stale closures)
@@ -256,6 +257,38 @@ export default function EditPostPage({ params }: EditPostPageProps) {
     window.addEventListener("beforeunload", handler);
     return () => window.removeEventListener("beforeunload", handler);
   }, []);
+
+  const handleSaveInPlace = async () => {
+    if (!form || !postId) return;
+    setSaveError(null);
+
+    if (!form.title.trim()) { setSaveError("Title is required."); return; }
+    if (!form.slug.trim()) { setSaveError("Slug is required."); return; }
+
+    setSavingInPlace(true);
+    try {
+      const res = await fetch(`/api/blog/posts/${postId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(buildPayload(form)),
+      });
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error ?? `HTTP ${res.status}`);
+      }
+
+      isDirtyRef.current = false;
+      const now = new Date();
+      setAutoSaveStatus(
+        `Last saved at ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+      );
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : "Failed to save post.");
+    } finally {
+      setSavingInPlace(false);
+    }
+  };
 
   const handleSave = async () => {
     if (!form || !postId) return;
@@ -399,8 +432,8 @@ export default function EditPostPage({ params }: EditPostPageProps) {
             </Select>
           </Box>
           <Button
-            onClick={handleSave}
-            disabled={saving}
+            onClick={handleSaveInPlace}
+            disabled={savingInPlace || saving}
             fullWidth
             variant="contained"
             sx={{
@@ -412,7 +445,24 @@ export default function EditPostPage({ params }: EditPostPageProps) {
               "&:hover": { filter: "brightness(0.9)" },
             }}
           >
-            {saving ? "Saving…" : "Update Post"}
+            {savingInPlace ? "Saving…" : "Save"}
+          </Button>
+          <Button
+            onClick={handleSave}
+            disabled={saving || savingInPlace}
+            fullWidth
+            variant="outlined"
+            sx={{
+              borderColor: theme.palette.divider,
+              color: theme.palette.text.secondary,
+              fontWeight: 500,
+              textTransform: "none",
+              borderRadius: "8px",
+              fontSize: "0.85rem",
+              "&:hover": { borderColor: theme.palette.custom.borderHover },
+            }}
+          >
+            {saving ? "Saving…" : "Save & Back"}
           </Button>
           <Button
             onClick={handlePreview}

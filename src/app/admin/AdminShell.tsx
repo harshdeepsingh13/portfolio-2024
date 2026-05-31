@@ -9,13 +9,14 @@ import { usePathname } from "next/navigation";
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 const NAVBAR_HEIGHT = "3rem";
+const FOOTER_HEIGHT = "5rem";
 const SIDEBAR_WIDTH = "220px";
 
 // ── Sidebar styled components ────────────────────────────────────────────────
 
 const AdminLayout = styled(Box)(() => ({
   display: "flex",
-  minHeight: `calc(100vh - ${NAVBAR_HEIGHT})`,
+  minHeight: `calc(100vh - ${NAVBAR_HEIGHT} - ${FOOTER_HEIGHT})`,
 }));
 
 const Sidebar = styled(Box)(({ theme }) => ({
@@ -38,31 +39,33 @@ const SidebarHeader = styled(Box)(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
-const NavItem = styled(Link, { shouldForwardProp: (p) => p !== "active" })<{ active?: boolean }>(({ theme, active }) => ({
-  display: "block",
-  padding: "10px 16px",
-  color: active ? theme.palette.primary.main : theme.palette.custom.tertiaryText,
-  textDecoration: "none",
-  fontSize: "0.875rem",
-  fontFamily: "'Outfit', sans-serif",
-  borderRadius: "6px",
-  margin: "2px 8px",
-  backgroundColor: active ? theme.palette.primary.alpha10 : "transparent",
-  border: active ? `1px solid ${theme.palette.primary.border}` : "1px solid transparent",
-  transition: "background-color 150ms, color 150ms, border-color 150ms",
+const NavItem = styled(Link, { shouldForwardProp: (p) => p !== "active" })<{ active?: boolean }>(
+  ({ theme, active }) => ({
+    display: "block",
+    padding: "10px 16px",
+    color: active ? theme.palette.primary.main : theme.palette.custom.tertiaryText,
+    textDecoration: "none",
+    fontSize: "0.875rem",
+    fontFamily: "'Outfit', sans-serif",
+    borderRadius: "6px",
+    margin: "2px 8px",
+    backgroundColor: active ? theme.palette.primary.alpha10 : "transparent",
+    border: active ? `1px solid ${theme.palette.primary.border}` : "1px solid transparent",
+    transition: "background-color 150ms, color 150ms, border-color 150ms",
 
-  "&:hover": {
-    backgroundColor: theme.palette.custom.secondaryHover,
-    color: theme.palette.text.primary,
-  },
-}));
+    "&:hover": {
+      backgroundColor: theme.palette.custom.secondaryHover,
+      color: theme.palette.text.primary,
+    },
+  }),
+);
 
 const MainContent = styled(Box)(({ theme }) => ({
   flex: 1,
   marginLeft: SIDEBAR_WIDTH,
   backgroundColor: theme.palette.background.default,
   minWidth: 0,
-  minHeight: `calc(100vh - ${NAVBAR_HEIGHT})`,
+  minHeight: `calc(100vh - ${NAVBAR_HEIGHT} - ${FOOTER_HEIGHT})`,
   overflowX: "auto",
 }));
 
@@ -108,9 +111,9 @@ function AdminSidebarContent() {
             link.href === "/admin"
               ? pathname === "/admin"
               : link.href === "/admin/posts"
-              ? pathname === "/admin/posts" ||
-                (pathname.startsWith("/admin/posts/") && !pathname.startsWith("/admin/posts/new"))
-              : pathname === link.href;
+                ? pathname === "/admin/posts" ||
+                  (pathname.startsWith("/admin/posts/") && !pathname.startsWith("/admin/posts/new"))
+                : pathname === link.href;
           return (
             <NavItem key={link.href} href={link.href} active={isActive}>
               {link.label}
