@@ -1,40 +1,16 @@
 import "dotenv/config";
-import mongoose from "mongoose";
+import { authenticate, createPost } from "./lib/blogApi.mjs";
 
-const BLOGS_MONGODB_URI = process.env.BLOGS_MONGODB_URI;
-const MONGODB_URI = process.env.MONGODB_URI;
-const UESR_EMAIL = process.env.UESR_EMAIL;
+// Requires: dev server running at NEXT_PUBLIC_SITE_URL (npm run dev)
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL;
+const EMAIL    = process.env.UESR_EMAIL;
+const PASSWORD = process.env.ADMIN_PASSWORD;
 
-if (!BLOGS_MONGODB_URI || !MONGODB_URI || !UESR_EMAIL) {
-  console.error("Missing BLOGS_MONGODB_URI, MONGODB_URI, or UESR_EMAIL in .env");
+if (!BASE_URL || !EMAIL || !PASSWORD) {
+  console.error("Missing NEXT_PUBLIC_SITE_URL, UESR_EMAIL, or ADMIN_PASSWORD in .env");
+  console.error("Ensure the dev server is running: npm run dev");
   process.exit(1);
 }
-
-const BlogPostSchema = new mongoose.Schema(
-  {
-    title: String,
-    slug: String,
-    author: mongoose.Schema.Types.ObjectId,
-    status: String,
-    publishedAt: Date,
-    excerpt: String,
-    coverImage: String,
-    tags: [String],
-    body_html: String,
-    readingTime: Number,
-    seo: {
-      metaTitle: String,
-      metaDescription: String,
-      ogImage: String,
-      canonicalUrl: String,
-    },
-    hasDraft: Boolean,
-  },
-  { timestamps: true }
-);
-
-const BlogPost =
-  mongoose.models.blogpost || mongoose.model("blogpost", BlogPostSchema);
 
 const slug = "full-stack-developer-portfolio-lessons";
 
@@ -241,46 +217,19 @@ const body_html = `
 </ul>
 `;
 
-const bodyText = body_html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-const wordCount = bodyText.split(" ").filter((w) => w.length > 0).length;
-const readingTime = Math.ceil(wordCount / 200);
+const cookie = await authenticate(BASE_URL, EMAIL, PASSWORD);
 
-// Look up portfolio owner's ObjectId from main DB
-const mainConn = await mongoose.createConnection(MONGODB_URI).asPromise();
-const UserSchema = new mongoose.Schema({ name: String, email: String });
-const User = mainConn.model("user", UserSchema);
-const ownerUser = await User.findOne({ email: UESR_EMAIL }).select("_id");
-if (!ownerUser) {
-  console.error(`User not found for email: ${UESR_EMAIL}`);
-  await mainConn.close();
-  process.exit(1);
-}
-const authorId = ownerUser._id;
-await mainConn.close();
-
-await mongoose.connect(BLOGS_MONGODB_URI);
-
-const existing = await BlogPost.findOne({ slug });
-if (existing) {
-  console.log(`⚠️  Article already exists (slug: ${slug}). Skipping.`);
-  await mongoose.disconnect();
-  process.exit(0);
-}
-
-const post = await BlogPost.create({
+const result = await createPost(BASE_URL, cookie, {
   title:
     "Full Stack Developer Portfolio Lessons: What I Learned Building 10+ Projects",
   slug,
-  author: authorId,
-  status: "published",
-  publishedAt: new Date(),
   excerpt:
     "Honest lessons from building and shipping 10+ full stack projects — what makes a portfolio stand out, what hiring managers actually look at, and what I'd do differently starting today.",
   coverImage:
     "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&h=630&fit=crop&auto=format",
   tags: ["Portfolio", "Career", "Full Stack", "Job Search"],
   body_html,
-  readingTime,
+  status: "published",
   seo: {
     metaTitle:
       "Full Stack Developer Portfolio Lessons: What I Learned Building 10+ Projects",
@@ -288,12 +237,12 @@ const post = await BlogPost.create({
       "Honest lessons from building and shipping 10+ full stack projects — what makes a portfolio stand out, what hiring managers actually look at, and what I'd do differently.",
     canonicalUrl: `https://theharshdeepsingh.com/blog/${slug}`,
   },
-  hasDraft: false,
 });
 
-console.log(`✅ Published: "${post.title}"`);
-console.log(`   Slug:      ${post.slug}`);
-console.log(`   Words:     ~${wordCount} words (~${readingTime} min read)`);
-console.log(`   URL:       https://theharshdeepsingh.com/blog/${post.slug}`);
-
-await mongoose.disconnect();
+if (result === null) {
+  console.log(`⚠️  Already seeded — slug exists (${slug}). Skipping.`);
+} else {
+  console.log(`✅ Published: "${result.title}"`);
+  console.log(`   Slug:      ${result.slug}`);
+  console.log(`   URL:       https://theharshdeepsingh.com/blog/${result.slug}`);
+}

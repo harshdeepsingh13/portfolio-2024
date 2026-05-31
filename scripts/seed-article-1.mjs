@@ -1,40 +1,16 @@
 import "dotenv/config";
-import mongoose from "mongoose";
+import { authenticate, createPost } from "./lib/blogApi.mjs";
 
-const BLOGS_MONGODB_URI = process.env.BLOGS_MONGODB_URI;
-const MONGODB_URI = process.env.MONGODB_URI;
-const UESR_EMAIL = process.env.UESR_EMAIL;
+// Requires: dev server running at NEXT_PUBLIC_SITE_URL (npm run dev)
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL;
+const EMAIL    = process.env.UESR_EMAIL;
+const PASSWORD = process.env.ADMIN_PASSWORD;
 
-if (!BLOGS_MONGODB_URI || !MONGODB_URI || !UESR_EMAIL) {
-  console.error("Missing BLOGS_MONGODB_URI, MONGODB_URI, or UESR_EMAIL in .env");
+if (!BASE_URL || !EMAIL || !PASSWORD) {
+  console.error("Missing NEXT_PUBLIC_SITE_URL, UESR_EMAIL, or ADMIN_PASSWORD in .env");
+  console.error("Ensure the dev server is running: npm run dev");
   process.exit(1);
 }
-
-const BlogPostSchema = new mongoose.Schema(
-  {
-    title: String,
-    slug: String,
-    author: mongoose.Schema.Types.ObjectId,
-    status: String,
-    publishedAt: Date,
-    excerpt: String,
-    coverImage: String,
-    tags: [String],
-    body_html: String,
-    readingTime: Number,
-    seo: {
-      metaTitle: String,
-      metaDescription: String,
-      ogImage: String,
-      canonicalUrl: String,
-    },
-    hasDraft: Boolean,
-  },
-  { timestamps: true }
-);
-
-const BlogPost =
-  mongoose.models.blogpost || mongoose.model("blogpost", BlogPostSchema);
 
 const slug = "how-to-build-ai-resume-builder-langchain-nodejs";
 
@@ -426,45 +402,18 @@ app.post("/api/rewrite/stream", async (req, res) => {
 </ul>
 `;
 
-const bodyText = body_html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-const wordCount = bodyText.split(" ").filter((w) => w.length > 0).length;
-const readingTime = Math.ceil(wordCount / 200);
+const cookie = await authenticate(BASE_URL, EMAIL, PASSWORD);
 
-// Look up portfolio owner's ObjectId from main DB
-const mainConn = await mongoose.createConnection(MONGODB_URI).asPromise();
-const UserSchema = new mongoose.Schema({ name: String, email: String });
-const User = mainConn.model("user", UserSchema);
-const ownerUser = await User.findOne({ email: UESR_EMAIL }).select("_id");
-if (!ownerUser) {
-  console.error(`User not found for email: ${UESR_EMAIL}`);
-  await mainConn.close();
-  process.exit(1);
-}
-const authorId = ownerUser._id;
-await mainConn.close();
-
-await mongoose.connect(BLOGS_MONGODB_URI);
-
-const existing = await BlogPost.findOne({ slug });
-if (existing) {
-  console.log(`⚠️  Article already exists (slug: ${slug}). Skipping.`);
-  await mongoose.disconnect();
-  process.exit(0);
-}
-
-const post = await BlogPost.create({
+const result = await createPost(BASE_URL, cookie, {
   title: "How to Build an AI Resume Builder with LangChain and Node.js",
   slug,
-  author: authorId,
-  status: "published",
-  publishedAt: new Date(),
   excerpt:
     "Learn how to build an AI-powered resume builder using LangChain and Node.js. Step-by-step guide with real code, architecture diagram, and prompt engineering that actually works.",
   coverImage:
     "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=1200&h=630&fit=crop&auto=format",
   tags: ["AI", "LangChain", "Node.js", "OpenAI", "Tutorial"],
   body_html,
-  readingTime,
+  status: "published",
   seo: {
     metaTitle:
       "How to Build an AI Resume Builder with LangChain and Node.js (2025)",
@@ -473,14 +422,12 @@ const post = await BlogPost.create({
     canonicalUrl:
       "https://theharshdeepsingh.com/blog/how-to-build-ai-resume-builder-langchain-nodejs",
   },
-  hasDraft: false,
 });
 
-console.log(`✅ Published: "${post.title}"`);
-console.log(`   Slug:      ${post.slug}`);
-console.log(`   Words:     ~${wordCount} words (~${readingTime} min read)`);
-console.log(
-  `   URL:       https://theharshdeepsingh.com/blog/${post.slug}`
-);
-
-await mongoose.disconnect();
+if (result === null) {
+  console.log(`⚠️  Already seeded — slug exists (${slug}). Skipping.`);
+} else {
+  console.log(`✅ Published: "${result.title}"`);
+  console.log(`   Slug:      ${result.slug}`);
+  console.log(`   URL:       https://theharshdeepsingh.com/blog/${result.slug}`);
+}
