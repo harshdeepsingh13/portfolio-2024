@@ -1,112 +1,70 @@
-# Harshdeep Singh — Portfolio
+# Harshdeep Singh — Full Stack Developer Portfolio
 
-Personal portfolio site for [Harshdeep Singh](https://theharshdeepsingh.com), a Canada-based full-stack developer and AI automation engineer with 5+ years of experience in React, TypeScript, Node.js, and cloud technologies.
-
-**Live site →** [theharshdeepsingh.com](https://theharshdeepsingh.com)
+This is my personal corner of the internet — a handcrafted portfolio and blog running in production at **[theharshdeepsingh.com](https://theharshdeepsingh.com)**. I'm a full stack developer based in Canada with 5+ years building web products, and I built this site myself the way I'd build anything: with code I'd actually want to maintain.
 
 ---
 
-## Tech Stack
+## What's inside
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 15 (App Router, Turbopack) |
-| Language | TypeScript |
-| UI | MUI v9, Emotion, Font Awesome, Outfit (Google Fonts) |
-| Database | MongoDB via Mongoose |
-| Assets | Cloudinary |
-| Analytics | Google Analytics 4 |
-| SEO | next-sitemap, JSON-LD schema, llms.txt |
-| Deployment | Node.js server (`next start`) |
+Most portfolio sites are static files or template clones. This one isn't. Every piece of content — skills, projects, work history, education — lives in MongoDB and renders fresh on every request. When something changes, it's live within seconds. No redeployments, no YAML files to wrestle with.
+
+The `/blog` section is a proper publishing system I built into the same app: a TipTap rich-text editor, a password-protected admin panel for writing and publishing directly from the browser, ISR-cached public pages, and an RSS feed. Every post gets Article JSON-LD schema for both search engines and AI crawlers. It started as a small addition and became one of the parts of this project I'm most proud of.
+
+Also: a dark/light theme applied before first paint (no FOUC), live GitHub stats fetched at request time, an animated particle canvas on every page, and a global middleware that rejects every non-GET/HEAD request before it touches a route handler.
 
 ---
 
-## Features
+## Stack
 
-- **Dynamic content** — all portfolio data (profile, skills, projects, work history, education) is stored in MongoDB and rendered fresh on every request with zero caching
-- **Live GitHub stats** — public repos, commit count, and estimated lines of code are fetched from the GitHub API at request time
-- **Dark / light theme** — theme is persisted in `localStorage` and applied before first paint to eliminate flash of unstyled content
-- **Animated particles background** — canvas-based interactive particle field rendered on every page
-- **Skills carousel** — horizontally scrolling animated tile layout for tech stack
-- **Responsive layout** — MUI breakpoints aligned to Bootstrap-compatible widths (`sm: 576`, `md: 768`, `lg: 992`, `xl: 1200`)
-- **SEO-ready** — Open Graph tags, Twitter cards, canonical URLs, Person/WebSite/ProfilePage JSON-LD, sitemap.xml, robots.txt, and `llms.txt` for AI crawlers
-- **Security hardened** — strict CSP, HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy, `poweredByHeader: false`, and a middleware that rejects all non-GET/HEAD requests globally
+- **Framework:** Next.js 15 App Router, Turbopack, TypeScript
+- **UI:** MUI v9, Emotion, Font Awesome
+- **Database:** MongoDB via Mongoose
+- **Auth:** NextAuth.js v5 — Credentials provider with bcrypt, JWT sessions
+- **Rich-text editor:** TipTap — code blocks with syntax highlighting, image and YouTube embeds, tables
+- **Assets:** Cloudinary
+- **SEO:** JSON-LD (Person, WebSite, ProfilePage, BlogPosting), next-sitemap, RSS 2.0, Open Graph, llms.txt
 
 ---
 
 ## Pages
 
-| Route | Content |
+| Route | |
 |---|---|
-| `/` | Hero with profile, GitHub stats, animated skill tiles, and portfolio stats |
-| `/skills` | Full skills breakdown by category |
-| `/projects` | Project cards with tech tags and links |
+| `/` | Hero, live GitHub stats, animated skills, portfolio overview |
+| `/skills` | Full tech stack breakdown by category |
+| `/projects` | Project cards with tech tags, demo and repo links |
 | `/experiences` | Work history timeline |
 | `/education` | Education records |
-| `/resume` | Resume viewer / download |
+| `/resume` | Resume viewer and download |
+| `/blog` | Post listing with tag filter and reading times |
+| `/blog/[slug]` | Post page — syntax-highlighted code, Article JSON-LD, ISR |
+| `/admin` | Blog CMS — write, edit, and publish posts (auth-protected) |
 
 ---
 
-## Project Structure
+## Blog
 
-```
-.
-├── modals/                  # Mongoose models (outside src/ by convention)
-│   ├── user.ts
-│   ├── skill.ts
-│   ├── project.ts
-│   ├── workExperience.ts
-│   └── educations.ts
-├── public/
-│   ├── assets/              # Static images, OG image, favicons
-│   ├── llms.txt             # AI crawler permissions
-│   └── robots.txt
-├── src/
-│   ├── app/                 # Next.js App Router pages & layouts
-│   │   ├── layout.tsx       # Root layout — NavBar, Footer, ThemeProvider, JSON-LD
-│   │   ├── page.tsx         # Home page
-│   │   ├── skills/
-│   │   ├── projects/
-│   │   ├── experiences/
-│   │   ├── education/
-│   │   ├── resume/
-│   │   └── _globalStyles.tsx  # Shared layout primitives (Container, Row, PageHeader…)
-│   ├── components/          # Feature components (LandingPage, NavBar, Footer, …)
-│   ├── context/             # ThemeContext — dark/light toggle + MUI ThemeProvider
-│   ├── lib/
-│   │   ├── mongoose.ts      # MongoDB singleton connection
-│   │   ├── getData.ts       # All DB query helpers
-│   │   ├── github.ts        # GitHub API stats fetcher
-│   │   └── emotionRegistry.tsx  # SSR Emotion cache
-│   ├── theme/
-│   │   ├── index.ts         # createAppTheme(mode) — full MUI palette + global styles
-│   │   └── animations.ts    # Reusable @emotion/react keyframes
-│   └── middleware.ts        # Global 405 guard for non-GET/HEAD requests
-├── next.config.ts           # Security headers, www→apex redirect
-├── next-sitemap.config.js   # Sitemap + robots.txt generation
-└── tsconfig.json
-```
+The blog is a first-class publishing system, not a markdown folder or third-party service.
+
+**Writing:** A TipTap editor with headings, bold/italic/strike/inline code, fenced code blocks with syntax highlighting (lowlight + highlight.js), bullet and ordered lists, blockquote, links, image embeds, YouTube embeds, and tables.
+
+**Storage:** Each post is saved in MongoDB in two formats — `body_json` (TipTap's ProseMirror JSON, so posts can be re-opened in the editor for editing) and `body_html` (pre-rendered HTML for fast public rendering without re-parsing on every request).
+
+**Publishing:** Draft/published toggle. Setting a post to published sets `publishedAt` and makes it appear on `/blog`. The admin panel is protected by NextAuth.js v5 — credentials login, bcrypt-hashed password, JWT session.
+
+**Discoverability:** Article JSON-LD on every post, canonical URLs, Open Graph and Twitter meta, RSS 2.0 at `/blog/rss.xml`. Published posts are auto-included in `sitemap.xml`.
 
 ---
 
-## Local Development
+## Running it locally
 
-### Prerequisites
-
-- Node.js 20+
-- A running MongoDB instance (local or [MongoDB Atlas](https://www.mongodb.com/atlas))
-
-### 1. Clone and install
+Node.js 20+ and a MongoDB instance (local or [Atlas](https://www.mongodb.com/atlas) free tier).
 
 ```bash
-git clone https://github.com/harshdeepsingh13/harshdeep-singh.git
-cd harshdeep-singh
-npm install
+git clone https://github.com/harshdeepsingh13/portfolio-2024.git
+cd portfolio-2024
+npm install --ignore-scripts   # skip the postinstall build step during local setup
 ```
-
-> `postinstall` runs `npm run build` automatically. Skip it during development by running `npm install --ignore-scripts` instead.
-
-### 2. Configure environment variables
 
 Create a `.env` file in the project root:
 
@@ -114,78 +72,37 @@ Create a `.env` file in the project root:
 # MongoDB connection string
 MONGODB_URI=mongodb+srv://<user>:<password>@<cluster>.mongodb.net/<db>
 
-# Email address used to identify the portfolio owner's documents in MongoDB
-# Note: the variable name has an intentional typo — use exactly as shown
+# Email used to key portfolio content across all MongoDB collections
+# Note: intentional typo in the variable name — use exactly as shown
 UESR_EMAIL=your@email.com
 
-# Cloudinary base URL for profile images and assets
+# Cloudinary base URL for images
 NEXT_PUBLIC_CLOUDINARY_RES_LINK=https://res.cloudinary.com/<cloud-name>/image/upload
 
-# Google Analytics measurement ID
+# Google Analytics
 NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 
-# GitHub stats (optional — stats show as 0 if omitted)
+# GitHub API — optional, stats show as 0 if omitted
 GITHUB_USERNAME=your-github-username
 GITHUB_TOKEN=ghp_xxxxxxxxxxxx
+
+# NextAuth.js — required for the blog admin panel
+# Generate with: openssl rand -base64 32
+AUTH_SECRET=your-random-secret-here
 ```
 
-### 3. Start the dev server
-
 ```bash
-npm run dev      # http://localhost:3000  (Turbopack)
-```
-
-### Other commands
-
-```bash
-npm run build    # Production build
-npm run start    # Serve the production build
+npm run dev      # http://localhost:3000 with Turbopack
+npm run build    # Production build — also regenerates sitemap.xml
+npm run start    # Serve production build
 npm run lint     # ESLint
 ```
 
 ---
 
-## Data Model
+## About me
 
-All portfolio content is keyed by the `UESR_EMAIL` environment variable. Seed your MongoDB instance with documents that match this email in each collection:
-
-| Collection | Model file | Purpose |
-|---|---|---|
-| `users` | `modals/user.ts` | Profile, avatar, objective, social links |
-| `skills` | `modals/skill.ts` | Skills list |
-| `projects` | `modals/project.ts` | Portfolio projects |
-| `workexperiences` | `modals/workExperience.ts` | Job history |
-| `educations` | `modals/educations.ts` | Education records |
-
----
-
-## Theming
-
-The MUI theme is created by `createAppTheme(mode)` in `src/theme/index.ts`. It exposes:
-
-- **Standard palette keys** — `background.default`, `background.paper`, `text.primary`, `text.secondary`, `divider`, `primary.main`
-- **Cyan accent variants** — `primary.glow`, `primary.border`, `primary.alpha10`, `primary.alpha20`, `primary.scanLineBg`
-- **Custom tokens** — `theme.palette.custom.*` (hover states, tertiary surfaces, accent text, border hover)
-
-Never hardcode colors — always reference `theme.palette.*`. Shared layout primitives (Container, Row, PageHeader, BreadcrumbsNav, CardTitle, CustomTabs) live in `src/app/_globalStyles.tsx`.
-
----
-
-## Security
-
-| Measure | Implementation |
-|---|---|
-| Content Security Policy | `next.config.ts` headers |
-| HSTS | `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload` |
-| Clickjacking prevention | `X-Frame-Options: DENY` |
-| MIME sniffing | `X-Content-Type-Options: nosniff` |
-| Method restriction | `src/middleware.ts` — 405 for anything except GET/HEAD |
-| Server fingerprint | `poweredByHeader: false` |
-| www redirect | Permanent 301 from `www.theharshdeepsingh.com` to apex |
-
----
-
-## Links
+I'm a full stack developer based in Vancouver, Canada — React, TypeScript, Node.js, and cloud infrastructure are my daily tools. Vetted by Toptal, top 3% of applicants globally. I write about what I'm building at [theharshdeepsingh.com/blog](https://theharshdeepsingh.com/blog).
 
 - **Portfolio** — [theharshdeepsingh.com](https://theharshdeepsingh.com)
 - **LinkedIn** — [linkedin.com/in/harshdeepsingh13](https://www.linkedin.com/in/harshdeepsingh13/)
