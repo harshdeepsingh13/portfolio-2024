@@ -15,24 +15,35 @@
  * Throws if authentication fails (wrong credentials, server unreachable, etc.).
  */
 export async function authenticate(baseUrl, email, password) {
-  // 1. Fetch CSRF token — required by NextAuth for all POST actions
+  // 1. Fetch CSRF token — NextAuth v5 requires both the token value AND the
+  //    csrf cookie to be sent back together on the sign-in POST.
   let csrfToken;
+  let csrfCookie;
   try {
     const csrfRes = await fetch(`${baseUrl}/api/auth/csrf`);
     if (!csrfRes.ok) {
       throw new Error(`HTTP ${csrfRes.status} ${csrfRes.statusText}`);
     }
     ({ csrfToken } = await csrfRes.json());
+    // Capture the csrf cookie that NextAuth set — must be forwarded on the sign-in POST
+    const setCookies =
+      typeof csrfRes.headers.getSetCookie === "function"
+        ? csrfRes.headers.getSetCookie()
+        : [csrfRes.headers.get("set-cookie")].filter(Boolean);
+    csrfCookie = setCookies.map((c) => c.split(";")[0]).join("; ");
   } catch (err) {
     throw new Error(
       `Could not reach dev server at ${baseUrl}. Is "npm run dev" running?\n  ${err.message}`
     );
   }
 
-  // 2. Submit credentials
+  // 2. Submit credentials — include the csrf cookie so NextAuth can verify it
   const signInRes = await fetch(`${baseUrl}/api/auth/callback/credentials`, {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      ...(csrfCookie ? { Cookie: csrfCookie } : {}),
+    },
     body: new URLSearchParams({ email, password, csrfToken }).toString(),
     redirect: "manual", // capture Set-Cookie without following the redirect
   });

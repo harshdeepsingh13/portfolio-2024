@@ -105,7 +105,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes&lt;HTMLButtonElement&gt
 
 const Button = ({ label, variant = "primary", ...rest }: ButtonProps) =&gt; {
   return (
-    &lt;button className={\`btn btn-${variant}\`} {...rest}&gt;
+    &lt;button className={\`btn btn-\${variant}\`} {...rest}&gt;
       {label}
     &lt;/button&gt;
   );
