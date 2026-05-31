@@ -23,6 +23,7 @@ const PREVIEW_PROJECTION = {
   coverImage: 1,
   tags: 1,
   readingTime: 1,
+  hasDraft: 1,
   createdAt: 1,
   updatedAt: 1,
 };

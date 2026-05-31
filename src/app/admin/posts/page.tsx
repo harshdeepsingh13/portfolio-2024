@@ -246,7 +246,28 @@ export default function AdminPostsPage() {
                       )}
                     </td>
                     <td>
-                      <StatusBadge status={post.status}>{post.status}</StatusBadge>
+                      <Box sx={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
+                        <StatusBadge status={post.status}>{post.status}</StatusBadge>
+                        {post.hasDraft && post.status === "published" && (
+                          <Box
+                            component="span"
+                            sx={{
+                              display: "inline-block",
+                              padding: "2px 8px",
+                              borderRadius: "50px",
+                              fontSize: "0.7rem",
+                              fontWeight: 600,
+                              letterSpacing: "0.4px",
+                              textTransform: "uppercase",
+                              backgroundColor: `${theme.palette.warning.main}1f`,
+                              color: theme.palette.warning.main,
+                              border: `1px solid ${theme.palette.warning.main}4d`,
+                            }}
+                          >
+                            Pending
+                          </Box>
+                        )}
+                      </Box>
                     </td>
                     <td style={{ color: theme.palette.custom.accentText }}>
                       {formatDate(post.publishedAt)}

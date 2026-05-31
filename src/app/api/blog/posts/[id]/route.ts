@@ -47,7 +47,15 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
 // ---------------------------------------------------------------------------
 // PUT /api/blog/posts/[id]
 // ---------------------------------------------------------------------------
-// Requires auth. Updates any fields supplied in the body.
+// Requires auth.
+// Body: { ...fields, mode?: "save" | "publish" }
+//
+// mode = "save"  AND post is "published"
+//   → write fields to draft.* subdoc, set hasDraft: true. Root fields untouched.
+//
+// mode = "publish"  OR post is "draft"
+//   → promote to root fields, unset draft, hasDraft: false, status: "published",
+//     publishedAt (first time only).
 // ---------------------------------------------------------------------------
 export async function PUT(req: NextRequest, { params }: RouteContext) {
   const session = await auth();
@@ -66,34 +74,78 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
     const BlogPost = conn.models.blogPost || conn.model("blogPost", blogPostSchema);
 
     const body = await req.json();
+    const { mode = "save", ...rest } = body as { mode?: "save" | "publish"; [key: string]: unknown };
 
-    // Allowlist updatable fields to prevent setting internal Mongoose fields
-    const ALLOWED_FIELDS = [
-      "title", "slug", "author", "coAuthors", "status", "publishedAt",
-      "excerpt", "coverImage", "tags", "body_json", "body_html",
-      "readingTime", "seo",
-    ] as const;
-
-    const updateData: Record<string, unknown> = {};
-    for (const field of ALLOWED_FIELDS) {
-      if (field in body) {
-        updateData[field] = body[field];
-      }
+    // Fetch existing post to know its current status
+    const existing = await BlogPost.findById(id, { status: 1, publishedAt: 1 }).lean() as
+      | { status: string; publishedAt?: Date }
+      | null;
+    if (!existing) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
-    // Set publishedAt when transitioning to published if not already set
-    if (updateData.status === "published" && !updateData.publishedAt) {
-      const existing = await BlogPost.findById(id, { publishedAt: 1 }).lean();
-      if (!existing) {
+    // Fields allowed in either path (slug excluded from draft — always immediate)
+    const CONTENT_FIELDS = [
+      "title", "excerpt", "coverImage", "tags",
+      "body_json", "body_html", "readingTime", "seo",
+    ] as const;
+    const ROOT_ONLY_FIELDS = ["slug", "author", "coAuthors"] as const;
+
+    // ── Save mode + post is already published → write to draft subdoc only ──
+    if (mode === "save" && existing.status === "published") {
+      const draftSet: Record<string, unknown> = { hasDraft: true };
+      for (const field of CONTENT_FIELDS) {
+        if (field in rest) draftSet[`draft.${field}`] = rest[field];
+      }
+      // Root-only fields (slug, author) always applied to root
+      const rootSet: Record<string, unknown> = {};
+      for (const field of ROOT_ONLY_FIELDS) {
+        if (field in rest) rootSet[field] = rest[field];
+      }
+      const updated = await BlogPost
+        .findByIdAndUpdate(id, { $set: { ...draftSet, ...rootSet } }, { new: true })
+        .lean();
+      return NextResponse.json(JSON.parse(JSON.stringify(updated)));
+    }
+
+    // ── Save mode + post is a draft → write root fields, keep status: "draft" ──
+    if (mode === "save" && existing.status === "draft") {
+      const updateData: Record<string, unknown> = {};
+      for (const field of CONTENT_FIELDS) {
+        if (field in rest) updateData[field] = rest[field];
+      }
+      for (const field of ROOT_ONLY_FIELDS) {
+        if (field in rest) updateData[field] = rest[field];
+      }
+      const updated = await BlogPost
+        .findByIdAndUpdate(id, { $set: updateData }, { new: true, runValidators: true })
+        .lean();
+      if (!updated) {
         return NextResponse.json({ error: "Post not found" }, { status: 404 });
       }
-      if (!(existing as { publishedAt?: Date }).publishedAt) {
-        updateData.publishedAt = new Date();
-      }
+      return NextResponse.json(JSON.parse(JSON.stringify(updated)));
+    }
+
+    // ── Publish mode → promote draft (or current edits) to root, set published ──
+    const updateData: Record<string, unknown> = {};
+    for (const field of CONTENT_FIELDS) {
+      if (field in rest) updateData[field] = rest[field];
+    }
+    for (const field of ROOT_ONLY_FIELDS) {
+      if (field in rest) updateData[field] = rest[field];
+    }
+    updateData.status = "published";
+    updateData.hasDraft = false;
+    if (!existing.publishedAt) {
+      updateData.publishedAt = new Date();
     }
 
     const updated = await BlogPost
-      .findByIdAndUpdate(id, { $set: updateData }, { new: true, runValidators: true })
+      .findByIdAndUpdate(
+        id,
+        { $set: updateData, $unset: { draft: 1 } },
+        { new: true, runValidators: true },
+      )
       .lean();
 
     if (!updated) {

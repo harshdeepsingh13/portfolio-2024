@@ -10,6 +10,23 @@ const SeoSchema = new Schema(
   { _id: false }
 );
 
+// Pending (unsaved-to-public) content for already-published posts.
+// Root-level fields are always the live version; draft.* holds edits
+// that haven't been promoted yet.
+const DraftSchema = new Schema(
+  {
+    title: { type: String },
+    excerpt: { type: String },
+    coverImage: { type: String },
+    tags: { type: [String] },
+    body_json: { type: Schema.Types.Mixed },
+    body_html: { type: String },
+    readingTime: { type: Number },
+    seo: { type: SeoSchema },
+  },
+  { _id: false }
+);
+
 export const blogPostSchema = new Schema(
   {
     title: { type: String, required: true },
@@ -25,6 +42,9 @@ export const blogPostSchema = new Schema(
     body_html: { type: String },
     readingTime: { type: Number },
     seo: { type: SeoSchema },
+    // Draft versioning
+    draft: { type: DraftSchema },
+    hasDraft: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

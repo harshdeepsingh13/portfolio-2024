@@ -95,8 +95,13 @@ export const getData = {
   getBlogPostBySlugForPreview: async (slug: string): Promise<BlogPost | null> => {
     const conn = await connectToBlogsDB();
     const BlogPost = conn.models.blogPost || conn.model("blogPost", blogPostSchema);
-    const data = await BlogPost.findOne({ slug }).lean();
-    return data ? JSON.parse(JSON.stringify(data)) : null;
+    const data = await BlogPost.findOne({ slug }).lean() as (BlogPost & { draft?: Partial<BlogPost> }) | null;
+    if (!data) return null;
+    // Merge draft over root so preview shows the last-saved (unpublished) content
+    const post = data.hasDraft && data.draft
+      ? { ...data, ...data.draft }
+      : data;
+    return JSON.parse(JSON.stringify(post));
   },
   getRelatedPosts: async (slug: string, limit = 3): Promise<BlogPostPreview[]> => {
     const conn = await connectToBlogsDB();

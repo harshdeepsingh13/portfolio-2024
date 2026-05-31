@@ -4,8 +4,6 @@ import BlogEditor from "@/components/BlogEditor";
 import type { BlogPost } from "@/types/blog";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
@@ -20,7 +18,6 @@ const PageWrapper = styled(Box)(({ theme }) => ({
   flexDirection: "row",
   gap: "24px",
   padding: "32px",
-  // minHeight: "100vh",
   alignItems: "flex-start",
 
   [theme.breakpoints.down("md")]: {
@@ -102,7 +99,6 @@ interface PostFormState {
   slug: string;
   excerpt: string;
   tags: string;
-  status: "draft" | "published";
   coverImage: string;
   seoTitle: string;
   seoDescription: string;
@@ -110,13 +106,12 @@ interface PostFormState {
   body_html: string;
 }
 
-function buildPayload(form: PostFormState) {
+function buildPayload(form: PostFormState, mode: "save" | "publish") {
   return {
     title: form.title.trim(),
     slug: form.slug.trim(),
     excerpt: form.excerpt.trim() || undefined,
     tags: form.tags.split(",").map((t) => t.trim()).filter(Boolean),
-    status: form.status,
     coverImage: form.coverImage.trim() || undefined,
     body_json: form.body_json,
     body_html: form.body_html,
@@ -127,7 +122,51 @@ function buildPayload(form: PostFormState) {
     readingTime: form.body_html
       ? Math.max(1, Math.round(form.body_html.replace(/<[^>]+>/g, "").split(/\s+/).length / 200))
       : undefined,
+    mode,
   };
+}
+
+// ── Status indicator ──────────────────────────────────────────────────────────
+
+function StatusIndicator({
+  postStatus,
+  hasDraft,
+}: {
+  postStatus: "draft" | "published";
+  hasDraft: boolean;
+}) {
+  const theme = useTheme();
+
+  if (postStatus === "draft") {
+    return (
+      <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <Box sx={{ width: 8, height: 8, borderRadius: "50%", backgroundColor: theme.palette.custom.accentText, flexShrink: 0 }} />
+        <Typography sx={{ fontSize: "0.8rem", color: theme.palette.custom.accentText }}>
+          Draft
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (hasDraft) {
+    return (
+      <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <Box sx={{ width: 8, height: 8, borderRadius: "50%", backgroundColor: "warning.main", flexShrink: 0 }} />
+        <Typography sx={{ fontSize: "0.8rem", color: "warning.main" }}>
+          Published · Unpublished changes
+        </Typography>
+      </Box>
+    );
+  }
+
+  return (
+    <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <Box sx={{ width: 8, height: 8, borderRadius: "50%", backgroundColor: "success.main", flexShrink: 0 }} />
+      <Typography sx={{ fontSize: "0.8rem", color: "success.main" }}>
+        Published · Up to date
+      </Typography>
+    </Box>
+  );
 }
 
 // ── Page ──────────────────────────────────────────────────────────────────────
@@ -142,15 +181,18 @@ export default function EditPostPage({ params }: EditPostPageProps) {
 
   const [postId, setPostId] = useState<string | null>(null);
   const [form, setForm] = useState<PostFormState | null>(null);
+  const [postStatus, setPostStatus] = useState<"draft" | "published">("draft");
+  const [hasDraft, setHasDraft] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const [savingInPlace, setSavingInPlace] = useState(false);
+  const [publishing, setPublishing] = useState(false);
   const [autoSaveStatus, setAutoSaveStatus] = useState<string>("");
 
   // Refs for auto-save (avoid stale closures)
   const formRef = useRef<PostFormState | null>(null);
   const postIdRef = useRef<string | null>(null);
+  const postStatusRef = useRef<"draft" | "published">("draft");
   const isDirtyRef = useRef(false);
 
   // Resolve async params
@@ -171,17 +213,25 @@ export default function EditPostPage({ params }: EditPostPageProps) {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const post: BlogPost = await res.json();
 
+        setPostStatus(post.status);
+        setHasDraft(post.hasDraft ?? false);
+        postStatusRef.current = post.status;
+
+        // When hasDraft, initialise from draft fields (fall back to root for missing fields)
+        const src = post.hasDraft && post.draft
+          ? { ...post, ...post.draft }
+          : post;
+
         const loaded: PostFormState = {
-          title: post.title,
-          slug: post.slug,
-          excerpt: post.excerpt ?? "",
-          tags: post.tags.join(", "),
-          status: post.status,
-          coverImage: post.coverImage ?? "",
-          seoTitle: post.seo?.metaTitle ?? "",
-          seoDescription: post.seo?.metaDescription ?? "",
-          body_json: post.body_json ?? null,
-          body_html: post.body_html ?? "",
+          title: src.title ?? "",
+          slug: post.slug, // slug always from root
+          excerpt: src.excerpt ?? "",
+          tags: (src.tags ?? post.tags).join(", "),
+          coverImage: src.coverImage ?? "",
+          seoTitle: src.seo?.metaTitle ?? "",
+          seoDescription: src.seo?.metaDescription ?? "",
+          body_json: src.body_json ?? null,
+          body_html: src.body_html ?? "",
         };
         setForm(loaded);
         formRef.current = loaded;
@@ -212,7 +262,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
     []
   );
 
-  // Auto-save function
+  // Auto-save (always mode="save", never auto-publishes)
   const autoSave = useCallback(async () => {
     const current = formRef.current;
     const id = postIdRef.current;
@@ -223,11 +273,15 @@ export default function EditPostPage({ params }: EditPostPageProps) {
       const res = await fetch(`/api/blog/posts/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(buildPayload(current)),
+        body: JSON.stringify(buildPayload(current, "save")),
       });
 
       if (res.ok) {
         isDirtyRef.current = false;
+        // If the post was published, saving creates an unpublished draft
+        if (postStatusRef.current === "published") {
+          setHasDraft(true);
+        }
         const now = new Date();
         setAutoSaveStatus(
           `Last saved at ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
@@ -258,38 +312,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
     return () => window.removeEventListener("beforeunload", handler);
   }, []);
 
-  const handleSaveInPlace = async () => {
-    if (!form || !postId) return;
-    setSaveError(null);
-
-    if (!form.title.trim()) { setSaveError("Title is required."); return; }
-    if (!form.slug.trim()) { setSaveError("Slug is required."); return; }
-
-    setSavingInPlace(true);
-    try {
-      const res = await fetch(`/api/blog/posts/${postId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(buildPayload(form)),
-      });
-
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error ?? `HTTP ${res.status}`);
-      }
-
-      isDirtyRef.current = false;
-      const now = new Date();
-      setAutoSaveStatus(
-        `Last saved at ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
-      );
-    } catch (err) {
-      setSaveError(err instanceof Error ? err.message : "Failed to save post.");
-    } finally {
-      setSavingInPlace(false);
-    }
-  };
-
+  // Save in place (mode: "save") — doesn't publish
   const handleSave = async () => {
     if (!form || !postId) return;
     setSaveError(null);
@@ -302,7 +325,43 @@ export default function EditPostPage({ params }: EditPostPageProps) {
       const res = await fetch(`/api/blog/posts/${postId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(buildPayload(form)),
+        body: JSON.stringify(buildPayload(form, "save")),
+      });
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error ?? `HTTP ${res.status}`);
+      }
+
+      isDirtyRef.current = false;
+      if (postStatus === "published") {
+        setHasDraft(true);
+      }
+      const now = new Date();
+      setAutoSaveStatus(
+        `Last saved at ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+      );
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : "Failed to save post.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Publish (mode: "publish") — promotes to live, navigates away
+  const handlePublish = async () => {
+    if (!form || !postId) return;
+    setSaveError(null);
+
+    if (!form.title.trim()) { setSaveError("Title is required."); return; }
+    if (!form.slug.trim()) { setSaveError("Slug is required."); return; }
+
+    setPublishing(true);
+    try {
+      const res = await fetch(`/api/blog/posts/${postId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(buildPayload(form, "publish")),
       });
 
       if (!res.ok) {
@@ -313,9 +372,9 @@ export default function EditPostPage({ params }: EditPostPageProps) {
       isDirtyRef.current = false;
       router.push("/admin/posts");
     } catch (err) {
-      setSaveError(err instanceof Error ? err.message : "Failed to save post.");
+      setSaveError(err instanceof Error ? err.message : "Failed to publish post.");
     } finally {
-      setSaving(false);
+      setPublishing(false);
     }
   };
 
@@ -413,27 +472,29 @@ export default function EditPostPage({ params }: EditPostPageProps) {
           <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "text.primary" }}>
             Publish
           </Typography>
-          <Box>
-            <FieldLabel>Status</FieldLabel>
-            <Select
-              value={form.status}
-              onChange={(e) => set("status", e.target.value as "draft" | "published")}
-              fullWidth
-              size="small"
-              sx={{
-                backgroundColor: theme.palette.background.default,
-                color: theme.palette.text.primary,
-                fontSize: "0.875rem",
-                "& .MuiOutlinedInput-notchedOutline": { borderColor: theme.palette.divider },
-              }}
-            >
-              <MenuItem value="draft">Draft</MenuItem>
-              <MenuItem value="published">Published</MenuItem>
-            </Select>
-          </Box>
+
+          <StatusIndicator postStatus={postStatus} hasDraft={hasDraft} />
+
           <Button
-            onClick={handleSaveInPlace}
-            disabled={savingInPlace || saving}
+            onClick={handleSave}
+            disabled={saving || publishing}
+            fullWidth
+            variant="outlined"
+            sx={{
+              borderColor: theme.palette.divider,
+              color: theme.palette.text.secondary,
+              fontWeight: 500,
+              textTransform: "none",
+              borderRadius: "8px",
+              fontSize: "0.875rem",
+              "&:hover": { borderColor: theme.palette.custom.borderHover },
+            }}
+          >
+            {saving ? "Saving…" : "Save"}
+          </Button>
+          <Button
+            onClick={handlePublish}
+            disabled={publishing || saving}
             fullWidth
             variant="contained"
             sx={{
@@ -445,24 +506,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
               "&:hover": { filter: "brightness(0.9)" },
             }}
           >
-            {savingInPlace ? "Saving…" : "Save"}
-          </Button>
-          <Button
-            onClick={handleSave}
-            disabled={saving || savingInPlace}
-            fullWidth
-            variant="outlined"
-            sx={{
-              borderColor: theme.palette.divider,
-              color: theme.palette.text.secondary,
-              fontWeight: 500,
-              textTransform: "none",
-              borderRadius: "8px",
-              fontSize: "0.85rem",
-              "&:hover": { borderColor: theme.palette.custom.borderHover },
-            }}
-          >
-            {saving ? "Saving…" : "Save & Back"}
+            {publishing ? "Publishing…" : "Publish"}
           </Button>
           <Button
             onClick={handlePreview}

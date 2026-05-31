@@ -3,8 +3,6 @@
 import BlogEditor from "@/components/BlogEditor";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
@@ -100,16 +98,24 @@ function generateSlug(title: string): string {
   return slugify(title, { lower: true, strict: true, trim: true });
 }
 
-function buildPayload(form: PostFormState) {
+interface PostFormState {
+  title: string;
+  slug: string;
+  excerpt: string;
+  tags: string;
+  coverImage: string;
+  seoTitle: string;
+  seoDescription: string;
+  body_json: Record<string, unknown> | null;
+  body_html: string;
+}
+
+function buildContentPayload(form: PostFormState) {
   return {
     title: form.title.trim(),
     slug: form.slug.trim(),
     excerpt: form.excerpt.trim() || undefined,
-    tags: form.tags
-      .split(",")
-      .map((t) => t.trim())
-      .filter(Boolean),
-    status: form.status,
+    tags: form.tags.split(",").map((t) => t.trim()).filter(Boolean),
     coverImage: form.coverImage.trim() || undefined,
     body_json: form.body_json,
     body_html: form.body_html,
@@ -123,27 +129,11 @@ function buildPayload(form: PostFormState) {
   };
 }
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-interface PostFormState {
-  title: string;
-  slug: string;
-  excerpt: string;
-  tags: string;
-  status: "draft" | "published";
-  coverImage: string;
-  seoTitle: string;
-  seoDescription: string;
-  body_json: Record<string, unknown> | null;
-  body_html: string;
-}
-
 const DEFAULT_FORM: PostFormState = {
   title: "",
   slug: "",
   excerpt: "",
   tags: "",
-  status: "draft",
   coverImage: "",
   seoTitle: "",
   seoDescription: "",
@@ -160,10 +150,10 @@ export default function NewPostPage() {
   const [form, setForm] = useState<PostFormState>(DEFAULT_FORM);
   const [slugEdited, setSlugEdited] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [publishing, setPublishing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [autoSaveStatus, setAutoSaveStatus] = useState<string>("");
 
-  // Refs for auto-save (avoid stale closures)
   const formRef = useRef<PostFormState>(DEFAULT_FORM);
   const savedPostId = useRef<string | null>(null);
   const isDirtyRef = useRef(false);
@@ -198,21 +188,20 @@ export default function NewPostPage() {
     []
   );
 
-  // Auto-save function (reads from ref to avoid stale closure)
+  // Auto-save always as draft (never auto-publishes)
   const autoSave = useCallback(async () => {
     const current = formRef.current;
     if (!current.title.trim()) return;
 
     setAutoSaveStatus("Saving…");
     try {
-      const payload = buildPayload(current);
       let ok = false;
 
       if (!savedPostId.current) {
         const res = await fetch("/api/blog/posts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
+          body: JSON.stringify({ ...buildContentPayload(current), status: "draft" }),
         });
         if (res.ok) {
           const data = await res.json();
@@ -223,7 +212,7 @@ export default function NewPostPage() {
         const res = await fetch(`/api/blog/posts/${savedPostId.current}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
+          body: JSON.stringify({ ...buildContentPayload(current), mode: "save" }),
         });
         ok = res.ok;
       }
@@ -259,6 +248,7 @@ export default function NewPostPage() {
     return () => window.removeEventListener("beforeunload", handler);
   }, []);
 
+  // Save as draft, stay on page
   const handleSave = async () => {
     setError(null);
     if (!form.title.trim()) { setError("Title is required."); return; }
@@ -266,20 +256,62 @@ export default function NewPostPage() {
 
     setSaving(true);
     try {
-      const payload = buildPayload(form);
-
       let res: Response;
       if (!savedPostId.current) {
         res = await fetch("/api/blog/posts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
+          body: JSON.stringify({ ...buildContentPayload(form), status: "draft" }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          savedPostId.current = data._id;
+        }
+      } else {
+        res = await fetch(`/api/blog/posts/${savedPostId.current}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...buildContentPayload(form), mode: "save" }),
+        });
+      }
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error ?? `HTTP ${res.status}`);
+      }
+
+      isDirtyRef.current = false;
+      const now = new Date();
+      setAutoSaveStatus(
+        `Last saved at ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to save post.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Publish and navigate to posts list
+  const handlePublish = async () => {
+    setError(null);
+    if (!form.title.trim()) { setError("Title is required."); return; }
+    if (!form.slug.trim()) { setError("Slug is required."); return; }
+
+    setPublishing(true);
+    try {
+      let res: Response;
+      if (!savedPostId.current) {
+        res = await fetch("/api/blog/posts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...buildContentPayload(form), status: "published" }),
         });
       } else {
         res = await fetch(`/api/blog/posts/${savedPostId.current}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
+          body: JSON.stringify({ ...buildContentPayload(form), mode: "publish" }),
         });
       }
 
@@ -291,9 +323,9 @@ export default function NewPostPage() {
       isDirtyRef.current = false;
       router.push("/admin/posts");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save post.");
+      setError(err instanceof Error ? err.message : "Failed to publish post.");
     } finally {
-      setSaving(false);
+      setPublishing(false);
     }
   };
 
@@ -364,28 +396,27 @@ export default function NewPostPage() {
             Publish
           </Typography>
 
-          <Box>
-            <FieldLabel>Status</FieldLabel>
-            <Select
-              value={form.status}
-              onChange={(e) => set("status", e.target.value as "draft" | "published")}
-              fullWidth
-              size="small"
-              sx={{
-                backgroundColor: theme.palette.background.default,
-                color: theme.palette.text.primary,
-                fontSize: "0.875rem",
-                "& .MuiOutlinedInput-notchedOutline": { borderColor: theme.palette.divider },
-              }}
-            >
-              <MenuItem value="draft">Draft</MenuItem>
-              <MenuItem value="published">Published</MenuItem>
-            </Select>
-          </Box>
-
           <Button
             onClick={handleSave}
-            disabled={saving}
+            disabled={saving || publishing}
+            fullWidth
+            variant="outlined"
+            sx={{
+              borderColor: theme.palette.divider,
+              color: theme.palette.text.secondary,
+              fontWeight: 500,
+              textTransform: "none",
+              borderRadius: "8px",
+              fontSize: "0.875rem",
+              "&:hover": { borderColor: theme.palette.custom.borderHover },
+            }}
+          >
+            {saving ? "Saving…" : "Save Draft"}
+          </Button>
+
+          <Button
+            onClick={handlePublish}
+            disabled={publishing || saving}
             fullWidth
             variant="contained"
             sx={{
@@ -397,7 +428,7 @@ export default function NewPostPage() {
               "&:hover": { filter: "brightness(0.9)" },
             }}
           >
-            {saving ? "Saving…" : form.status === "published" ? "Publish Post" : "Save Draft"}
+            {publishing ? "Publishing…" : "Publish"}
           </Button>
 
           <Button

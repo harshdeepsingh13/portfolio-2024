@@ -5,6 +5,17 @@ export interface BlogSeo {
   canonicalUrl?: string;
 }
 
+export interface BlogPostDraft {
+  title?: string;
+  excerpt?: string;
+  coverImage?: string;
+  tags?: string[];
+  body_json?: Record<string, unknown>;
+  body_html?: string;
+  readingTime?: number;
+  seo?: BlogSeo;
+}
+
 export interface BlogPost {
   _id: string;
   title: string;
@@ -20,6 +31,8 @@ export interface BlogPost {
   body_html?: string;
   readingTime?: number;
   seo?: BlogSeo;
+  draft?: BlogPostDraft;
+  hasDraft?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -35,6 +48,7 @@ export interface BlogPostPreview {
   coverImage?: string;
   tags: string[];
   readingTime?: number;
+  hasDraft?: boolean;
   createdAt: string;
   updatedAt: string;
 }
