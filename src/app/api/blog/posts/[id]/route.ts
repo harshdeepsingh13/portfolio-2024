@@ -2,21 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import blogPost from "../../../../../../modals/blogPost";
 import { connectToDB } from "@/lib/mongoose";
-
-// ---------------------------------------------------------------------------
-// Auth helper
-// ---------------------------------------------------------------------------
-// TODO (Unit 2): Replace with proper session check once auth is merged:
-//   import { auth } from "@/auth";
-//   const session = await auth();
-//   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-//
-// Temporary workaround: use a custom header that the admin panel will send.
-function isAuthorized(req: NextRequest): boolean {
-  const adminKey = process.env.ADMIN_SECRET_KEY;
-  if (!adminKey) return false;
-  return req.headers.get("x-admin-key") === adminKey;
-}
+import { auth } from "@/auth";
 
 // ---------------------------------------------------------------------------
 // Route params type — Next.js 15 requires async params
@@ -39,8 +25,9 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
   try {
     await connectToDB();
 
+    const session = await auth();
     const filter: Record<string, unknown> = { _id: id };
-    if (!isAuthorized(req)) {
+    if (!session) {
       filter.status = "published";
     }
 
@@ -62,7 +49,8 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
 // Requires auth. Updates any fields supplied in the body.
 // ---------------------------------------------------------------------------
 export async function PUT(req: NextRequest, { params }: RouteContext) {
-  if (!isAuthorized(req)) {
+  const session = await auth();
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -151,7 +139,8 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
 // Requires auth. Hard-deletes the post.
 // ---------------------------------------------------------------------------
 export async function DELETE(req: NextRequest, { params }: RouteContext) {
-  if (!isAuthorized(req)) {
+  const session = await auth();
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -183,7 +172,8 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
 // Sets publishedAt when transitioning to published.
 // ---------------------------------------------------------------------------
 export async function PATCH(req: NextRequest, { params }: RouteContext) {
-  if (!isAuthorized(req)) {
+  const session = await auth();
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

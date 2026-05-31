@@ -1,23 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import mongoose from "mongoose";
 import slugify from "slugify";
 import blogPost from "../../../../../modals/blogPost";
 import { connectToDB } from "@/lib/mongoose";
-
-// ---------------------------------------------------------------------------
-// Auth helper
-// ---------------------------------------------------------------------------
-// TODO (Unit 2): Replace with proper session check once auth is merged:
-//   import { auth } from "@/auth";
-//   const session = await auth();
-//   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-//
-// Temporary workaround: use a custom header that the admin panel will send.
-function isAuthorized(req: NextRequest): boolean {
-  const adminKey = process.env.ADMIN_SECRET_KEY;
-  if (!adminKey) return false;
-  return req.headers.get("x-admin-key") === adminKey;
-}
+import { auth } from "@/auth";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -59,7 +44,8 @@ export async function GET(req: NextRequest) {
 
     const filter: Record<string, unknown> = {};
 
-    if (all && isAuthorized(req)) {
+    const session = await auth();
+    if (all && session) {
       // Authenticated: return all posts regardless of status
     } else {
       // Public: published only
@@ -89,7 +75,8 @@ export async function GET(req: NextRequest) {
 //         body_html?, readingTime?, status?, seo?, author? }
 // ---------------------------------------------------------------------------
 export async function POST(req: NextRequest) {
-  if (!isAuthorized(req)) {
+  const session = await auth();
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

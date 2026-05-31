@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
+import StatCard from "./StatCard";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -28,56 +29,6 @@ async function getPostStats(): Promise<PostStats> {
     // Graceful degradation — API route not yet available
     return { total: 0, published: 0, drafts: 0 };
   }
-}
-
-// ── Stat card ─────────────────────────────────────────────────────────────────
-
-function StatCard({
-  label,
-  value,
-  accent,
-}: {
-  label: string;
-  value: number;
-  accent?: boolean;
-}) {
-  return (
-    <Box
-      sx={{
-        flex: "1 1 180px",
-        minWidth: "160px",
-        padding: "24px 20px",
-        borderRadius: "10px",
-        backgroundColor: "background.paper",
-        border: "1px solid",
-        borderColor: accent ? "primary.border" : "divider",
-        background: accent ? "primary.glow" : undefined,
-        boxShadow: accent ? (theme: { palette: { primary: { alpha10: string } } }) => `0 4px 16px ${theme.palette.primary.alpha10}` : undefined,
-      }}
-    >
-      <Typography
-        sx={{
-          fontSize: "2.25rem",
-          fontWeight: 900,
-          color: accent ? "primary.main" : "text.primary",
-          lineHeight: 1,
-          marginBottom: "6px",
-        }}
-      >
-        {value}
-      </Typography>
-      <Typography
-        sx={{
-          fontSize: "0.8rem",
-          color: "custom.accentText",
-          textTransform: "uppercase",
-          letterSpacing: "0.8px",
-        }}
-      >
-        {label}
-      </Typography>
-    </Box>
-  );
 }
 
 // ── Page ──────────────────────────────────────────────────────────────────────
