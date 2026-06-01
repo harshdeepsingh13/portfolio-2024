@@ -4,9 +4,8 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { BlogPostPreview } from "@/types/blog";
+import { useBlogPosts, useDeletePost } from "@/hooks/blog/useBlogPosts";
 
 // ── Styled components ─────────────────────────────────────────────────────────
 
@@ -86,43 +85,15 @@ const ActionBtn = styled("button")<{ variant?: "edit" | "delete" }>(({ theme, va
 export default function AdminPostsPage() {
   const theme = useTheme();
   const router = useRouter();
-  const [posts, setPosts] = useState<BlogPostPreview[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [deleting, setDeleting] = useState<string | null>(null);
 
-  const fetchPosts = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/blog/posts?all=true");
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      setPosts(Array.isArray(data) ? data : []);
-    } catch {
-      // API not yet available (Unit 4); show empty state
-      setPosts([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const { data: posts = [], isLoading, isError } = useBlogPosts();
+  const { mutate: deletePostMutate, isPending: isDeleting, variables: deletingId } = useDeletePost();
 
-  useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts]);
-
-  const handleDelete = async (id: string, title: string) => {
+  const handleDelete = (id: string, title: string) => {
     if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return;
-    setDeleting(id);
-    try {
-      const res = await fetch(`/api/blog/posts/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      setPosts((prev) => prev.filter((p) => p._id !== id));
-    } catch {
-      alert("Failed to delete post. Please try again.");
-    } finally {
-      setDeleting(null);
-    }
+    deletePostMutate(id, {
+      onError: () => alert("Failed to delete post. Please try again."),
+    });
   };
 
   const formatDate = (dateStr?: string) => {
@@ -175,9 +146,13 @@ export default function AdminPostsPage() {
           overflow: "hidden",
         }}
       >
-        {loading ? (
+        {isLoading ? (
           <Box sx={{ padding: "40px", textAlign: "center", color: "custom.accentText" }}>
             Loading posts…
+          </Box>
+        ) : isError ? (
+          <Box sx={{ padding: "40px", textAlign: "center", color: "error.main" }}>
+            Failed to load posts. Please refresh the page.
           </Box>
         ) : posts.length === 0 ? (
           <Box sx={{ padding: "60px 40px", textAlign: "center" }}>
@@ -285,10 +260,10 @@ export default function AdminPostsPage() {
                         </ActionBtn>
                         <ActionBtn
                           variant="delete"
-                          disabled={deleting === post._id}
+                          disabled={isDeleting && deletingId === post._id}
                           onClick={() => handleDelete(post._id, post.title)}
                         >
-                          {deleting === post._id ? "…" : "Delete"}
+                          {isDeleting && deletingId === post._id ? "…" : "Delete"}
                         </ActionBtn>
                       </Box>
                     </td>
