@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 import AdminShell from "./AdminShell";
+import ReactQueryProvider from "./ReactQueryProvider";
 
 export default async function AdminLayout({
   children,
@@ -16,5 +16,9 @@ export default async function AdminLayout({
     return <>{children}</>;
   }
 
-  return <AdminShell>{children}</AdminShell>;
+  return (
+    <ReactQueryProvider>
+      <AdminShell>{children}</AdminShell>
+    </ReactQueryProvider>
+  );
 }
