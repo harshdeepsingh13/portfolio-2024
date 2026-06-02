@@ -6,6 +6,13 @@ import { styled, useTheme } from "@mui/material/styles";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+type NavGuardWindow = Window & { __adminNavGuard?: () => boolean };
+
+function checkNavGuard(e: React.MouseEvent): void {
+  const guard = (window as NavGuardWindow).__adminNavGuard;
+  if (guard && !guard()) e.preventDefault();
+}
+
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 const NAVBAR_HEIGHT = "3rem";
@@ -66,7 +73,7 @@ const MainContent = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
   minWidth: 0,
   minHeight: `calc(100vh - ${NAVBAR_HEIGHT} - ${FOOTER_HEIGHT})`,
-  overflowX: "auto",
+  overflowX: "clip",
 }));
 
 // ── Sidebar content ───────────────────────────────────────────────────────────
@@ -115,7 +122,7 @@ function AdminSidebarContent() {
                   (pathname.startsWith("/admin/posts/") && !pathname.startsWith("/admin/posts/new"))
                 : pathname === link.href;
           return (
-            <NavItem key={link.href} href={link.href} active={isActive}>
+            <NavItem key={link.href} href={link.href} active={isActive} onClick={checkNavGuard}>
               {link.label}
             </NavItem>
           );
@@ -128,7 +135,7 @@ function AdminSidebarContent() {
           borderTop: `1px solid ${theme.palette.divider}`,
         }}
       >
-        <NavItem href="/" title="Back to site">
+        <NavItem href="/" title="Back to site" onClick={checkNavGuard}>
           ← Portfolio
         </NavItem>
       </Box>

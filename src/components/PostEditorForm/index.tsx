@@ -219,6 +219,8 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
   const savedPostIdRef = useRef<string | null>(postId ?? null);
   const postStatusRef = useRef<"draft" | "published">("draft");
   const isDirtyRef = useRef(false);
+  // false during TipTap init (edit mode) so appendTransaction-triggered onUpdate doesn't mark dirty
+  const isSettledRef = useRef(!isEditMode);
 
   // Navigation guard: covers beforeunload, popstate (Back button), and sidebar links
   const { guardedNavigate } = useNavigationGuard(isDirtyRef);
@@ -227,6 +229,7 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
 
   useEffect(() => {
     if (!loadedPost || !isEditMode) return;
+    isSettledRef.current = false;
     const src = loadedPost.hasDraft && loadedPost.draft ? { ...loadedPost, ...loadedPost.draft } : loadedPost;
     const loaded: PostFormState = {
       title: src.title ?? "",
@@ -245,26 +248,17 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
     setForm(loaded);
     formRef.current = loaded;
     isDirtyRef.current = false;
+    const settleTimer = setTimeout(() => {
+      isSettledRef.current = true;
+      isDirtyRef.current = false;
+    }, 200);
+    return () => clearTimeout(settleTimer);
   }, [loadedPost, isEditMode]);
 
   // Keep formRef in sync — does NOT touch isDirtyRef (dirty is set only by user actions)
   useEffect(() => {
     if (!form) return;
     formRef.current = form;
-  }, [form]);
-
-  // LinkExtension's autolink plugin fires appendTransaction during the setContent call
-  // that BlogEditor makes on initial load. That transaction lacks preventUpdate meta,
-  // so onUpdate fires and marks the form dirty before the user has done anything.
-  // We reset dirty after a rAF (post-paint) so all TipTap init effects have settled.
-  const firstLoadDoneRef = useRef(!isEditMode);
-  useEffect(() => {
-    if (!form || firstLoadDoneRef.current) return;
-    firstLoadDoneRef.current = true;
-    const frame = requestAnimationFrame(() => {
-      isDirtyRef.current = false;
-    });
-    return () => cancelAnimationFrame(frame);
   }, [form]);
 
   // ── Field change handlers ─────────────────────────────────────────────────
@@ -300,7 +294,9 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
 
   const handleEditorChange = useCallback(
     ({ json, html }: { json: Record<string, unknown>; html: string }) => {
-      isDirtyRef.current = true;
+      if (isSettledRef.current) {
+        isDirtyRef.current = true;
+      }
       setForm((prev) => (prev ? { ...prev, body_json: json, body_html: html } : prev));
     },
     [],
