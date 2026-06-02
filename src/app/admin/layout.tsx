@@ -1,4 +1,6 @@
 import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import AdminShell from "./AdminShell";
 import ReactQueryProvider from "./ReactQueryProvider";
 
@@ -8,10 +10,18 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") ?? "";
+  const isLoginPage = pathname === "/admin/login";
 
-  // Login page must render without the admin shell so unauthenticated users
-  // can actually see the form. The middleware handles redirecting all other
-  // /admin/* paths to /admin/login when there's no session.
+  if (!session && !isLoginPage) {
+    redirect(`/admin/login?callbackUrl=${encodeURIComponent(pathname)}`);
+  }
+
+  if (session && isLoginPage) {
+    redirect("/admin");
+  }
+
   if (!session) {
     return <>{children}</>;
   }

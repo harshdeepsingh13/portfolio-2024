@@ -1,37 +1,14 @@
-import NextAuth from "next-auth";
-import type { NextAuthRequest } from "next-auth";
 import { NextResponse } from "next/server";
-import { authConfig } from "./auth.config";
+import type { NextRequest } from "next/server";
 
-const { auth } = NextAuth(authConfig);
-
-export default auth(function middleware(req: NextAuthRequest) {
-  // 1. Block non-GET/HEAD methods for all matched routes
+export function middleware(req: NextRequest) {
   if (!["GET", "HEAD"].includes(req.method)) {
     return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
   }
-
-  // 2. Auth checks for /admin routes
-  const isLoggedIn = !!req.auth?.user;
-  const { pathname } = req.nextUrl;
-
-  if (pathname === "/admin/login") {
-    if (isLoggedIn) {
-      return NextResponse.redirect(new URL("/admin", req.nextUrl));
-    }
-    return NextResponse.next();
-  }
-
-  if (pathname.startsWith("/admin")) {
-    if (!isLoggedIn) {
-      const loginUrl = new URL("/admin/login", req.nextUrl);
-      loginUrl.searchParams.set("callbackUrl", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-  }
-
-  return NextResponse.next();
-});
+  const res = NextResponse.next();
+  res.headers.set("x-pathname", req.nextUrl.pathname);
+  return res;
+}
 
 export const config = {
   matcher: [
