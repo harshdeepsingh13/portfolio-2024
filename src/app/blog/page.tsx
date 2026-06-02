@@ -9,7 +9,14 @@ export const metadata: Metadata = {
   title: "Blog — Harshdeep Singh",
   description:
     "Articles on full stack development, React, TypeScript, Node.js, and AI automation by Harshdeep Singh.",
-  alternates: { canonical: "https://theharshdeepsingh.com/blog" },
+  alternates: {
+    canonical: "https://theharshdeepsingh.com/blog",
+    types: {
+      "application/rss+xml": [
+        { url: "https://theharshdeepsingh.com/blog/rss.xml", title: "Harshdeep Singh Blog" },
+      ],
+    },
+  },
   openGraph: {
     title: "Blog — Harshdeep Singh",
     description:
@@ -18,12 +25,21 @@ export const metadata: Metadata = {
     siteName: "Harshdeep Singh",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/assets/og/default.png",
+        width: 1200,
+        height: 630,
+        alt: "Harshdeep Singh Blog",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Blog — Harshdeep Singh",
     description:
       "Articles on full stack development, React, TypeScript, Node.js, and AI automation by Harshdeep Singh.",
+    images: ["/assets/og/default.png"],
   },
 };
 
