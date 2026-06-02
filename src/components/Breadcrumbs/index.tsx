@@ -1,3 +1,4 @@
+import { safeJsonLd } from "@/lib/jsonLd";
 import Link from "next/link";
 import styles from "./styles.module.css";
 
@@ -43,7 +44,7 @@ const Breadcrumbs = ({ items }: { items: Breadcrumb[] }) => {
           </ol>
         </nav>
       </div>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }} />
     </>
   );
 };

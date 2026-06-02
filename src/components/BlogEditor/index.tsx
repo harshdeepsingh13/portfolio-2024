@@ -55,6 +55,8 @@ function ToolbarBtn({
 interface BlogEditorProps {
   /** Initial TipTap JSON document */
   content?: Record<string, unknown>;
+  /** HTML string fallback — used when body_json is absent (e.g. seeded posts) */
+  contentHtml?: string;
   /** Called whenever content changes */
   onChange?: (data: { json: Record<string, unknown>; html: string }) => void;
   placeholder?: string;
@@ -62,6 +64,7 @@ interface BlogEditorProps {
 
 export default function BlogEditor({
   content,
+  contentHtml,
   onChange,
   placeholder = "Write your post here…",
 }: BlogEditorProps) {
@@ -94,7 +97,7 @@ export default function BlogEditor({
       TableHeader,
       TableCell,
     ],
-    content: content ?? "",
+    content: content ?? contentHtml ?? "",
     editorProps: {
       attributes: {
         spellcheck: "true",
@@ -112,13 +115,19 @@ export default function BlogEditor({
 
   // Sync external content changes (e.g. when loading an existing post)
   useEffect(() => {
-    if (!editor || !content) return;
-    const currentJson = JSON.stringify(editor.getJSON());
-    const newJson = JSON.stringify(content);
-    if (currentJson !== newJson) {
-      editor.commands.setContent(content);
+    if (!editor) return;
+    if (content) {
+      const currentJson = JSON.stringify(editor.getJSON());
+      const newJson = JSON.stringify(content);
+      if (currentJson !== newJson) {
+        // emitUpdate: false — TipTap v3 defaults to true, which would fire onUpdate
+        // and mark the form dirty even though this is a programmatic content load.
+        editor.commands.setContent(content, { emitUpdate: false });
+      }
+    } else if (contentHtml && editor.isEmpty) {
+      editor.commands.setContent(contentHtml, { emitUpdate: false });
     }
-  }, [editor, content]);
+  }, [editor, content, contentHtml]);
 
   if (!editor) return null;
 

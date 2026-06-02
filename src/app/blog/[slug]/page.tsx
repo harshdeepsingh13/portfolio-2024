@@ -2,6 +2,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import BlogPostContent from "@/components/BlogPostContent";
 import PreviewBanner from "@/components/PreviewBanner";
 import { getData } from "@/lib/getData";
+import { safeJsonLd } from "@/lib/jsonLd";
 import { sanitizeHtml } from "@/lib/sanitize";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
@@ -113,7 +114,7 @@ const BlogPostPage = async ({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(articleJsonLd) }}
       />
       <Breadcrumbs
         items={[
