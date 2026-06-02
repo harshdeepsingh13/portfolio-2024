@@ -15,11 +15,35 @@ const BlogTagFilter = ({ tags, activeTag }: { tags: string[]; activeTag: string 
     }
   };
 
+  // MUI Tabs doesn't fire onChange when clicking the already-selected tab,
+  // so we handle deselection via onClick on the active tab.
+  const handleActiveClick = () => {
+    if (activeTag !== "all") router.push("/blog");
+  };
+
   return (
-    <CustomTabs value={activeTag} onChange={handleChange} aria-label="Filter posts by tag">
+    <CustomTabs
+      value={activeTag}
+      onChange={handleChange}
+      aria-label="Filter posts by tag"
+      centered={false}
+      variant="scrollable"
+      scrollButtons="auto"
+      sx={{
+        "& .MuiTabs-flexContainer": {
+          flexWrap: "nowrap",
+          justifyContent: "flex-start",
+        },
+      }}
+    >
       <CustomTab value="all" label="All" />
       {tags.map((tag) => (
-        <CustomTab key={tag} value={tag} label={tag} />
+        <CustomTab
+          key={tag}
+          value={tag}
+          label={tag}
+          onClick={tag === activeTag ? handleActiveClick : undefined}
+        />
       ))}
     </CustomTabs>
   );
