@@ -24,13 +24,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         try {
           // Dynamic imports keep mongoose + bcryptjs out of the edge bundle.
-          const { connectToDB } = await import("./lib/mongoose");
+          const { connectToBlogsDB } = await import("./lib/mongoose");
           const { default: bcrypt } = await import("bcryptjs");
-          const { default: UserModel } = await import("../modals/user");
+          const { blogUserSchema } = await import("../modals/blogUser");
 
-          await connectToDB();
+          const conn = await connectToBlogsDB();
+          const BlogUser = conn.models.blogUser || conn.model("blogUser", blogUserSchema);
 
-          const user = await UserModel.findOne({
+          const user = await BlogUser.findOne({
             email: credentials.email,
           }).select("+password");
 

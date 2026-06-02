@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import slugify from "slugify";
 import { blogPostSchema } from "../../../../../modals/blogPost";
-import User from "../../../../../modals/user";
-import { connectToBlogsDB, connectToDB } from "@/lib/mongoose";
+import { blogUserSchema } from "../../../../../modals/blogUser";
+import { connectToBlogsDB } from "@/lib/mongoose";
 import { auth } from "@/auth";
 
 // ---------------------------------------------------------------------------
@@ -127,9 +127,9 @@ export async function POST(req: NextRequest) {
         ? computeReadingTime(body_html)
         : undefined;
 
-    // Resolve the portfolio owner's ObjectId — never trust the request body for author
-    await connectToDB();
-    const ownerUser = await User.findOne({ email: process.env.UESR_EMAIL }).select("_id").lean() as { _id: unknown } | null;
+    // Resolve the portfolio owner's ObjectId from blogs DB — never trust the request body for author
+    const BlogUser = conn.models.blogUser || conn.model("blogUser", blogUserSchema);
+    const ownerUser = await BlogUser.findOne({ email: process.env.UESR_EMAIL }).select("_id").lean() as { _id: unknown } | null;
     if (!ownerUser) {
       return NextResponse.json({ error: "Author user not found" }, { status: 500 });
     }

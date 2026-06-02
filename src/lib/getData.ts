@@ -1,5 +1,6 @@
 import educations from "../../modals/educations";
 import { blogPostSchema } from "../../modals/blogPost";
+import { blogUserSchema } from "../../modals/blogUser";
 import project from "../../modals/project";
 import skill from "../../modals/skill";
 import user from "../../modals/user";
@@ -87,13 +88,13 @@ export const getData = {
     const posts: BlogPostPreview[] = JSON.parse(JSON.stringify(data));
     if (posts.length > 0 && posts[0].author) {
       try {
-        await connectToDB();
-        const authorDoc = await user.findById(posts[0].author).select("name").lean() as { name?: string } | null;
+        const BlogUser = conn.models.blogUser || conn.model("blogUser", blogUserSchema);
+        const authorDoc = await BlogUser.findById(posts[0].author).select("name").lean() as { name?: string } | null;
         if (authorDoc?.name) {
           const authorName = authorDoc.name;
           return posts.map((p) => ({ ...p, authorName }));
         }
-      } catch { /* author not yet an ObjectId — migration pending */ }
+      } catch { /* author lookup failed */ }
     }
     return posts;
   },
@@ -105,10 +106,10 @@ export const getData = {
     const post: BlogPost = JSON.parse(JSON.stringify(data));
     if (post.author) {
       try {
-        await connectToDB();
-        const authorDoc = await user.findById(post.author).select("name").lean() as { name?: string } | null;
+        const BlogUser = conn.models.blogUser || conn.model("blogUser", blogUserSchema);
+        const authorDoc = await BlogUser.findById(post.author).select("name").lean() as { name?: string } | null;
         if (authorDoc?.name) post.authorName = authorDoc.name;
-      } catch { /* author not yet an ObjectId — migration pending */ }
+      } catch { /* author lookup failed */ }
     }
     return post;
   },
@@ -124,10 +125,10 @@ export const getData = {
     const post: BlogPost = JSON.parse(JSON.stringify(merged));
     if (post.author) {
       try {
-        await connectToDB();
-        const authorDoc = await user.findById(post.author).select("name").lean() as { name?: string } | null;
+        const BlogUser = conn.models.blogUser || conn.model("blogUser", blogUserSchema);
+        const authorDoc = await BlogUser.findById(post.author).select("name").lean() as { name?: string } | null;
         if (authorDoc?.name) post.authorName = authorDoc.name;
-      } catch { /* author not yet an ObjectId — migration pending */ }
+      } catch { /* author lookup failed */ }
     }
     return post;
   },
@@ -148,13 +149,13 @@ export const getData = {
     const posts: BlogPostPreview[] = JSON.parse(JSON.stringify(data));
     if (posts.length > 0 && posts[0].author) {
       try {
-        await connectToDB();
-        const authorDoc = await user.findById(posts[0].author).select("name").lean() as { name?: string } | null;
+        const BlogUser = conn.models.blogUser || conn.model("blogUser", blogUserSchema);
+        const authorDoc = await BlogUser.findById(posts[0].author).select("name").lean() as { name?: string } | null;
         if (authorDoc?.name) {
           const authorName = authorDoc.name;
           return posts.map((p) => ({ ...p, authorName }));
         }
-      } catch { /* author not yet an ObjectId — migration pending */ }
+      } catch { /* author lookup failed */ }
     }
     return posts;
   },

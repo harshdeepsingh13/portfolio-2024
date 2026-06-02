@@ -74,7 +74,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
     const BlogPost = conn.models.blogPost || conn.model("blogPost", blogPostSchema);
 
     const body = await req.json();
-    const { mode = "save", ...rest } = body as { mode?: "save" | "publish"; [key: string]: unknown };
+    const { mode = "save", ...rest } = body as { mode?: "save" | "publish" | "discard"; [key: string]: unknown };
 
     // Fetch existing post to know its current status
     const existing = await BlogPost.findById(id, { status: 1, publishedAt: 1 }).lean() as
@@ -90,6 +90,19 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
       "body_json", "body_html", "readingTime", "seo",
     ] as const;
     const ROOT_ONLY_FIELDS = ["slug"] as const;
+
+    // ── Discard mode → drop draft subdoc, restore post to clean published state ──
+    if (mode === "discard" && existing.status === "published") {
+      const updated = await BlogPost
+        .findByIdAndUpdate(
+          id,
+          { $unset: { draft: 1 }, $set: { hasDraft: false } },
+          { new: true }
+        )
+        .lean();
+      if (!updated) return NextResponse.json({ error: "Post not found" }, { status: 404 });
+      return NextResponse.json(JSON.parse(JSON.stringify(updated)));
+    }
 
     // ── Save mode + post is already published → write to draft subdoc only ──
     if (mode === "save" && existing.status === "published") {
