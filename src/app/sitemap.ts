@@ -43,30 +43,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.6,
     },
+    {
+      url: `${siteUrl}/blog`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
   ];
 
-  let blogEntries: MetadataRoute.Sitemap = [];
+  let blogPostEntries: MetadataRoute.Sitemap = [];
   try {
     const blogPosts = await getData.getBlogPostsForSitemap();
-    blogEntries = [
-      {
-        url: `${siteUrl}/blog`,
-        lastModified: now,
-        changeFrequency: "weekly",
+    blogPostEntries = blogPosts
+      .filter((post) => post.updatedAt && !isNaN(new Date(post.updatedAt).getTime()))
+      .map((post) => ({
+        url: `${siteUrl}/blog/${post.slug}`,
+        lastModified: new Date(post.updatedAt),
+        changeFrequency: "monthly" as const,
         priority: 0.8,
-      },
-      ...blogPosts
-        .filter((post) => post.updatedAt && !isNaN(new Date(post.updatedAt).getTime()))
-        .map((post) => ({
-          url: `${siteUrl}/blog/${post.slug}`,
-          lastModified: new Date(post.updatedAt),
-          changeFrequency: "monthly" as const,
-          priority: 0.8,
-        })),
-    ];
+      }));
   } catch (err) {
     console.error("[sitemap] Failed to fetch blog posts:", err);
   }
 
-  return [...staticEntries, ...blogEntries];
+  return [...staticEntries, ...blogPostEntries];
 }
