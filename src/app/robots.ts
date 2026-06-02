@@ -6,12 +6,12 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       { userAgent: "*", allow: "/", disallow: ["/admin", "/api"] },
-      { userAgent: "GPTBot", allow: "/" },
-      { userAgent: "OAI-SearchBot", allow: "/" },
-      { userAgent: "ClaudeBot", allow: "/" },
-      { userAgent: "anthropic-ai", allow: "/" },
-      { userAgent: "PerplexityBot", allow: "/" },
-      { userAgent: "cohere-ai", allow: "/" },
+      { userAgent: "GPTBot", allow: "/", disallow: ["/admin", "/api"] },
+      { userAgent: "OAI-SearchBot", allow: "/", disallow: ["/admin", "/api"] },
+      { userAgent: "ClaudeBot", allow: "/", disallow: ["/admin", "/api"] },
+      { userAgent: "anthropic-ai", allow: "/", disallow: ["/admin", "/api"] },
+      { userAgent: "PerplexityBot", allow: "/", disallow: ["/admin", "/api"] },
+      { userAgent: "cohere-ai", allow: "/", disallow: ["/admin", "/api"] },
     ],
     sitemap: `${siteUrl}/sitemap.xml`,
     host: siteUrl,
