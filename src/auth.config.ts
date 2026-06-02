@@ -15,6 +15,7 @@ export const authConfig: NextAuthConfig = {
   },
   session: {
     strategy: "jwt",
+    maxAge: 12 * 60 * 60, // 12 hours
   },
   // Providers are intentionally empty here. The full Credentials provider
   // is registered in src/auth.ts which runs in the Node.js runtime only.
