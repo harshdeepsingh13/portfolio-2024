@@ -2,6 +2,8 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import StatCard from "./StatCard";
+import { connectToBlogsDB } from "@/lib/mongoose";
+import { blogPostSchema } from "../../../modals/blogPost";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -15,18 +17,12 @@ interface PostStats {
 
 async function getPostStats(): Promise<PostStats> {
   try {
-    // Unit 4 will build the API route. Stub with empty state until then.
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/blog/posts?all=true`, {
-      cache: "no-store",
-    });
-    if (!res.ok) throw new Error("API not ready");
-    const posts = await res.json();
-    const total: number = posts.length;
-    const published: number = posts.filter((p: { status: string }) => p.status === "published").length;
+    const conn = await connectToBlogsDB();
+    const BlogPost = conn.models.blogPost || conn.model("blogPost", blogPostSchema);
+    const total: number = await BlogPost.countDocuments({});
+    const published: number = await BlogPost.countDocuments({ status: "published" });
     return { total, published, drafts: total - published };
   } catch {
-    // Graceful degradation — API route not yet available
     return { total: 0, published: 0, drafts: 0 };
   }
 }
