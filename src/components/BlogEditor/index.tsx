@@ -261,11 +261,29 @@ export default function BlogEditor({
         <ToolbarBtn
           onClick={() => {
             const url = window.prompt("Enter image URL:");
-            if (url) editor.chain().focus().setImage({ src: url }).run();
+            if (!url) return;
+            const alt = window.prompt("ALT text (describe the image for SEO & accessibility):") ?? "";
+            editor.chain().focus().setImage({ src: url, alt: alt.trim() }).run();
           }}
           title="Insert image"
         >
           🖼
+        </ToolbarBtn>
+
+        {/* Edit image ALT text */}
+        <ToolbarBtn
+          onClick={() => {
+            if (!editor.isActive("image")) return;
+            const currentAlt = (editor.getAttributes("image").alt as string) ?? "";
+            const alt = window.prompt("Edit image ALT text:", currentAlt);
+            if (alt !== null) {
+              editor.chain().focus().updateAttributes("image", { alt: alt.trim() }).run();
+            }
+          }}
+          isActive={editor.isActive("image")}
+          title="Edit image ALT text"
+        >
+          ALT
         </ToolbarBtn>
 
         {/* YouTube */}
