@@ -7,7 +7,6 @@ export const EditorWrapper = styled("div")(({ theme }) => ({
   flexDirection: "column",
   border: `1px solid ${theme.palette.primary.border}`,
   borderRadius: "8px",
-  overflow: "hidden",
   backgroundColor: theme.palette.background.paper,
   minHeight: "400px",
 
@@ -23,6 +22,11 @@ export const EditorWrapper = styled("div")(({ theme }) => ({
     padding: "8px 12px",
     borderBottom: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.background.default,
+    position: "sticky",
+    top: "3rem",
+    zIndex: 10,
+    borderRadius: "8px 8px 0 0",
+    boxShadow: `0 2px 6px ${theme.palette.primary.alpha10}`,
   },
 
   "& .toolbar-btn": {
@@ -66,6 +70,7 @@ export const EditorWrapper = styled("div")(({ theme }) => ({
     padding: "16px 20px",
     minHeight: "360px",
     outline: "none",
+    overflowX: "auto",
     color: theme.palette.text.primary,
     fontSize: "1rem",
     lineHeight: 1.8,
