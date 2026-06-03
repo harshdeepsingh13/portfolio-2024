@@ -168,6 +168,28 @@ export const EditorWrapper = styled("div")(({ theme }) => ({
       margin: "1em 0",
     },
 
+    "& .tiptap-chip": {
+      display: "inline-block",
+      fontSize: "0.8em",
+      padding: "2px 8px",
+      borderRadius: "50px",
+      border: `1px solid ${theme.palette.primary.border}`,
+      color: theme.palette.primary.main,
+      backgroundColor: theme.palette.primary.glow,
+      cursor: "default",
+      userSelect: "none",
+      WebkitUserSelect: "none",
+      verticalAlign: "middle",
+      margin: "0 2px",
+      whiteSpace: "nowrap",
+      lineHeight: 1.5,
+    },
+
+    "& .tiptap-chip.ProseMirror-selectednode": {
+      outline: `2px solid ${theme.palette.primary.main}`,
+      outlineOffset: "1px",
+    },
+
     "& table": {
       borderCollapse: "collapse",
       width: "100%",

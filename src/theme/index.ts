@@ -273,6 +273,30 @@ export const createAppTheme = (mode: PaletteMode = "light") => {
             border: none;
           }
 
+          /* Inline chip labels */
+          .blog-post-body .tiptap-chip {
+            display: inline-block;
+            font-size: 0.8em;
+            padding: 2px 8px;
+            border-radius: 50px;
+            cursor: default;
+            user-select: none;
+            vertical-align: middle;
+            margin: 0 2px;
+            white-space: nowrap;
+            line-height: 1.5;
+          }
+          html[data-theme="dark"]  .blog-post-body .tiptap-chip {
+            border: 1px solid rgba(56,189,248,0.15);
+            color: #38bdf8;
+            background-color: rgba(56,189,248,0.08);
+          }
+          html[data-theme="light"] .blog-post-body .tiptap-chip {
+            border: 1px solid rgba(2,132,199,0.2);
+            color: #0284c7;
+            background-color: rgba(2,132,199,0.08);
+          }
+
           /* Theme-dependent colours */
           html[data-theme="dark"]  .blog-post-body a { color: #38bdf8; }
           html[data-theme="light"] .blog-post-body a { color: #0284c7; }

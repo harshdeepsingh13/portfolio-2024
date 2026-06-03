@@ -21,6 +21,7 @@ import css from "highlight.js/lib/languages/css";
 import python from "highlight.js/lib/languages/python";
 import { useEffect } from "react";
 import { CharCountWrapper, EditorWrapper } from "./styles";
+import { ChipExtension } from "./ChipExtension";
 
 // Configure lowlight with supported languages
 const lowlight = createLowlight();
@@ -96,6 +97,8 @@ export default function BlogEditor({
       TableRow,
       TableHeader,
       TableCell,
+      // Inline chip labels
+      ChipExtension,
     ],
     content: content ?? contentHtml ?? "",
     editorProps: {
@@ -275,6 +278,24 @@ export default function BlogEditor({
         >
           ▶
         </ToolbarBtn>
+
+        {/* Chip */}
+        <ToolbarBtn
+          onClick={() => {
+            const label = window.prompt("Chip label:");
+            if (label?.trim()) {
+              editor
+                .chain()
+                .focus()
+                .insertContent({ type: "chip", attrs: { label: label.trim() } })
+                .run();
+            }
+          }}
+          title="Insert chip"
+        >
+          🏷
+        </ToolbarBtn>
+        <div className="toolbar-divider" />
 
         {/* Table */}
         <ToolbarBtn
