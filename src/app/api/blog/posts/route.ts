@@ -119,6 +119,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Validate slug format when provided by caller
+    if (rawSlug && !/^[a-z0-9-]+$/.test(rawSlug)) {
+      return NextResponse.json(
+        { error: "slug may only contain lowercase letters, digits, and hyphens" },
+        { status: 400 }
+      );
+    }
+
     // Compute readingTime from body_html if not provided
     const readingTime =
       rawReadingTime != null

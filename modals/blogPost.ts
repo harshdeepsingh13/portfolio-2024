@@ -45,6 +45,8 @@ export const blogPostSchema = new Schema(
     // Draft versioning
     draft: { type: DraftSchema },
     hasDraft: { type: Boolean, default: false },
+    // DEV.io cross-post tracking
+    devToId: { type: String },
   },
   { timestamps: true }
 );

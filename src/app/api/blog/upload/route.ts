@@ -1,19 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-
-// ---------------------------------------------------------------------------
-// Auth helper
-// ---------------------------------------------------------------------------
-// TODO (Unit 2): Replace with proper session check once auth is merged:
-//   import { auth } from "@/auth";
-//   const session = await auth();
-//   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-//
-// Temporary workaround: use a custom header that the admin panel will send.
-function isAuthorized(req: NextRequest): boolean {
-  const adminKey = process.env.ADMIN_SECRET_KEY;
-  if (!adminKey) return false;
-  return req.headers.get("x-admin-key") === adminKey;
-}
+import { auth } from "@/auth";
 
 // ---------------------------------------------------------------------------
 // Extract the Cloudinary cloud name from NEXT_PUBLIC_CLOUDINARY_RES_LINK.
@@ -34,7 +20,8 @@ function getCloudName(): string | null {
 // Returns { url: "https://res.cloudinary.com/..." }
 // ---------------------------------------------------------------------------
 export async function POST(req: NextRequest) {
-  if (!isAuthorized(req)) {
+  const session = await auth();
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
