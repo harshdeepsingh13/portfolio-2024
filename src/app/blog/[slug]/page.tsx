@@ -6,7 +6,8 @@ import { safeJsonLd } from "@/lib/jsonLd";
 import { sanitizeHtml } from "@/lib/sanitize";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 
 const SITE_URL = "https://theharshdeepsingh.com";
 
@@ -56,7 +57,7 @@ const BlogPostPage = async ({
   const isPreview = sp.preview === "1";
 
   if (isPreview) {
-    const session = await auth();
+    const session = await getServerSession(authOptions);
     if (!session) redirect("/admin/login");
 
     const post = await getData.getBlogPostBySlugForPreview(slug);

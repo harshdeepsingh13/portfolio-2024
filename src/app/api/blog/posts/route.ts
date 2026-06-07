@@ -3,7 +3,8 @@ import slugify from "slugify";
 import { blogPostSchema } from "../../../../../modals/blogPost";
 import { blogUserSchema } from "../../../../../modals/blogUser";
 import { connectToBlogsDB } from "@/lib/mongoose";
-import { auth } from "@/auth";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -47,7 +48,7 @@ export async function GET(req: NextRequest) {
 
     const filter: Record<string, unknown> = {};
 
-    const session = await auth();
+    const session = await getServerSession(authOptions);
     if (all && session) {
       // Authenticated: return all posts regardless of status
     } else {
@@ -78,7 +79,7 @@ export async function GET(req: NextRequest) {
 //         body_html?, readingTime?, status?, seo?, author? }
 // ---------------------------------------------------------------------------
 export async function POST(req: NextRequest) {
-  const session = await auth();
+  const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

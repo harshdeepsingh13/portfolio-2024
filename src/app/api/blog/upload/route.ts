@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 
 // ---------------------------------------------------------------------------
 // Extract the Cloudinary cloud name from NEXT_PUBLIC_CLOUDINARY_RES_LINK.
@@ -20,7 +21,7 @@ function getCloudName(): string | null {
 // Returns { url: "https://res.cloudinary.com/..." }
 // ---------------------------------------------------------------------------
 export async function POST(req: NextRequest) {
-  const session = await auth();
+  const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
