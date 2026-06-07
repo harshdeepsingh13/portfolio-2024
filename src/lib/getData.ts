@@ -10,6 +10,45 @@ import type { BlogPost, BlogPostForSitemap, BlogPostPreview } from "@/types/blog
 
 const userEmail = process.env.UESR_EMAIL;
 
+const attachAuthorNames = async (
+  conn: Awaited<ReturnType<typeof connectToBlogsDB>>,
+  posts: BlogPostPreview[],
+): Promise<BlogPostPreview[]> => {
+  const authorIds = Array.from(
+    new Set(
+      posts
+        .map((post) => post.author)
+        .filter((author): author is string => typeof author === "string" && author.length > 0),
+    ),
+  );
+
+  if (authorIds.length === 0) {
+    return posts;
+  }
+
+  try {
+    const BlogUser = conn.models.blogUser || conn.model("blogUser", blogUserSchema);
+    const authorDocs = await BlogUser
+      .find({ _id: { $in: authorIds } })
+      .select("_id name")
+      .lean() as Array<{ _id: unknown; name?: string }>;
+
+    const authorNameById = new Map<string, string>();
+    for (const authorDoc of authorDocs) {
+      if (authorDoc.name) {
+        authorNameById.set(String(authorDoc._id), authorDoc.name);
+      }
+    }
+
+    return posts.map((post) => ({
+      ...post,
+      authorName: post.author ? authorNameById.get(String(post.author)) : post.authorName,
+    }));
+  } catch {
+    return posts;
+  }
+};
+
 export const getData = {
   getBasicInformation: async () => {
     // Disable Next.js data cache for this request so DB reads are always fresh.
@@ -86,17 +125,7 @@ export const getData = {
       .sort({ publishedAt: -1 })
       .lean();
     const posts: BlogPostPreview[] = JSON.parse(JSON.stringify(data));
-    if (posts.length > 0 && posts[0].author) {
-      try {
-        const BlogUser = conn.models.blogUser || conn.model("blogUser", blogUserSchema);
-        const authorDoc = await BlogUser.findById(posts[0].author).select("name").lean() as { name?: string } | null;
-        if (authorDoc?.name) {
-          const authorName = authorDoc.name;
-          return posts.map((p) => ({ ...p, authorName }));
-        }
-      } catch { /* author lookup failed */ }
-    }
-    return posts;
+    return attachAuthorNames(conn, posts);
   },
   getBlogPostBySlug: async (slug: string): Promise<BlogPost | null> => {
     const conn = await connectToBlogsDB();
@@ -147,17 +176,7 @@ export const getData = {
       .limit(limit)
       .lean();
     const posts: BlogPostPreview[] = JSON.parse(JSON.stringify(data));
-    if (posts.length > 0 && posts[0].author) {
-      try {
-        const BlogUser = conn.models.blogUser || conn.model("blogUser", blogUserSchema);
-        const authorDoc = await BlogUser.findById(posts[0].author).select("name").lean() as { name?: string } | null;
-        if (authorDoc?.name) {
-          const authorName = authorDoc.name;
-          return posts.map((p) => ({ ...p, authorName }));
-        }
-      } catch { /* author lookup failed */ }
-    }
-    return posts;
+    return attachAuthorNames(conn, posts);
   },
   getBlogPostsForSitemap: async (): Promise<BlogPostForSitemap[]> => {
     const conn = await connectToBlogsDB();

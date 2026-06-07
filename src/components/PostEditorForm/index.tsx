@@ -309,6 +309,7 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
   const autoSave = useCallback(async () => {
     const current = formRef.current;
     if (!current || !current.title.trim()) return;
+    if (!isDirtyRef.current) return;
 
     setAutoSaveStatus("Saving…");
     try {

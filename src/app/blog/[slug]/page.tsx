@@ -8,8 +8,6 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
 
-export const dynamic = "force-dynamic";
-
 const SITE_URL = "https://theharshdeepsingh.com";
 
 export async function generateMetadata({
@@ -68,7 +66,7 @@ const BlogPostPage = async ({
 
     return (
       <>
-        <PreviewBanner postId={String((post as any)._id)} slug={slug} />
+        <PreviewBanner postId={String((post as { _id?: unknown })._id)} slug={slug} />
         <Breadcrumbs
           items={[
             { label: "Home", href: "/" },

@@ -5,9 +5,13 @@ export function middleware(req: NextRequest) {
   if (!["GET", "HEAD"].includes(req.method)) {
     return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
   }
-  const res = NextResponse.next();
-  res.headers.set("x-pathname", req.nextUrl.pathname);
-  return res;
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("x-pathname", req.nextUrl.pathname);
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 
 export const config = {

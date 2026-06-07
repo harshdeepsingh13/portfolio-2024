@@ -24,15 +24,17 @@ export const authConfig: NextAuthConfig = {
   callbacks: {
     jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.email = user.email ?? token.email;
-        token.name = user.name ?? token.name;
+        token.id = user.id ?? token.id ?? token.sub ?? "";
+        token.email = user.email ?? token.email ?? "";
+        token.name = user.name ?? token.name ?? "";
       }
       return token;
     },
     session({ session, token }) {
       if (token && session.user) {
-        session.user.id = token.id as string;
+        session.user.id = (token.id as string) || "";
+        session.user.email = (token.email as string) || "";
+        session.user.name = (token.name as string) || "";
       }
       return session;
     },
