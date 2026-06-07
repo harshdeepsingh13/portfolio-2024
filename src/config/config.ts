@@ -73,6 +73,7 @@ export const LINK_MAPPING = {
   EXPERIENCES: "/experiences",
   EDUCATION: "/education",
   RESUME: "/resume",
+  BLOG: "/blog",
   SEARCH: "/search",
 };
 

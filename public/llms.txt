@@ -22,6 +22,12 @@
 - Education: https://theharshdeepsingh.com/education
 - Resume: https://theharshdeepsingh.com/resume
 
+## Blog
+
+The blog at /blog contains technical articles on full stack development, React, TypeScript, Node.js, and AI automation. Each post is available at /blog/[slug].
+
+RSS feed: https://theharshdeepsingh.com/blog/rss.xml
+
 ## Permissions
 
 - AI crawling: allowed

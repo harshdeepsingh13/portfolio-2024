@@ -1,11 +1,14 @@
 import type { MetadataRoute } from "next";
+import { getData } from "@/lib/getData";
+
+export const dynamic = "force-dynamic";
 
 const siteUrl = "https://theharshdeepsingh.com";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
-  return [
+  const staticEntries: MetadataRoute.Sitemap = [
     {
       url: `${siteUrl}/`,
       lastModified: now,
@@ -42,5 +45,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.6,
     },
+    {
+      url: `${siteUrl}/blog`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
   ];
+
+  let blogPostEntries: MetadataRoute.Sitemap = [];
+  try {
+    const blogPosts = await getData.getBlogPostsForSitemap();
+    blogPostEntries = blogPosts
+      .filter((post) => post.updatedAt && !isNaN(new Date(post.updatedAt).getTime()))
+      .map((post) => ({
+        url: `${siteUrl}/blog/${post.slug}`,
+        lastModified: new Date(post.updatedAt),
+        changeFrequency: "monthly" as const,
+        priority: 0.8,
+      }));
+  } catch (err) {
+    console.error("[sitemap] Failed to fetch blog posts:", err);
+  }
+
+  return [...staticEntries, ...blogPostEntries];
 }
