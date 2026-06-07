@@ -1,4 +1,5 @@
-import { auth } from "@/auth";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import AdminShell from "./AdminShell";
@@ -9,7 +10,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
+  const session = await getServerSession(authOptions);
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") ?? "";
   const isLoginPage = pathname === "/admin/login";
