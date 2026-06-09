@@ -14,8 +14,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { sendGAEvent } from "@next/third-parties/google";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Logo from "../Logo";
+import { useReadingProgress } from "@/hooks/useReadingProgress";
 import {
   DrawerNavItem,
   HamburgerButton,
@@ -25,6 +27,7 @@ import {
   MobileDrawer,
   NavLinkItem,
   NavLinksContainer,
+  ProgressBarFill,
   ThemeButton,
 } from "./styles";
 
@@ -40,6 +43,9 @@ const NAV_LINKS = [
 const Header = ({ basicInformation }: { basicInformation: any }) => {
   const { theme, setTheme } = useThemeContext();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const pathname = usePathname();
+  const isBlogPost = /^\/blog\/[^/]+/.test(pathname ?? "");
+  const progress = useReadingProgress(isBlogPost);
 
   const onThemeToggle = () => {
     sendGAEvent("event", "toggle_theme");
@@ -77,6 +83,9 @@ const Header = ({ basicInformation }: { basicInformation: any }) => {
             </ThemeButton>
           </div>
         </HeaderContainer>
+        {isBlogPost && (
+          <ProgressBarFill style={{ width: `${progress}%` }} />
+        )}
       </HeaderWrapper>
 
       <MobileDrawer

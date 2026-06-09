@@ -201,3 +201,15 @@ export const ThemeButton = styled("div")(() => ({
   paddingLeft: "0.5rem",
   paddingRight: "0.5rem",
 }));
+
+export const ProgressBarFill = styled("div")(({ theme }) => ({
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  height: "3px",
+  backgroundColor: theme.palette.primary.main,
+  boxShadow: `0 0 8px ${theme.palette.primary.alpha20}`,
+  transition: "width 150ms linear",
+  pointerEvents: "none",
+  zIndex: 1,
+}));
