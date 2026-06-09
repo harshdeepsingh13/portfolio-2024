@@ -44,6 +44,7 @@ const Sidebar = styled(Box)(({ theme }) => ({
   top: "6rem",
   maxHeight: "calc(100vh - 120px)",
   overflowY: "auto",
+  borderRadius: "10px",
   [theme.breakpoints.down("md")]: {
     width: "100%",
     position: "static",
