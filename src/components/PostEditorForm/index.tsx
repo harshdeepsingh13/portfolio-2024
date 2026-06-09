@@ -9,8 +9,8 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
-import slugify from "slugify";
 import { useCallback, useEffect, useRef, useState } from "react";
+import slugify from "slugify";
 
 // ── Styled components ─────────────────────────────────────────────────────────
 
@@ -42,7 +42,7 @@ const Sidebar = styled(Box)(({ theme }) => ({
   gap: "16px",
   position: "sticky",
   top: "6rem",
-  maxHeight: "calc(100vh - 56px)",
+  maxHeight: "calc(100vh - 120px)",
   overflowY: "auto",
   [theme.breakpoints.down("md")]: {
     width: "100%",
@@ -130,7 +130,10 @@ function buildPayload(form: PostFormState, extra: Record<string, unknown> = {}) 
     title: form.title.trim(),
     slug: form.slug.trim(),
     excerpt: form.excerpt.trim() || undefined,
-    tags: form.tags.split(",").map((t) => t.trim()).filter(Boolean),
+    tags: form.tags
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean),
     coverImage: form.coverImage.trim() || undefined,
     body_json: form.body_json,
     body_html: form.body_html,
@@ -147,19 +150,21 @@ function buildPayload(form: PostFormState, extra: Record<string, unknown> = {}) 
 
 // ── Status indicator (edit mode only) ─────────────────────────────────────────
 
-function StatusIndicator({
-  postStatus,
-  hasDraft,
-}: {
-  postStatus: "draft" | "published";
-  hasDraft: boolean;
-}) {
+function StatusIndicator({ postStatus, hasDraft }: { postStatus: "draft" | "published"; hasDraft: boolean }) {
   const theme = useTheme();
 
   if (postStatus === "draft") {
     return (
       <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-        <Box sx={{ width: 8, height: 8, borderRadius: "50%", backgroundColor: theme.palette.custom.accentText, flexShrink: 0 }} />
+        <Box
+          sx={{
+            width: 8,
+            height: 8,
+            borderRadius: "50%",
+            backgroundColor: theme.palette.custom.accentText,
+            flexShrink: 0,
+          }}
+        />
         <Typography sx={{ fontSize: "0.8rem", color: theme.palette.custom.accentText }}>Draft</Typography>
       </Box>
     );
@@ -169,9 +174,7 @@ function StatusIndicator({
     return (
       <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
         <Box sx={{ width: 8, height: 8, borderRadius: "50%", backgroundColor: "warning.main", flexShrink: 0 }} />
-        <Typography sx={{ fontSize: "0.8rem", color: "warning.main" }}>
-          Published · Unpublished changes
-        </Typography>
+        <Typography sx={{ fontSize: "0.8rem", color: "warning.main" }}>Published · Unpublished changes</Typography>
       </Box>
     );
   }
@@ -179,9 +182,7 @@ function StatusIndicator({
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
       <Box sx={{ width: 8, height: 8, borderRadius: "50%", backgroundColor: "success.main", flexShrink: 0 }} />
-      <Typography sx={{ fontSize: "0.8rem", color: "success.main" }}>
-        Published · Up to date
-      </Typography>
+      <Typography sx={{ fontSize: "0.8rem", color: "success.main" }}>Published · Up to date</Typography>
     </Box>
   );
 }
@@ -292,15 +293,12 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
     [set],
   );
 
-  const handleEditorChange = useCallback(
-    ({ json, html }: { json: Record<string, unknown>; html: string }) => {
-      if (isSettledRef.current) {
-        isDirtyRef.current = true;
-      }
-      setForm((prev) => (prev ? { ...prev, body_json: json, body_html: html } : prev));
-    },
-    [],
-  );
+  const handleEditorChange = useCallback(({ json, html }: { json: Record<string, unknown>; html: string }) => {
+    if (isSettledRef.current) {
+      isDirtyRef.current = true;
+    }
+    setForm((prev) => (prev ? { ...prev, body_json: json, body_html: html } : prev));
+  }, []);
 
   // ── Auto-save (every 30 s, always as draft) ───────────────────────────────
   // Calls service functions directly (not via mutation hooks) because mutation
@@ -325,9 +323,7 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
 
       isDirtyRef.current = false;
       const now = new Date();
-      setAutoSaveStatus(
-        `Last saved at ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`,
-      );
+      setAutoSaveStatus(`Last saved at ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`);
     } catch {
       setAutoSaveStatus("Auto-save failed");
     }
@@ -343,8 +339,14 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
   const handleSave = async () => {
     if (!form) return;
     setSaveError(null);
-    if (!form.title.trim()) { setSaveError("Title is required."); return; }
-    if (!form.slug.trim()) { setSaveError("Slug is required."); return; }
+    if (!form.title.trim()) {
+      setSaveError("Title is required.");
+      return;
+    }
+    if (!form.slug.trim()) {
+      setSaveError("Slug is required.");
+      return;
+    }
 
     setSaving(true);
     try {
@@ -358,9 +360,7 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
 
       isDirtyRef.current = false;
       const now = new Date();
-      setAutoSaveStatus(
-        `Last saved at ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`,
-      );
+      setAutoSaveStatus(`Last saved at ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`);
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : "Failed to save post.");
     } finally {
@@ -373,8 +373,14 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
   const handlePublish = async () => {
     if (!form) return;
     setSaveError(null);
-    if (!form.title.trim()) { setSaveError("Title is required."); return; }
-    if (!form.slug.trim()) { setSaveError("Slug is required."); return; }
+    if (!form.title.trim()) {
+      setSaveError("Title is required.");
+      return;
+    }
+    if (!form.slug.trim()) {
+      setSaveError("Slug is required.");
+      return;
+    }
 
     setPublishing(true);
     try {
@@ -548,9 +554,7 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
       {/* ── Right: metadata sidebar ──────────────────── */}
       <Sidebar>
         <SidebarCard>
-          <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "text.primary" }}>
-            Publish
-          </Typography>
+          <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "text.primary" }}>Publish</Typography>
 
           {isEditMode && <StatusIndicator postStatus={postStatus} hasDraft={hasDraft} />}
 
@@ -632,9 +636,7 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
         </SidebarCard>
 
         <SidebarCard>
-          <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "text.primary" }}>
-            URL
-          </Typography>
+          <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "text.primary" }}>URL</Typography>
           <Box>
             <FieldLabel>Slug</FieldLabel>
             <StyledTextField
@@ -656,9 +658,7 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
         </SidebarCard>
 
         <SidebarCard>
-          <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "text.primary" }}>
-            Details
-          </Typography>
+          <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "text.primary" }}>Details</Typography>
           <Box>
             <FieldLabel>Excerpt</FieldLabel>
             <StyledTextField
