@@ -3,6 +3,9 @@
 # Local planning docs and one-time scripts (never commit)
 seo-plan.md
 scripts/
+
+# Temp upload processing directory
+tmp/
 docs/superpowers/
 
 # dependencies

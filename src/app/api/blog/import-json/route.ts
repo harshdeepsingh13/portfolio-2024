@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
-import os from "os";
 import path from "path";
 import fs from "fs/promises";
+
+const TMP_DIR = path.join(process.cwd(), "tmp");
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
@@ -65,7 +66,8 @@ export async function POST(req: NextRequest) {
     }
 
     const buf = Buffer.from(await file.arrayBuffer());
-    tmpPath = path.join(os.tmpdir(), `tiptap-import-${Date.now()}.json`);
+    await fs.mkdir(TMP_DIR, { recursive: true });
+    tmpPath = path.join(TMP_DIR, `tiptap-import-${Date.now()}.json`);
     await fs.writeFile(tmpPath, buf);
 
     let raw: unknown;
