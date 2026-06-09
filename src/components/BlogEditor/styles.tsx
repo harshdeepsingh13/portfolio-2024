@@ -23,7 +23,7 @@ export const EditorWrapper = styled("div")(({ theme }) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.background.default,
     position: "sticky",
-    top: "3rem",
+    top: "4rem",
     zIndex: 10,
     borderRadius: "8px 8px 0 0",
     boxShadow: `0 2px 6px ${theme.palette.primary.alpha10}`,

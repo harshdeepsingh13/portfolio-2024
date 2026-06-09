@@ -19,9 +19,10 @@ import javascript from "highlight.js/lib/languages/javascript";
 import typescript from "highlight.js/lib/languages/typescript";
 import css from "highlight.js/lib/languages/css";
 import python from "highlight.js/lib/languages/python";
-import { useEffect } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { CharCountWrapper, EditorWrapper } from "./styles";
 import { ChipExtension } from "./ChipExtension";
+import { importTiptapJson } from "@/services/blog/importJson";
 
 // Configure lowlight with supported languages
 const lowlight = createLowlight();
@@ -69,6 +70,8 @@ export default function BlogEditor({
   onChange,
   placeholder = "Write your post here…",
 }: BlogEditorProps) {
+  const [, rerender] = useReducer((x: number) => x + 1, 0);
+
   const editor = useEditor({
     extensions: [
       // StarterKit without the extensions we're replacing
@@ -106,6 +109,9 @@ export default function BlogEditor({
         spellcheck: "true",
       },
     },
+    onSelectionUpdate() {
+      rerender();
+    },
     onUpdate({ editor }) {
       if (onChange) {
         onChange({
@@ -131,6 +137,35 @@ export default function BlogEditor({
       editor.commands.setContent(contentHtml, { emitUpdate: false });
     }
   }, [editor, content, contentHtml]);
+
+  const jsonInputRef = useRef<HTMLInputElement>(null);
+  const [importError, setImportError] = useState<string | null>(null);
+
+  const handleJsonImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !editor) return;
+    e.target.value = ""; // reset so same file can be re-selected
+
+    if (!editor.isEmpty) {
+      const ok = window.confirm(
+        "Uploading a JSON will replace all existing content and cannot be undone. Continue?",
+      );
+      if (!ok) return;
+    }
+
+    setImportError(null);
+    try {
+      const { json, warnings } = await importTiptapJson(file);
+      if (editor.isDestroyed) return;
+      // TipTap v3: second arg is an options object, not a boolean
+      editor.commands.setContent(json, { emitUpdate: true });
+      if (warnings.length > 0) {
+        setImportError(`Imported with warnings: ${warnings.join("; ")}`);
+      }
+    } catch (err) {
+      setImportError(err instanceof Error ? err.message : "Import failed");
+    }
+  };
 
   if (!editor) return null;
 
@@ -324,6 +359,17 @@ export default function BlogEditor({
         >
           ⊞
         </ToolbarBtn>
+        <div className="toolbar-divider" />
+        <ToolbarBtn onClick={() => jsonInputRef.current?.click()} title="Upload TipTap JSON">
+          ↑ JSON
+        </ToolbarBtn>
+        <input
+          ref={jsonInputRef}
+          type="file"
+          accept=".json"
+          style={{ display: "none" }}
+          onChange={handleJsonImport}
+        />
       </div>
 
       {/* Bubble menu for selected text */}
@@ -367,6 +413,22 @@ export default function BlogEditor({
       <CharCountWrapper>
         {wordCount} words · {charCount} characters
       </CharCountWrapper>
+      {importError && (
+        <div
+          style={{
+            fontSize: "0.75rem",
+            color: importError.startsWith("Imported with warnings") ? "#f59e0b" : "#ef4444",
+            marginTop: "4px",
+            padding: "6px 10px",
+            borderRadius: "4px",
+            backgroundColor: importError.startsWith("Imported with warnings")
+              ? "rgba(245,158,11,0.08)"
+              : "rgba(239,68,68,0.08)",
+          }}
+        >
+          {importError}
+        </div>
+      )}
     </EditorWrapper>
   );
 }
