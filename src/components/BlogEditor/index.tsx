@@ -19,7 +19,7 @@ import javascript from "highlight.js/lib/languages/javascript";
 import typescript from "highlight.js/lib/languages/typescript";
 import css from "highlight.js/lib/languages/css";
 import python from "highlight.js/lib/languages/python";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { CharCountWrapper, EditorWrapper } from "./styles";
 import { ChipExtension } from "./ChipExtension";
 import { importTiptapJson } from "@/services/blog/importJson";
@@ -70,6 +70,8 @@ export default function BlogEditor({
   onChange,
   placeholder = "Write your post here…",
 }: BlogEditorProps) {
+  const [, rerender] = useReducer((x: number) => x + 1, 0);
+
   const editor = useEditor({
     extensions: [
       // StarterKit without the extensions we're replacing
@@ -106,6 +108,9 @@ export default function BlogEditor({
       attributes: {
         spellcheck: "true",
       },
+    },
+    onSelectionUpdate() {
+      rerender();
     },
     onUpdate({ editor }) {
       if (onChange) {
