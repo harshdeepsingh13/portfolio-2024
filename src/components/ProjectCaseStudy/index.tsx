@@ -12,6 +12,7 @@ interface ProjectCaseStudyProps {
   project: {
     name?: string;
     summary?: string;
+    tagLine?: string;
     technologyStack?: string[];
     link?: string;
     website?: string;
@@ -42,6 +43,21 @@ const ProjectCaseStudy = ({ project, safeHtml }: ProjectCaseStudyProps) => {
       <PageHeader component="h1" sx={{ textAlign: "left", fontSize: { xs: "2rem", md: "2.75rem" } }}>
         {project.name}
       </PageHeader>
+
+      {project.tagLine && (
+        <p
+          style={{
+            margin: "0.5rem 0 0",
+            fontSize: "1.25rem",
+            lineHeight: 1.5,
+            fontStyle: "italic",
+            fontWeight: 300,
+            color: theme.palette.custom.tertiaryText,
+          }}
+        >
+          {project.tagLine}
+        </p>
+      )}
 
       {/* Meta row: dates + repo/live links */}
       <div

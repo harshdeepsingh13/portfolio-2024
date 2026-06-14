@@ -26,6 +26,7 @@ export interface ProjectDetail {
   _id?: string;
   name?: string;
   summary?: string;
+  tagLine?: string;
   technologyStack?: string[];
   link?: string;
   website?: string;

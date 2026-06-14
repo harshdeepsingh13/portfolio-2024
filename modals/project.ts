@@ -22,6 +22,9 @@ const projectSchema = new Schema(
     summary: {
       type: String,
     },
+    tagLine: {
+      type: String,
+    },
     link: {
       type: String,
     },
