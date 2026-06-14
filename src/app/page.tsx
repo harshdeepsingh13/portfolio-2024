@@ -84,7 +84,7 @@ const profilePageJsonLd = {
   url: siteUrl,
   name: "Harshdeep Singh | Full Stack Developer, React & AI Automation Engineer",
   description:
-    "Portfolio of Harshdeep Singh, a Canada-based full stack developer specializing in React, TypeScript, Node.js, AI automation, and production web applications.",
+    "Portfolio of Harshdeep Singh, a Canada-based full stack developer specializing in React, TypeScript, Node.js, AI automation, and production web applications. - MERN Full Stack Developer | React, Node.js, MongoDB | AI Automation Engineer | Toptal Freelancer | AWS Certified | LangChain Expert",
   inLanguage: "en-US",
   isPartOf: { "@id": `${siteUrl}/#website` },
   about: { "@id": `${siteUrl}/#person` },
