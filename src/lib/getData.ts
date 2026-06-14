@@ -7,8 +7,83 @@ import user from "../../modals/user";
 import workExperience from "../../modals/workExperience";
 import { connectToDB, connectToBlogsDB } from "./mongoose";
 import type { BlogPost, BlogPostForSitemap, BlogPostPreview } from "@/types/blog";
+import { unstable_cache } from "next/cache";
+import slugify from "slugify";
+import { fetchReadmeHtml, parseRepo, README_MIN_CHARS } from "./github";
 
 const userEmail = process.env.UESR_EMAIL;
+
+// Minimum raw `summary` length for a project to earn a case-study page.
+// The summary is the original intro that sits above the (GitHub-duplicated)
+// README — this is the original-text-ratio gate, not just README bulk.
+const SUMMARY_MIN_CHARS = 150;
+
+/** Derive a project's URL slug from its name — same slugify config the blog uses. */
+export const slugifyProjectName = (name?: string): string =>
+  name ? slugify(name, { lower: true, strict: true }) : "";
+
+export interface ProjectDetail {
+  _id?: string;
+  name?: string;
+  summary?: string;
+  tagLine?: string;
+  technologyStack?: string[];
+  link?: string;
+  website?: string;
+  startDate?: string;
+  endDate?: string;
+  isPresent?: boolean;
+  updatedAt?: string;
+  slug: string;
+}
+
+export interface ProjectCaseStudyEntry {
+  slug: string;
+  name: string;
+  updatedAt: string | null;
+  readmeLastModified: string | null;
+  hasCaseStudy: boolean;
+}
+
+// Build the case-study eligibility index: for every project with a parseable
+// GitHub link, fetch its README (in parallel) and decide whether it qualifies
+// for a dedicated page. Wrapped in unstable_cache so the GitHub calls are cached
+// for an hour regardless of the calling route's `dynamic` setting (sitemap.ts is
+// force-dynamic and would otherwise re-fetch every README on each crawl).
+const buildProjectCaseStudyIndex = unstable_cache(
+  async (): Promise<ProjectCaseStudyEntry[]> => {
+    await connectToDB();
+    const docs = await project
+      .find({ user: userEmail }, undefined, { sort: { startDate: -1 } })
+      .lean();
+    const list = JSON.parse(JSON.stringify(docs)) as Array<{
+      name?: string;
+      summary?: string;
+      link?: string;
+      updatedAt?: string;
+    }>;
+
+    const entries = await Promise.all(
+      list.map(async (p) => {
+        if (!parseRepo(p.link)) return null;
+        const summaryLen = typeof p.summary === "string" ? p.summary.length : 0;
+        const readme = await fetchReadmeHtml(p.link).catch(() => null);
+        const textLength = readme?.textLength ?? 0;
+        return {
+          slug: slugifyProjectName(p.name),
+          name: p.name ?? "",
+          updatedAt: p.updatedAt ?? null,
+          readmeLastModified: readme?.readmeLastModified ?? null,
+          hasCaseStudy: textLength >= README_MIN_CHARS && summaryLen >= SUMMARY_MIN_CHARS,
+        } satisfies ProjectCaseStudyEntry;
+      }),
+    );
+
+    return entries.filter((e): e is ProjectCaseStudyEntry => e !== null);
+  },
+  ["project-case-study-index-v1"],
+  { revalidate: 3600 },
+);
 
 const attachAuthorNames = async (
   conn: Awaited<ReturnType<typeof connectToBlogsDB>>,
@@ -88,6 +163,26 @@ export const getData = {
     await connectToDB();
     const data = await project.find({ user: userEmail }, undefined, { sort: { startDate: -1 } }).lean();
     return JSON.parse(JSON.stringify(data));
+  },
+  // Resolve a project by its derived slug. Slugs aren't stored, so we slugify
+  // each project's name and match — O(projects), fine at this scale.
+  getProjectBySlug: async (slug: string): Promise<ProjectDetail | null> => {
+    await connectToDB();
+    const data = await project
+      .find({ user: userEmail }, undefined, { sort: { startDate: -1 } })
+      .lean();
+    const list = JSON.parse(JSON.stringify(data)) as ProjectDetail[];
+    const match = list.find((p) => p.name && slugifyProjectName(p.name) === slug);
+    return match ? { ...match, slug } : null;
+  },
+  // Case-study eligibility index, shared by the listing and the sitemap.
+  // Degrades gracefully (empty array) if GitHub is unreachable.
+  getProjectCaseStudyIndex: async (): Promise<ProjectCaseStudyEntry[]> => {
+    try {
+      return await buildProjectCaseStudyIndex();
+    } catch {
+      return [];
+    }
   },
   getWorkExperiences: async () => {
     // Disable caching so experience updates are reflected on first refresh.

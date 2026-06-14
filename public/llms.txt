@@ -18,6 +18,7 @@
 - Home: https://theharshdeepsingh.com/
 - Skills: https://theharshdeepsingh.com/skills
 - Projects: https://theharshdeepsingh.com/projects
+  - Projects with a substantial GitHub README have a dedicated case-study page at /projects/[slug]
 - Work Experience: https://theharshdeepsingh.com/experiences
 - Education: https://theharshdeepsingh.com/education
 - Resume: https://theharshdeepsingh.com/resume

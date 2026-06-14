@@ -183,6 +183,7 @@ export const createAppTheme = (mode: PaletteMode = "light") => {
           /* Images */
           .blog-post-body img {
             max-width: 100%;
+            height: auto;
             border-radius: 8px;
             margin: 1.5em 0;
             display: block;
