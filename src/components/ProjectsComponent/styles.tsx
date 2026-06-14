@@ -1,6 +1,7 @@
 import Image from "@/elements/Image";
 import { fadeIn } from "@/theme/animations";
 import { styled } from "@mui/material/styles";
+import Link from "next/link";
 import Card from "../Card";
 import { CardTag } from "../Card/styles";
 import { Row } from "@/app/_globalStyles";
@@ -55,6 +56,22 @@ export const ProjectItem = styled(Card, {
     color: theme.palette.text.secondary,
     fontWeight: 300,
     margin: "1.5em 0 1.8em 0",
+  },
+}));
+
+export const CaseStudyLink = styled(Link)(({ theme }) => ({
+  display: "inline-flex",
+  alignItems: "center",
+  gap: "0.35em",
+  marginTop: "0.25em",
+  fontSize: "0.9em",
+  fontWeight: 500,
+  color: theme.palette.primary.main,
+  textDecoration: "none",
+  transition: "gap 0.2s ease, opacity 0.2s ease",
+  "&:hover": {
+    opacity: 0.8,
+    gap: "0.6em",
   },
 }));
 

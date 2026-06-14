@@ -21,6 +21,11 @@ Required in `.env`:
 - `NEXT_PUBLIC_CLOUDINARY_RES_LINK` — Cloudinary base URL for assets
 - `NEXT_PUBLIC_GA_ID` — Google Analytics measurement ID
 
+Optional:
+- `GITHUB_USERNAME` — used by `getGitHubStats` (home page repo/commit/LOC stats)
+- `GITHUB_TOKEN` — raises the GitHub API rate limit for `getGitHubStats` and for the
+  per-project README fetch (`src/lib/github.ts`). Works without it for a few projects.
+
 ## Architecture
 
 This is a **Next.js 15 App Router** portfolio site (TypeScript). All pages are server components that fetch data directly from MongoDB at request time (`force-dynamic`, `revalidate = 0`).

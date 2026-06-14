@@ -4,7 +4,7 @@ import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import ColorThief from "colorthief/dist/color-thief.mjs";
 import { CardLink, CardLinksContainer } from "../Card/styles";
-import { ProjectItem, ProjectLogo, TechItem } from "./styles";
+import { CaseStudyLink, ProjectItem, ProjectLogo, TechItem } from "./styles";
 
 const LOGO_MAP: Record<string, string> = {
   "Unconventional Music Player": "/assets/logos/unconventional-player.svg",
@@ -15,7 +15,15 @@ const LOGO_MAP: Record<string, string> = {
   "StockFlow AI": "/assets/logos/stockflowAI.png",
 };
 
-const ProjectCard = ({ project, delay }: { project: any; delay?: number }) => {
+const ProjectCard = ({
+  project,
+  delay,
+  caseStudy,
+}: {
+  project: any;
+  delay?: number;
+  caseStudy?: { slug: string; hasCaseStudy: boolean };
+}) => {
 
   return (
     <ProjectItem key={project._id} delay={delay}>
@@ -40,6 +48,12 @@ const ProjectCard = ({ project, delay }: { project: any; delay?: number }) => {
         {project.tagLine && <div className="tag-line-container">{project.tagLine}</div>}
 
         {project.summary && <div className="summary-container" dangerouslySetInnerHTML={{ __html: project.summary }} />}
+
+        {caseStudy?.hasCaseStudy && (
+          <CaseStudyLink href={`/projects/${caseStudy.slug}`}>
+            View case study <span aria-hidden="true">→</span>
+          </CaseStudyLink>
+        )}
       </div>
 
       {project?.technologyStack && (

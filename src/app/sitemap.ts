@@ -68,5 +68,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("[sitemap] Failed to fetch blog posts:", err);
   }
 
-  return [...staticEntries, ...blogPostEntries];
+  let projectEntries: MetadataRoute.Sitemap = [];
+  try {
+    const caseStudies = await getData.getProjectCaseStudyIndex();
+    projectEntries = caseStudies
+      .filter((p) => p.hasCaseStudy)
+      .map((p) => {
+        // README can change without the DB doc being re-saved — use the freshest signal.
+        const stamps = [p.updatedAt, p.readmeLastModified]
+          .filter((d): d is string => Boolean(d))
+          .map((d) => new Date(d).getTime())
+          .filter((t) => !isNaN(t));
+        return {
+          url: `${siteUrl}/projects/${p.slug}`,
+          lastModified: stamps.length ? new Date(Math.max(...stamps)) : now,
+          changeFrequency: "monthly" as const,
+          priority: 0.8, // matches blog posts; these are primary SEO targets
+        };
+      });
+  } catch (err) {
+    console.error("[sitemap] Failed to fetch project case studies:", err);
+  }
+
+  return [...staticEntries, ...blogPostEntries, ...projectEntries];
 }

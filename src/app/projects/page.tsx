@@ -40,7 +40,19 @@ export const metadata: Metadata = {
 const siteUrl = "https://theharshdeepsingh.com";
 
 const Projects = async () => {
-  const projects = await getData.getProjects();
+  const [projects, caseStudyIndex] = await Promise.all([
+    getData.getProjects(),
+    getData.getProjectCaseStudyIndex(),
+  ]);
+
+  // Map project name → { slug, hasCaseStudy } so cards can link eligible ones.
+  const caseStudyMap: Record<string, { slug: string; hasCaseStudy: boolean }> =
+    Object.fromEntries(
+      caseStudyIndex.map((entry) => [
+        entry.name,
+        { slug: entry.slug, hasCaseStudy: entry.hasCaseStudy },
+      ]),
+    );
 
   const projectsItemListJsonLd = projects?.length
     ? {
@@ -87,7 +99,7 @@ const Projects = async () => {
           { label: "Projects", href: "/projects" },
         ]}
       />
-      <ProjectsComponent projects={projects} />
+      <ProjectsComponent projects={projects} caseStudyMap={caseStudyMap} />
     </>
   );
 };
