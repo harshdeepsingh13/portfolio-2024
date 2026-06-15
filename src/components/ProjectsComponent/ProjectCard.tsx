@@ -6,13 +6,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CardLink, CardLinksContainer } from "../Card/styles";
 import { CaseStudyLink, ProjectItem, ProjectLogo, TechItem } from "./styles";
 
-const LOGO_MAP: Record<string, string> = {
-  "Unconventional Music Player": "/assets/logos/unconventional-player.svg",
+const LOGO_MAP: Record<string, { link: string; width?: number; height?: number }> = {
+  "Unconventional Music Player": { link: "/assets/logos/unconventional-player.svg" },
   //   "Unconventional Music Player": "/assets/logos/ts.png",
-  "Career Canvas": "/assets/logos/career-canvas.svg",
-  Pixeliano: "/assets/logos/pixeliano.png",
-  "Pixeliano Admin App": "/assets/logos/pixeliano.png",
-  "StockFlow AI": "/assets/logos/stockflowAI.png",
+  "Career Canvas": { link: "/assets/logos/career-canvas.svg" },
+  Pixeliano: { link: "/assets/logos/pixeliano.png" },
+  "Pixeliano Admin App": { link: "/assets/logos/pixeliano.png" },
+  "StockFlow AI": { link: "/assets/logos/stockflowAI.png" },
+  "Portfolio & Publishing Platform": { link: "/assets/logos/portfolio.svg", width: 48, height: 48 },
 };
 
 const ProjectCard = ({
@@ -24,11 +25,15 @@ const ProjectCard = ({
   delay?: number;
   caseStudy?: { slug: string; hasCaseStudy: boolean };
 }) => {
-
   return (
     <ProjectItem key={project._id} delay={delay}>
       <div>
-        <ProjectLogo src={LOGO_MAP[project.name]} alt={`${project.name} Logo`} width={60} height={60} />
+        <ProjectLogo
+          src={LOGO_MAP[project.name].link}
+          alt={`${project.name} Logo`}
+          width={LOGO_MAP[project.name]?.width || 60}
+          height={LOGO_MAP[project.name]?.height || 60}
+        />
         <div className="name-container">
           <CardTitle>{project.name}</CardTitle>
           <CardLinksContainer>

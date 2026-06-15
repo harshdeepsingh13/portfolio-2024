@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    /* #71717a is neutral mid-grey — visible on both dark and light browser chrome */
+    .prompt { stroke: #dedee1; fill: none; }
+    .mark   { stroke: #38bdf8; fill: none; }
+    .cursor { fill: #38bdf8; }
+    @media (prefers-color-scheme: light) {
+      .prompt { stroke: #71717a; fill: none; }
+      .mark   { stroke: #0284c7; }
+      .cursor { fill: #0284c7; }
+    }
+  </style>
+  <!-- > prompt (dim, thin) -->
+  <path class="prompt"
+        d="M 4 9 L 10 16 L 4 23"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- h stem (bold) -->
+  <line class="mark" x1="16" y1="7" x2="16" y2="24"
+        stroke-width="3.5" stroke-linecap="round"/>
+  <!-- h arch + right leg (bold) -->
+  <path class="mark"
+        d="M 16 15 C 16 10 24 10 24 15 L 24 24"
+        stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- _ cursor block -->
+  <rect class="cursor" x="26" y="22" width="4" height="2.5" rx="0.5"/>
+</svg>
