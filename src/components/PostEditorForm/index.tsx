@@ -3,14 +3,26 @@
 import BlogEditor from "@/components/BlogEditor";
 import { useBlogPost } from "@/hooks/blog/useBlogPost";
 import { useNavigationGuard } from "@/hooks/useNavigationGuard";
+import { useShareToLinkedIn } from "@/hooks/integrations/useLinkedIn";
 import { createPost, updatePost } from "@/services/blog/posts";
+import { ShareError } from "@/services/integrations/linkedin";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Link from "next/link";
+import type { LinkPlacement } from "@/services/integrations/linkedin";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
 import { useCallback, useEffect, useRef, useState } from "react";
 import slugify from "slugify";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://theharshdeepsingh.com";
 
 // ── Styled components ─────────────────────────────────────────────────────────
 
@@ -126,6 +138,29 @@ function autoSlug(title: string): string {
   return slugify(title, { lower: true, strict: true, trim: true });
 }
 
+// Default LinkedIn share text: a hook from excerpt/title + soft CTA + up to 5
+// hashtags. Mirrors generateCommentary() in src/lib/linkedin.ts (kept
+// client-local to avoid importing the server-only service into this component).
+const COMMENTARY_CTA = "♻️ Repost if it helps someone in your network.";
+
+function defaultCommentary(form: PostFormState): string {
+  const hook = form.excerpt.trim() || form.title.trim();
+  const hashtags = form.tags
+    .split(",")
+    .map((t) => t.trim())
+    .filter(Boolean)
+    .slice(0, 5)
+    .map((t) => {
+      const cleaned = t.replace(/[^a-zA-Z0-9]/g, "");
+      return cleaned ? `#${cleaned}` : "";
+    })
+    .filter(Boolean)
+    .join(" ");
+  const parts = [hook, COMMENTARY_CTA];
+  if (hashtags) parts.push(hashtags);
+  return parts.join("\n\n");
+}
+
 function buildPayload(form: PostFormState, extra: Record<string, unknown> = {}) {
   return {
     title: form.title.trim(),
@@ -206,6 +241,16 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
   // Edit-mode-only state
   const [postStatus, setPostStatus] = useState<"draft" | "published">("draft");
   const [hasDraft, setHasDraft] = useState(false);
+  const [linkedInId, setLinkedInId] = useState<string | null>(null);
+  const [linkedInUrl, setLinkedInUrl] = useState<string | null>(null);
+
+  // LinkedIn share dialog
+  const [liDialogOpen, setLiDialogOpen] = useState(false);
+  const [liCommentary, setLiCommentary] = useState("");
+  const [liLinkPlacement, setLiLinkPlacement] = useState<LinkPlacement>("card");
+  const [liError, setLiError] = useState<string | null>(null);
+  const [liNeedsConnect, setLiNeedsConnect] = useState(false);
+  const shareToLinkedIn = useShareToLinkedIn();
 
   const { data: loadedPost, isError: loadError } = useBlogPost(isEditMode ? postId : undefined);
 
@@ -246,6 +291,8 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
     };
     setPostStatus(loadedPost.status);
     setHasDraft(loadedPost.hasDraft ?? false);
+    setLinkedInId(loadedPost.linkedInId ?? null);
+    setLinkedInUrl(loadedPost.linkedInUrl ?? null);
     postStatusRef.current = loadedPost.status;
     setForm(loaded);
     formRef.current = loaded;
@@ -438,6 +485,40 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
     if (formRef.current?.title.trim()) await autoSave();
     const slug = formRef.current?.slug.trim();
     if (slug) window.open(`/blog/${slug}?preview=1`, "_blank");
+  };
+
+  // ── Share to LinkedIn (edit mode, published posts) ────────────────────────
+
+  const openLinkedInDialog = () => {
+    if (!form) return;
+    setLiError(null);
+    setLiNeedsConnect(false);
+    setLiLinkPlacement("card");
+    setLiCommentary(defaultCommentary(formRef.current ?? form));
+    setLiDialogOpen(true);
+  };
+
+  const handleShareToLinkedIn = async () => {
+    if (!postId) return;
+    setLiError(null);
+    setLiNeedsConnect(false);
+    try {
+      const result = await shareToLinkedIn.mutateAsync({
+        id: postId,
+        commentary: liCommentary,
+        linkPlacement: liLinkPlacement,
+      });
+      setLinkedInId(result.linkedInId);
+      setLinkedInUrl(result.url);
+      setLiDialogOpen(false);
+    } catch (err) {
+      if (err instanceof ShareError && (err.code === "not_connected" || err.code === "expired")) {
+        setLiNeedsConnect(true);
+        setLiError(err.message);
+      } else {
+        setLiError(err instanceof Error ? err.message : "Failed to share to LinkedIn.");
+      }
+    }
   };
 
   // ── Loading / error (edit mode only) ─────────────────────────────────────
@@ -634,6 +715,51 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
           >
             Preview
           </Button>
+
+          {isEditMode && postStatus === "published" &&
+            (linkedInId ? (
+              <Button
+                component="a"
+                href={linkedInUrl ?? "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                disabled={!linkedInUrl}
+                fullWidth
+                variant="outlined"
+                sx={{
+                  borderColor: "success.main",
+                  color: "success.main",
+                  fontWeight: 500,
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  fontSize: "0.85rem",
+                  "&:hover": { borderColor: "success.dark", backgroundColor: "rgba(76,175,80,0.06)" },
+                }}
+              >
+                ✓ Shared to LinkedIn
+              </Button>
+            ) : (
+              <Button
+                onClick={openLinkedInDialog}
+                disabled={saving || publishing || discarding}
+                fullWidth
+                variant="outlined"
+                sx={{
+                  borderColor: theme.palette.primary.main,
+                  color: theme.palette.primary.main,
+                  fontWeight: 500,
+                  textTransform: "none",
+                  borderRadius: "8px",
+                  fontSize: "0.85rem",
+                  "&:hover": {
+                    borderColor: theme.palette.primary.main,
+                    backgroundColor: theme.palette.primary.alpha10,
+                  },
+                }}
+              >
+                Share to LinkedIn
+              </Button>
+            ))}
         </SidebarCard>
 
         <SidebarCard>
@@ -724,6 +850,135 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
           </Box>
         </SidebarCard>
       </Sidebar>
+
+      {/* ── Share to LinkedIn dialog ──────────────────── */}
+      <Dialog
+        open={liDialogOpen}
+        onClose={() => setLiDialogOpen(false)}
+        fullWidth
+        maxWidth="sm"
+        slotProps={{
+          paper: {
+            sx: { backgroundColor: theme.palette.background.paper, backgroundImage: "none" },
+          },
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 700, fontSize: "1.1rem", color: "text.primary" }}>
+          Share to LinkedIn
+        </DialogTitle>
+        <DialogContent>
+          <Typography sx={{ fontSize: "0.8rem", color: "custom.accentText", mb: "12px" }}>
+            Posts a link share to your LinkedIn feed. The card (image, title, description) is pulled
+            from the post automatically — just write your hook below.
+          </Typography>
+
+          <FieldLabel>Commentary</FieldLabel>
+          <StyledTextField
+            value={liCommentary}
+            onChange={(e) => setLiCommentary(e.target.value)}
+            fullWidth
+            multiline
+            rows={6}
+            placeholder="Write a hook for your network…"
+          />
+
+          <Box sx={{ mt: "14px" }}>
+            <FieldLabel>Link</FieldLabel>
+            <Typography
+              sx={{
+                fontSize: "0.8rem",
+                color: "primary.main",
+                wordBreak: "break-all",
+                fontFamily: "monospace",
+              }}
+            >
+              {`${SITE_URL}/blog/${form.slug}`}
+            </Typography>
+            <Typography sx={{ fontSize: "0.7rem", color: "custom.accentText", mt: "4px" }}>
+              Tracking tags (utm_source=linkedin…) are added automatically for analytics.
+            </Typography>
+          </Box>
+
+          <Box sx={{ mt: "16px" }}>
+            <FieldLabel>Link placement</FieldLabel>
+            <ToggleButtonGroup
+              value={liLinkPlacement}
+              exclusive
+              onChange={(_, v) => v && setLiLinkPlacement(v as LinkPlacement)}
+              size="small"
+              sx={{
+                "& .MuiToggleButton-root": {
+                  textTransform: "none",
+                  fontSize: "0.8rem",
+                  color: theme.palette.text.secondary,
+                  borderColor: theme.palette.divider,
+                  "&.Mui-selected": {
+                    color: theme.palette.primary.main,
+                    backgroundColor: theme.palette.primary.alpha10,
+                    "&:hover": { backgroundColor: theme.palette.primary.alpha20 },
+                  },
+                },
+              }}
+            >
+              <ToggleButton value="card">Preview card</ToggleButton>
+              <ToggleButton value="comment">Link in first comment</ToggleButton>
+            </ToggleButtonGroup>
+            <Typography sx={{ fontSize: "0.7rem", color: "custom.accentText", mt: "6px" }}>
+              {liLinkPlacement === "card"
+                ? "Shows a rich preview card — best click-through. Recommended."
+                : "Posts text only and drops the link in the first comment — trades the card for wider reach."}
+            </Typography>
+          </Box>
+
+          {liError && (
+            <Box
+              sx={{
+                mt: "14px",
+                fontSize: "0.8rem",
+                color: "error.main",
+                backgroundColor: "rgba(244,67,54,0.08)",
+                border: "1px solid rgba(244,67,54,0.25)",
+                borderRadius: "6px",
+                padding: "10px 14px",
+              }}
+            >
+              <Typography sx={{ fontSize: "0.8rem", color: "error.main" }}>{liError}</Typography>
+              {liNeedsConnect && (
+                <Box
+                  component={Link}
+                  href="/admin/settings"
+                  sx={{ color: "primary.main", fontSize: "0.8rem", textDecoration: "underline" }}
+                >
+                  Open Settings to connect LinkedIn →
+                </Box>
+              )}
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ padding: "12px 24px 20px" }}>
+          <Button
+            onClick={() => setLiDialogOpen(false)}
+            sx={{ textTransform: "none", color: "text.secondary" }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleShareToLinkedIn}
+            disabled={shareToLinkedIn.isPending || !liCommentary.trim()}
+            variant="contained"
+            sx={{
+              backgroundColor: theme.palette.primary.main,
+              color: theme.palette.background.default,
+              fontWeight: 600,
+              textTransform: "none",
+              borderRadius: "8px",
+              "&:hover": { filter: "brightness(0.9)" },
+            }}
+          >
+            {shareToLinkedIn.isPending ? "Posting…" : "Post to LinkedIn"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </PageWrapper>
   );
 }
