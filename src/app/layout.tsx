@@ -4,7 +4,7 @@ import { ThemeContextProvider } from "@/context";
 import EmotionRegistry from "@/lib/emotionRegistry";
 import "@/lib/fontawesome";
 import { getData } from "@/lib/getData";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import ConditionalAnalytics from "@/components/ConditionalAnalytics";
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import React from "react";
@@ -139,7 +139,7 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
-        <GoogleAnalytics gaId={gaID} />
+        <ConditionalAnalytics gaId={gaID} />
         <EmotionRegistry>
           <ThemeContextProvider>
             <ParticlesBackground />
