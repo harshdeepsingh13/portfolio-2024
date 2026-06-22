@@ -34,6 +34,9 @@ export interface BlogPost {
   seo?: BlogSeo;
   draft?: BlogPostDraft;
   hasDraft?: boolean;
+  devToId?: string;
+  linkedInId?: string;
+  linkedInUrl?: string;
   createdAt: string;
   updatedAt: string;
 }

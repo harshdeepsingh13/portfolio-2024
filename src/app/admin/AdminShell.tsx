@@ -86,6 +86,7 @@ function AdminSidebarContent() {
     { href: "/admin", label: "Dashboard" },
     { href: "/admin/posts", label: "Posts" },
     { href: "/admin/posts/new", label: "New Post" },
+    { href: "/admin/settings", label: "Settings" },
   ];
 
   return (

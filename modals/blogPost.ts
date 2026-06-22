@@ -47,6 +47,9 @@ export const blogPostSchema = new Schema(
     hasDraft: { type: Boolean, default: false },
     // DEV.io cross-post tracking
     devToId: { type: String },
+    // LinkedIn cross-post tracking — share URN + public URL (set once shared)
+    linkedInId: { type: String },
+    linkedInUrl: { type: String },
   },
   { timestamps: true }
 );
