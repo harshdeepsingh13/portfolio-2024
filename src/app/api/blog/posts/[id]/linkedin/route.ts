@@ -26,7 +26,13 @@ interface BlogPostLean {
   excerpt?: string;
   tags?: string[];
   linkedInId?: string;
-  seo?: { metaTitle?: string; metaDescription?: string; canonicalUrl?: string };
+  coverImage?: string;
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    canonicalUrl?: string;
+    ogImage?: string;
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -97,6 +103,7 @@ export async function POST(req: NextRequest, { params }: RouteContext) {
     // gets UTM tags for GA4 attribution. Keep these two separate.
     const canonicalUrl = post.seo?.canonicalUrl || `${SITE_URL}/blog/${post.slug}`;
     const articleUrl = withUtm(canonicalUrl, post.slug);
+    const thumbnailUrl = post.seo?.ogImage || post.coverImage;
 
     const result = await shareArticle({
       accessToken: connection.accessToken,
@@ -107,13 +114,18 @@ export async function POST(req: NextRequest, { params }: RouteContext) {
       title: post.seo?.metaTitle || post.title,
       description: post.seo?.metaDescription || post.excerpt,
       linkPlacement,
+      thumbnailUrl,
     });
 
     await BlogPost.findByIdAndUpdate(id, {
       $set: { linkedInId: result.id || "shared", linkedInUrl: result.url },
     });
 
-    return NextResponse.json({ url: result.url, linkedInId: result.id || "shared" });
+    return NextResponse.json({
+      url: result.url,
+      linkedInId: result.id || "shared",
+      thumbnailAttached: result.thumbnailAttached,
+    });
   } catch (err) {
     const status = err instanceof LinkedInError ? err.status : 500;
     const message = err instanceof Error ? err.message : "Internal server error";

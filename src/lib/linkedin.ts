@@ -18,6 +18,7 @@ const AUTHORIZE_URL = "https://www.linkedin.com/oauth/v2/authorization";
 const TOKEN_URL = "https://www.linkedin.com/oauth/v2/accessToken";
 const USERINFO_URL = "https://api.linkedin.com/v2/userinfo";
 const POSTS_URL = "https://api.linkedin.com/rest/posts";
+const IMAGES_URL = "https://api.linkedin.com/rest/images";
 
 // openid + profile → identify the member (person URN via /userinfo)
 // w_member_social → create posts on the member's behalf
@@ -264,6 +265,7 @@ export function withUtm(url: string, slug?: string): string {
 export interface ShareResult {
   id: string; // share URN, e.g. urn:li:share:123
   url: string; // public feed URL
+  thumbnailAttached?: boolean; // only set when a card thumbnail was attempted
 }
 
 /** Where the canonical link rides: as the post's article card, or as the first comment. */
@@ -306,6 +308,97 @@ export async function addComment(input: {
   }
 }
 
+// Our Unsplash URLs carry `?auto=format`, which can serve WebP — LinkedIn's
+// image upload wants JPEG/PNG. Force a JPEG render instead.
+function normalizeImageUrl(imageUrl: string): string {
+  try {
+    const u = new URL(imageUrl);
+    if (u.searchParams.has("auto")) {
+      u.searchParams.delete("auto");
+      u.searchParams.set("fm", "jpg");
+    }
+    return u.toString();
+  } catch {
+    return imageUrl;
+  }
+}
+
+interface InitializeUploadResponse {
+  value: { uploadUrl: string; image: string };
+}
+
+/** Polls until the uploaded image asset is AVAILABLE — the upload is async. */
+async function waitForImageAvailable(
+  accessToken: string,
+  apiVersion: string,
+  imageUrn: string,
+): Promise<void> {
+  const url = `${IMAGES_URL}/${encodeURIComponent(imageUrn)}`;
+  const maxAttempts = 5;
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const res = await fetch(url, { headers: postHeaders(accessToken, apiVersion) });
+    if (res.ok) {
+      const data = (await res.json()) as { status?: string };
+      if (data.status === "AVAILABLE") return;
+    }
+    if (attempt < maxAttempts - 1) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+  }
+  throw new LinkedInError(`LinkedIn image ${imageUrn} did not become available in time`, 502);
+}
+
+/**
+ * Uploads an image to LinkedIn via the Images API (initializeUpload + PUT) and
+ * returns the resulting `urn:li:image:{id}` once the asset is AVAILABLE.
+ * LinkedIn's Posts API never scrapes OG tags for article posts — the thumbnail
+ * must be an asset we've uploaded ourselves.
+ */
+export async function uploadImage(input: {
+  accessToken: string;
+  personUrn: string;
+  apiVersion: string;
+  imageUrl: string;
+}): Promise<string> {
+  const initRes = await fetch(`${IMAGES_URL}?action=initializeUpload`, {
+    method: "POST",
+    headers: postHeaders(input.accessToken, input.apiVersion),
+    body: JSON.stringify({ initializeUploadRequest: { owner: input.personUrn } }),
+  });
+  if (!initRes.ok) {
+    const detail = await initRes.text().catch(() => "");
+    throw new LinkedInError(`LinkedIn image upload init failed (${initRes.status}): ${detail}`, 502);
+  }
+  const { value } = (await initRes.json()) as InitializeUploadResponse;
+
+  const sourceRes = await fetch(normalizeImageUrl(input.imageUrl));
+  if (!sourceRes.ok) {
+    throw new LinkedInError(
+      `Failed to fetch source image (${sourceRes.status}) from ${input.imageUrl}`,
+      502,
+    );
+  }
+  const bytes = await sourceRes.arrayBuffer();
+
+  // Image uploads require an Authorization header on the PUT (video uploads
+  // explicitly don't — images do).
+  const putRes = await fetch(value.uploadUrl, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${input.accessToken}`,
+      "Content-Type": "image/jpeg",
+    },
+    body: bytes,
+  });
+  if (!putRes.ok) {
+    const detail = await putRes.text().catch(() => "");
+    throw new LinkedInError(`LinkedIn image upload PUT failed (${putRes.status}): ${detail}`, 502);
+  }
+
+  await waitForImageAvailable(input.accessToken, input.apiVersion, value.image);
+  return value.image;
+}
+
 export async function shareArticle(input: {
   accessToken: string;
   personUrn: string;
@@ -315,7 +408,27 @@ export async function shareArticle(input: {
   title: string;
   description?: string;
   linkPlacement: LinkPlacement;
+  thumbnailUrl?: string;
 }): Promise<ShareResult> {
+  // Best-effort thumbnail upload: a failure here shouldn't block the share
+  // itself, but we surface it via `thumbnailAttached` rather than swallowing it.
+  let thumbnail: string | undefined;
+  let thumbnailAttached: boolean | undefined;
+  if (input.linkPlacement === "card" && input.thumbnailUrl) {
+    try {
+      thumbnail = await uploadImage({
+        accessToken: input.accessToken,
+        personUrn: input.personUrn,
+        apiVersion: input.apiVersion,
+        imageUrl: input.thumbnailUrl,
+      });
+      thumbnailAttached = true;
+    } catch (err) {
+      console.error("LinkedIn thumbnail upload failed; sharing without an image:", err);
+      thumbnailAttached = false;
+    }
+  }
+
   const payload = {
     author: input.personUrn,
     commentary: escapeCommentary(input.commentary),
@@ -334,6 +447,7 @@ export async function shareArticle(input: {
               source: input.articleUrl,
               title: input.title,
               ...(input.description ? { description: input.description } : {}),
+              ...(thumbnail ? { thumbnail } : {}),
             },
           },
         }
@@ -371,5 +485,5 @@ export async function shareArticle(input: {
     });
   }
 
-  return { id, url };
+  return { id, url, ...(thumbnailAttached !== undefined ? { thumbnailAttached } : {}) };
 }
