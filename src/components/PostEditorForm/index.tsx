@@ -118,6 +118,7 @@ interface PostFormState {
   coverImage: string;
   seoTitle: string;
   seoDescription: string;
+  seoOgImage: string;
   body_json: Record<string, unknown> | null;
   body_html: string;
 }
@@ -130,6 +131,7 @@ const DEFAULT_FORM: PostFormState = {
   coverImage: "",
   seoTitle: "",
   seoDescription: "",
+  seoOgImage: "",
   body_json: null,
   body_html: "",
 };
@@ -176,6 +178,7 @@ function buildPayload(form: PostFormState, extra: Record<string, unknown> = {}) 
     seo: {
       metaTitle: form.seoTitle.trim() || undefined,
       metaDescription: form.seoDescription.trim() || undefined,
+      ogImage: form.seoOgImage.trim() || undefined,
     },
     readingTime: form.body_html
       ? Math.max(1, Math.round(form.body_html.replace(/<[^>]+>/g, "").split(/\s+/).length / 200))
@@ -286,6 +289,7 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
       coverImage: src.coverImage ?? "",
       seoTitle: src.seo?.metaTitle ?? "",
       seoDescription: src.seo?.metaDescription ?? "",
+      seoOgImage: src.seo?.ogImage ?? "",
       body_json: src.body_json ?? null,
       body_html: src.body_html ?? "",
     };
@@ -464,6 +468,7 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
         coverImage: updated.coverImage ?? "",
         seoTitle: updated.seo?.metaTitle ?? "",
         seoDescription: updated.seo?.metaDescription ?? "",
+        seoOgImage: updated.seo?.ogImage ?? "",
         body_json: updated.body_json ?? null,
         body_html: updated.body_html ?? "",
       };
@@ -848,6 +853,16 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
               placeholder={isEditMode ? undefined : "Defaults to excerpt"}
             />
           </Box>
+          <Box>
+            <FieldLabel>OG Image URL</FieldLabel>
+            <StyledTextField
+              value={form.seoOgImage}
+              onChange={(e) => set("seoOgImage", e.target.value)}
+              fullWidth
+              size="small"
+              placeholder="Defaults to Cover Image URL"
+            />
+          </Box>
         </SidebarCard>
       </Sidebar>
 
@@ -979,6 +994,6 @@ export default function PostEditorForm({ postId }: PostEditorFormProps) {
           </Button>
         </DialogActions>
       </Dialog>
-    </PageWrapper>
+  </PageWrapper>
   );
 }
