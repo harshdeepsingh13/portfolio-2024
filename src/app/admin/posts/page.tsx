@@ -61,6 +61,19 @@ const StatusBadge = styled("span")<{ status: "draft" | "published" }>(({ theme, 
       : `1px solid ${theme.palette.warning.main}4d`,
 }));
 
+const LinkedInBadge = styled("span")<{ shared: boolean }>(({ theme, shared }) => ({
+  display: "inline-block",
+  padding: "2px 10px",
+  borderRadius: "50px",
+  fontSize: "0.72rem",
+  fontWeight: 600,
+  letterSpacing: "0.4px",
+  textTransform: "uppercase",
+  backgroundColor: shared ? `${theme.palette.success.main}1f` : "transparent",
+  color: shared ? theme.palette.success.main : theme.palette.custom.accentText,
+  border: shared ? `1px solid ${theme.palette.success.main}4d` : `1px solid ${theme.palette.divider}`,
+}));
+
 const ActionBtn = styled("button")<{ variant?: "edit" | "delete" }>(({ theme, variant }) => ({
   padding: "5px 12px",
   borderRadius: "6px",
@@ -183,6 +196,7 @@ export default function AdminPostsPage() {
                 <tr>
                   <th>Title</th>
                   <th>Status</th>
+                  <th>LinkedIn</th>
                   <th>Published Date</th>
                   <th>Updated</th>
                   <th style={{ textAlign: "right" }}>Actions</th>
@@ -243,6 +257,21 @@ export default function AdminPostsPage() {
                           </Box>
                         )}
                       </Box>
+                    </td>
+                    <td>
+                      {post.linkedInId ? (
+                        <Box
+                          component="a"
+                          href={post.linkedInUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          sx={{ textDecoration: "none" }}
+                        >
+                          <LinkedInBadge shared>Shared</LinkedInBadge>
+                        </Box>
+                      ) : (
+                        <LinkedInBadge shared={false}>Not shared</LinkedInBadge>
+                      )}
                     </td>
                     <td style={{ color: theme.palette.custom.accentText }}>
                       {formatDate(post.publishedAt)}

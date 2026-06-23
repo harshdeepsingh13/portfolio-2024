@@ -54,6 +54,8 @@ export interface BlogPostPreview {
   tags: string[];
   readingTime?: number;
   hasDraft?: boolean;
+  linkedInId?: string;
+  linkedInUrl?: string;
   createdAt: string;
   updatedAt: string;
 }

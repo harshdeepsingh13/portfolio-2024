@@ -26,6 +26,8 @@ const PREVIEW_PROJECTION = {
   tags: 1,
   readingTime: 1,
   hasDraft: 1,
+  linkedInId: 1,
+  linkedInUrl: 1,
   createdAt: 1,
   updatedAt: 1,
 };
