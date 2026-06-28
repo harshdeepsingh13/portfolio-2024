@@ -7,6 +7,7 @@ import { faClock, faTag, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Grid from "@mui/material/Grid";
 import { useTheme } from "@mui/material/styles";
+import { useScrollMemory } from "@/hooks/useScrollMemory";
 
 function formatDate(dateStr?: string): string {
   if (!dateStr) return "";
@@ -25,13 +26,18 @@ interface BlogPostContentProps {
 
 const BlogPostContent = ({ post, relatedPosts, safeHtml }: BlogPostContentProps) => {
   const theme = useTheme();
+  // Remember the reader's scroll position so a refresh returns them to their
+  // spot (load at top, then scroll down) instead of stranding them at the bottom.
+  useScrollMemory(post.slug);
   return (
     <Container>
       {post.coverImage && (
         <div
           style={{
             width: "100%",
-            maxHeight: "420px",
+            // Reserve height before the image loads to avoid layout shift
+            // (which is what made native scroll restoration misfire).
+            height: "min(420px, 56vw)",
             overflow: "hidden",
             borderRadius: "16px",
             marginBottom: "2rem",
